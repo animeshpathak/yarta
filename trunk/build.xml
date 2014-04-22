@@ -24,6 +24,7 @@
 		<!-- Desktop Samples -->
 		
 		<!-- Copy mse-middleware.jar to external/desktop & external/android -->
+		
 		<copy todir="${external}/desktop" overwrite="true">
 			<fileset dir="mselib/MSE-Middleware/dist">
 				<include name="*.jar"/>
@@ -97,6 +98,7 @@
 		<ant dir="samples/android/INRIADonations" target="release" />
 
 		<!-- remove temporary mse-middleware.jar files from android applications -->
+		
 		<delete file="mselib/libapps/android/YartaLibrary/libs/mse-middleware.jar" />
 		<delete file="samples/android/YartaUIAndroid/libs/mse-middleware.jar" />
 		<delete file="samples/android/YartaUIXAndroid/libs/mse-middleware.jar" />
