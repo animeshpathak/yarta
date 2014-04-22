@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="fr.inria.arles.yarta.middleware.msemanagement"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+
+<!--  
+    <activity android:label="@string/app_name" 
+    
+    android:clearTaskOnLaunch="true"
+     android:finishOnTaskLaunch="true"
+    android:name="fr.inria.arles.yarta.middleware.msemanagement.GUI.Splash">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		
+	</activity>
+	-->
+
+    <activity android:label="@string/app_name" 
+    android:clearTaskOnLaunch="true" 
+    android:name="fr.inria.arles.yarta.middleware.msemanagement.GUI.Home">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		
+	</activity>
+	
+
+
+<activity  android:name=".GUI.ContactManager.ContactManagerHome" android:label="ContactManager Home"></activity>
+<activity  android:name=".GUI.CallLogManager.CallLogManagerHome"  android:label="CallLogManager Home"></activity>
+<activity android:name=".GUI.SMSManager.SMSManagerHome"  android:label="SMSManager Home"></activity>
+<activity  android:name=".GUI.LinkedInManager.LinkedInManagerHome"  android:label="LinkedInManager Home"></activity>
+<activity  android:name=".GUI.FacebookManager.FacebookManagerHome"  android:label="Facebook Manager"></activity>
+<activity  android:name=".GUI.ContactManager.FindAllContact"  android:label="Full Contact List"></activity>
+
+<activity android:name=".GUI.ContactManager.FindContactByName"  android:label="Search Contact By Name"></activity>
+<activity android:name=".GUI.ContactManager.FindContactByNumber" android:label="Search Contact By Number"></activity>
+<activity android:name=".GUI.ContactManager.FindContactByEmail"  android:label="Search Contact By Email"></activity>
+
+<activity android:name=".GUI.ContactManager.FindNameByNumber"  android:label="Search Name By Number"></activity>
+<activity android:name=".GUI.ContactManager.FindNameByEmail"  android:label="Search Name By Email"></activity>
+<activity android:name=".GUI.ContactManager.FindNumberByName"  android:label="Search Number By Name"></activity>
+<activity android:name=".GUI.ContactManager.FindNumberByEmail"  android:label="Search Number By Email"></activity>
+<activity android:name=".GUI.ContactManager.FindEmailByName"  android:label="Search Email By Name"></activity>
+<activity android:name=".GUI.ContactManager.FindEmailByNumber"  android:label="Search Email By Number"></activity>
+
+
+<activity android:name=".GUI.SMSManager.DisplayAllSMS" android:label="All SMS"></activity>
+<activity android:name=".GUI.SMSManager.DisplayInboxSMS" android:label="Inbox SMS"></activity>
+<activity android:name=".GUI.SMSManager.DisplaySentSMS" android:label="Sent SMS"></activity>
+<activity android:name=".GUI.SMSManager.DisplayAllSMSFriend" android:label="All SMS Friends"></activity>
+<activity android:name=".GUI.SMSManager.DisplayAllInboxFriend" android:label="Inbox SMS Friends"></activity>
+<activity android:name=".GUI.SMSManager.DisplayAllSentSMSFriend" android:label="Sent SMS Friends"></activity>
+
+
+
+<activity android:name=".GUI.CallLogManager.DisplayAllCallLog" android:label="All Call Log"></activity>
+<activity android:name=".GUI.CallLogManager.DisplayCallLogByName" android:label="Search Call Log By Name"></activity>
+<activity android:name=".GUI.CallLogManager.DisplayCallLogByNumber" android:label="Search Call Log By Number"></activity>
+<activity android:name=".GUI.CallLogManager.DisplayCallLogFriend" android:label="Call Log Friends"></activity>
+
+
+<activity android:name=".GUI.LinkedInManager.LinkedInManagerHome" android:label="LinkedIn Manager Home"></activity>
+<activity android:name=".GUI.LinkedInManager.FirstTimeConnectLinkedInGUI" android:label="Fist Time LinkedIn Connection"></activity>
+<activity android:name=".GUI.LinkedInManager.DefaultConnectLinkedIn" android:label="LinkedIn Profile"></activity>
+<activity android:name=".GUI.LinkedInManager.TestLinkedInAccessTokenStore" android:label="Test LinkedIn Access Token"></activity>
+
+<activity android:name="fr.inria.arles.yarta.middleware.msemanagement.LinkedInFindAccessToken" android:label="Authorize MSE"></activity>
+
+
+<activity android:name="fr.inria.arles.yarta.middleware.msemanagement.FacebookFindAccessToken" android:label="Authorize MSE"></activity>
+<activity android:name="fr.inria.arles.yarta.middleware.msemanagement.DeleteLinkedInAccessTokenStore" android:label="Delete LinkedIn AccessToken"></activity>
+</application>
+
+<uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+
+ 
+  <uses-permission android:name="android.permission.INTERNET"/>
+ 
+
+   
+  <uses-permission android:name="android.permission.READ_LOGS"/>
+  
+ <uses-permission android:name="android.permission.READ_SMS">
+    </uses-permission>
+
+
+</manifest> 

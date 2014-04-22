@@ -1,0 +1,99 @@
+Yarta
+-----
+
+This is the Yarta source tree which is organized as follows:
+
+- root
+	+ docs (contains documentation & useful information to read before proceeding in using)
+	+ external (here you should place all the external libraries needed for compiling);
+	+ misc (contains two old projects: DataExtractionDemo & PolicyManager)
+	- mselib
+		+ libapps (contains library project applications which will contain
+			heavy implementation for different objects such as kbservice, etc.)
+		+ MSE-Middleware (the actual mse library)
+	+ samples (contains sample applications using Yarta library)
+	+ tools (contains developer tools used for developing apps using Yarta)
+	
+
+External Libraries
+------------------
+
+In order to successfully build Yarta you need the following prerequisites (folder structures):
+
+Folder: /external/android
+		 File size file name
+         2 044 568 androjena_0.1.jar
+         1 646 454 arqoid_0.1.jar
+            46 725 commons-codec-1.3.jar
+           384 282 facebook4j-core-1.1.5.jar
+         3 067 005 IbicoopCoreAndroid.jar
+         3 233 439 icu4j-3.4.4.jar
+           151 337 iri-0.7.jar
+           127 972 libGoogleAnalyticsV2.jar
+           613 979 linkedin-j-android.jar
+           126 174 mse-middleware.jar
+            44 558 signpost-core-1.2.1.1.jar
+            27 559 slf4j.android_1.5.8.jar
+           284 059 twitter4j-core-3.0.3.jar
+
+Folder: /external/desktop
+		 File size file name
+         5 435 407 android.jar
+         1 522 757 arq-2.8.1.jar
+           575 389 commons-collections-3.
+           261 809 commons-lang-2.4.jar
+         2 913 621 IbicoopSE.jar
+         3 233 439 icu4j-3.4.4.jar
+           151 337 iri-0.7.jar
+             7 656 jar-in-jar-loader.zip
+         1 879 967 jena-2.6.2.jar
+            43 858 kxml2-2.3.0.jar
+           358 180 log4j-1.2.13.jar
+           126 174 mse-middleware.jar
+            22 338 slf4j-api-1.5.6.jar
+             9 678 slf4j-log4j12-1.5.6.ja
+           449 505 velocity-1.7.jar
+         1 203 860 xercesImpl-2.7.1.jar
+             7 144 xmlpull_1_1_3_4c.jar
+
+
+
+For guidance on getting the required libraries you can browse the following links:
+
+Apache Velocity 1.7 (Apache 2.0)
+Download : http://velocity.apache.org/download.cgi
+
+Apache Jena 2.6.2 - includes arq 2.8.1, iri 0.7, log4j 1.2.13 (Apache 2.0)
+Download : http://www.apache.org/dist/jena/binaries/
+
+Androjena 1.0 (Apache 2.0)
+Download : https://code.google.com/p/androjena/
+
+Facebook4J (Apache 2.0)
+Download : http://facebook4j.org/
+
+Twitter4J (Apache 2.0)
+Download : http://twitter4j.org
+
+Linkedin-J (Apache 2.0)
+Download : https://code.google.com/p/linkedin-j/
+
+Google Analytics (Apache 2.0)
+Download : https://code.google.com/p/google-api-java-client/wiki/APIs#Google_Analytics_API
+
+Ibicoop (Ambientic SAS)
+Contact : contact@ambientic.com, http://www.ambientic.com/en/#contact
+
+Building with ANT
+-----------------
+
+In order to build the project using ant, please modify the following build variables in local.properties:
+
+- Signatures Location
+
+Also, you need to have ANDROID_HOME, JAVA_HOME environment variables set correctly.
+
+Building with Eclipse
+---------------------
+
+Manually copy everything from /external/android to /mselib/libapps/android/YartaLibrary/libs.

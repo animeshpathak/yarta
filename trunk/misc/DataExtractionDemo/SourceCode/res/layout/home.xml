@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+  <!--   
+	<ScrollView 		android:id="@+id/scrollWelComeTV"  
+	         			android:layout_height="10dip"   
+	        			android:layout_width="320dip"
+	        			android:scrollbars="vertical"
+	        			android:isScrollContainer="true"> 
+	         
+	  		<TextView   android:id="@+id/welcomeTV"  
+	        		    android:layout_width="320dip"
+				  		android:layout_height="wrap_content">
+	  		</TextView> 
+	</ScrollView>
+ -->		  
+<RelativeLayout
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="6dip">
+				
+	<ListView 	android:id="@+id/optionList"
+	            android:paddingLeft="5dip"
+	            android:layout_toRightOf="@+id/gridview"
+			    android:paddingTop="11dip"
+	            android:layout_width="wrap_content"
+	   			android:layout_height="300dip" />
+	 		
+	
+	<GridView 	xmlns:android="http://schemas.android.com/apk/res/android" 
+    			android:id="@id/gridview"
+			    android:layout_width="50dip" 
+			    android:layout_height="wrap_content"
+			    android:columnWidth="5dip"    
+			    android:paddingTop="10dip"
+			    android:numColumns="1"
+			    android:verticalSpacing="7dip"
+			    android:horizontalSpacing="0dp"
+			    android:stretchMode="columnWidth"
+			    android:scrollbars="vertical"
+			    android:gravity="center"/>
+			    
+	</RelativeLayout>		
+			
+	 		
+</LinearLayout>

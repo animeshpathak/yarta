@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="../../external/desktop/jena-2.6.2.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/velocity-1.7.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/slf4j-api-1.5.6.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/slf4j-log4j12-1.5.6.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/xercesImpl-2.7.1.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/iri-0.7.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/icu4j-3.4.4.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="../../external/desktop/commons-lang-2.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

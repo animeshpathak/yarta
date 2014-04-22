@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/ActivityTitle"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/player_player_info" />
+
+        <RelativeLayout
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
+            android:background="@drawable/card" >
+
+            <ImageView
+                android:id="@+id/player"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:src="@drawable/player_default" />
+
+            <Button
+                android:id="@+id/games"
+                style="@style/AppCarrotButton"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:onClick="onGames"
+                android:text="@string/player_games" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/games"
+                android:layout_toRightOf="@+id/player"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_n_a" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            style="@style/ActivityTitle"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/player_statistics" />
+
+        <LinearLayout
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
+            android:background="@drawable/card"
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/winrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_winrate" />
+
+            <TextView
+                android:id="@+id/scorepoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_scorepoints" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/ActivityTitle"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/player_time_statistics" />
+    </LinearLayout>
+
+</ScrollView>

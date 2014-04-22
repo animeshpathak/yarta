@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY foosball "http://yarta.gforge.inria.fr/ontologies/foosball.rdf#">
+  <!ENTITY mse "http://yarta.gforge.inria.fr/ontologies/mse.rdf#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&foosball;"
+         xmlns:mse="&mse;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;"
+		 xmlns:foosball="&foosball;">
+		 
+		 <!-- Ontology Information -->
+		 <owl:Ontology rdf:about="">
+			<owl:imports>
+				<owl:Ontology rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#"/>
+			</owl:imports>
+		</owl:Ontology>
+		
+		<!-- Classes -->
+		
+		<owl:Class rdf:about="#Match">
+			<rdfs:subClassOf rdf:resource="&mse;Event" />
+		</owl:Class>
+		
+		<!-- Datatype Properties -->
+		<owl:DatatypeProperty rdf:about="#time">
+			<rdfs:domain rdf:resource="#Match"/>
+			<rdfs:range rdf:resource="&xsd;long"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#totalGames">
+			<rdfs:domain rdf:resource="&mse;Person"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#winRate">
+			<rdfs:domain rdf:resource="&mse;Person"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#scorePoints">
+			<rdfs:domain rdf:resource="&mse;Person"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#nickName">
+			<rdfs:domain rdf:resource="&mse;Person"/>
+			<rdfs:range rdf:resource="&xsd;string"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#lastPlayed">
+			<rdfs:domain rdf:resource="&mse;Person"/>
+			<rdfs:range rdf:resource="&xsd;long"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#redScore">
+			<rdfs:domain rdf:resource="#Match"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#blueScore">
+			<rdfs:domain rdf:resource="#Match"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<!-- Object Properties -->
+		<owl:ObjectProperty rdf:about="#redO"
+                      rdfs:label="redO">
+			<rdfs:domain rdf:resource="#Match"/>
+			<rdfs:range rdf:resource="&mse;Person"/>
+		</owl:ObjectProperty>
+		
+		<owl:ObjectProperty rdf:about="#redD"
+                      rdfs:label="redO">
+			<rdfs:domain rdf:resource="#Match"/>
+			<rdfs:range rdf:resource="&mse;Person"/>
+		</owl:ObjectProperty>
+
+		<owl:ObjectProperty rdf:about="#blueO"
+                      rdfs:label="redO">
+			<rdfs:domain rdf:resource="#Match"/>
+			<rdfs:range rdf:resource="&mse;Person"/>
+		</owl:ObjectProperty>
+		
+		<owl:ObjectProperty rdf:about="#blueD"
+                      rdfs:label="redO">
+			<rdfs:domain rdf:resource="#Match"/>
+			<rdfs:range rdf:resource="&mse;Person"/>
+		</owl:ObjectProperty>
+</rdf:RDF>

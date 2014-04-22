@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml version="1.0">
+<!-- -->
+<!-- Free software (c) 2011 ALICE A.I. Foundation.   -->
+<!-- This program is open source code released under -->
+<!-- the terms of the GNU General Public License     -->
+<!-- as published by the Free Software Foundation.   -->
+<!-- Complies with AIML 1.0 Tag Set Specification -->
+<!-- as adopted by the ALICE A.I. Foundation.  -->
+<!-- Last modified 11/23/2011 -->
+<!-- -->
+
+
+<category>
+<pattern>HI</pattern>
+<template>Hi! I am InriAgent. I help you fix things.</template>
+</category>
+
+<category>
+<pattern>HELLO</pattern>
+<template>Hello, I am InriAgent. I help you fix things.</template>
+</category>
+
+<category>
+<pattern>WHAT IS INRIA</pattern>
+<template><set name="she">INRIA</set> is National Research Institute in Informatics and Automatics..</template>
+</category>
+
+<category>
+<pattern>WHO ARE YOU</pattern>
+<template>I am InriAgent. I help you fix things.</template>
+</category>
+
+<category>
+<pattern>WHAT DO YOU KNOW</pattern>
+<template>It depends. But primarily: I remember.</template>
+</category>
+
+<category>
+<pattern>WHAT * REMEMBER</pattern>
+<template>You can build me: try A = B</template>
+</category>
+
+<category>
+<pattern>*</pattern>
+<template>Be more specific!</template>
+</category>
+</aiml>

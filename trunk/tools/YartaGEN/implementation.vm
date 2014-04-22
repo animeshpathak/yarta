@@ -1,0 +1,145 @@
+package $Class.PackageName;
+
+#foreach( $Import in $Class.ImplementationImportList )
+import $Import;
+#end
+
+/**
+ * 
+ * $Class.Name class implementation.
+ *
+ */
+public class ${Class.Name}Impl extends YartaResource implements $Class.Name {
+
+	/**
+	 * Wraps a given node into a ${Class.Name}Impl object
+	 * 
+	 * @param	sam
+	 * 			The storage and access manager
+	 * @param	n
+	 * 			The node to wrap
+	 */
+	public ${Class.Name}Impl(ThinStorageAccessManager sam, Node n) {
+		super(sam, n);
+	}
+#if ($Class.isDerivedFrom('Person'))
+
+	/**
+	 * Constructor to store a node and its unique Id. Use this normally to
+	 * create a new node
+	 * 
+	 * @param	sam
+	 *			The storage and access manager
+	 * @param	uniqueRequestorId
+	 *			application unique identifier
+	 *
+	 * @throws	KBException
+	 */
+	public ${Class.Name}Impl(ThinStorageAccessManager sam, String uniqueRequestorId) {
+		super(sam, sam.createNewNode(#if(!$Class.New)$YartaResourcePackage#end${Class.Name}.typeURI));
+		this.setUserId(uniqueRequestorId);
+	}
+#end
+#foreach ( $DataProperty in $Class.DataProperties )
+#if ( $DataProperty.RangeU == 'Float' || $DataProperty.RangeU == 'Boolean' || $DataProperty.RangeU == 'Integer' || $DataProperty.RangeU == 'Long')
+
+	/**
+	 * @return the ${DataProperty.Name}. Null if value is not set.
+	 */
+	public $DataProperty.RangeU get${DataProperty.NameU}() {
+		return ${DataProperty.RangeU}.valueOf(sam.getDataProperty(kbNode, PROPERTY_$DataProperty.Name.toUpperCase()_URI,
+				String.class));
+	}
+
+	/**
+	 * Sets the ${DataProperty.Name}.
+	 * 
+	 * @param	$DataProperty.RangeL
+	 *			the ${DataProperty.Name} to be set
+	 */
+	public void set${DataProperty.NameU}($DataProperty.RangeU $DataProperty.NameL) {
+		sam.setDataProperty(kbNode, PROPERTY_$DataProperty.Name.toUpperCase()_URI, String.class,
+				String.valueOf($DataProperty.NameL));
+	}
+#else
+
+	/**
+	 * @return the ${DataProperty.Name}. Null if value is not set.
+	 */
+	public $DataProperty.RangeU get${DataProperty.NameU}() {
+		return sam.getDataProperty(kbNode, PROPERTY_$DataProperty.Name.toUpperCase()_URI,
+				${DataProperty.RangeU}.class);
+	}
+	
+	/**
+	 * Sets the ${DataProperty.Name}.
+	 * 
+	 * @param	$DataProperty.RangeL
+	 *			the ${DataProperty.Name} to be set
+	 */
+	public void set${DataProperty.NameU}($DataProperty.RangeU $DataProperty.RangeL) {
+		sam.setDataProperty(kbNode, PROPERTY_$DataProperty.Name.toUpperCase()_URI, ${DataProperty.RangeU}.class,
+				$DataProperty.RangeL);
+	}
+#end
+#end
+#foreach ( $ObjectProperty in $Class.ObjectProperties )
+
+	/**
+	 * Creates a "$ObjectProperty.NameL" edge between this $Class.Name.toLowerCase() and $ObjectProperty.RangeL
+	 * 
+	 * @param	$ObjectProperty.RangeL
+	 *			the $ObjectProperty.RangeU
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean add${ObjectProperty.NameU}($ObjectProperty.RangeU $ObjectProperty.RangeL) {
+		return sam.setObjectProperty(kbNode, PROPERTY_$ObjectProperty.Name.toUpperCase()_URI, $ObjectProperty.RangeL);
+	}
+
+	/**
+	 * deletes the "$ObjectProperty.NameL" link between this $Class.Name.toLowerCase() and $ObjectProperty.RangeL
+	 * 
+	 * @param	$ObjectProperty.RangeL
+	 * 			the $ObjectProperty.RangeU
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean delete${ObjectProperty.NameU}($ObjectProperty.RangeU $ObjectProperty.RangeL) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_$ObjectProperty.Name.toUpperCase()_URI, $ObjectProperty.RangeL);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "$ObjectProperty.NameL" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<$ObjectProperty.RangeU> get${ObjectProperty.NameU}() {
+		return sam.getObjectProperty(kbNode, PROPERTY_$ObjectProperty.Name.toUpperCase()_URI);
+	}
+#end
+#foreach ($InverseProperty in $Class.InverseProperties )
+#if ( ${InverseProperty.DomainU} == 'Resource' )
+
+	/**
+	 * inverse of {@link #get${InverseProperty.NameU}()}
+	 */
+	@Override
+	public Set<$InverseProperty.DomainU> get${InverseProperty.NameU}_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, PROPERTY_$InverseProperty.Name.toUpperCase()_URI);
+	}
+#else
+
+	/**
+	 * inverse of {@link #get${InverseProperty.NameU}()}
+	 */
+	@Override
+	public Set<$InverseProperty.DomainU> get${InverseProperty.NameU}_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, ${InverseProperty.DomainU}.PROPERTY_$InverseProperty.Name.toUpperCase()_URI);
+	}
+#end
+#end
+}

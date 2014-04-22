@@ -1,0 +1,48 @@
+package $PackageName;
+
+#foreach( $Import in $ImportList )
+import $Import;
+#end
+
+/**
+ * StorageAccessManager class extension.
+ */
+public class $StorageAcMgrClass extends StorageAccessManager {
+
+	/**
+	 * Basic constructor. Binds interfaces to implementation.
+	 */
+	public $StorageAcMgrClass() {
+		super();
+#foreach ($Class in $Classes)
+		bindInterfacetoImplementation(${Class.Name}.typeURI,
+				"${ResourcesPackage}.${Class.Name}Impl");
+#end
+	}
+#foreach ($Class in $Classes)
+
+#if ($Class.isDerivedFrom('Person'))
+	/**
+	 * Creates a new instance of ${Class.Name}
+	 */
+	public ${Class.Name} create${Class.Name}(String uniqueId) {
+		return (${Class.Name}) new ${Class.Name}Impl(this, uniqueId);
+	}
+#else
+	/**
+	 * Creates a new instance of ${Class.Name}
+	 */
+	public ${Class.Name} create${Class.Name}() {
+		return (${Class.Name}) new ${Class.Name}Impl(this,
+				createNewNode(${Class.Name}.typeURI));
+	}
+#end
+
+	/**
+	 * Returns all instances of type ${Class.Name}
+	 */
+	public Set<${Class.Name}> getAll${Class.Name}s() {
+		return getAllResourcesOfType(getPropertyNode(${Class.Name}.typeURI));
+	}
+#end
+}

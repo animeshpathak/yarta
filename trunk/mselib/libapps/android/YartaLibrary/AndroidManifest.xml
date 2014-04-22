@@ -1,0 +1,164 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fr.inria.arles.yarta"
+    android:versionCode="40"
+    android:versionName="1.40" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="14" />
+
+    <permission
+        android:name="fr.inria.arles.yarta.ACCESS_DATA"
+        android:label="Access Social Data"
+        android:permissionGroup="android.permission-group.PERSONAL_INFO"
+        android:protectionLevel="dangerous" />
+
+    <uses-permission android:name="fr.inria.arles.yarta.ACCESS_DATA" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Required for ibicoop to work properly -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <application
+        android:name="fr.inria.arles.yarta.android.library.YartaApp"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.EulaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.DashboardActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.AboutActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.ConsoleActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/console_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.SettingsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/settings_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.PluginLoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.ConversationActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/conversation_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.PluginsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/plugins_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.PeopleActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/people_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.GroupsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/groups_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.EventsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/events_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.PersonActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/person_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="fr.inria.arles.yarta.android.library.PersonActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.ConversationsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/conversations_title"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="fr.inria.arles.yarta.android.library.ConversationsActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/conversations_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeTransparent" >
+            <intent-filter>
+                <action android:name="fr.inria.arles.yarta.android.library.LoginActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="fr.inria.arles.yarta.android.library.NotifActivityHandler" />
+
+        <receiver android:name="fr.inria.arles.yarta.android.library.plugins.SyncAlarm" />
+
+        <service
+            android:name="fr.inria.arles.yarta.android.library.LibraryService"
+            android:permission="fr.inria.arles.yarta.ACCESS_DATA" >
+            <intent-filter>
+                <action android:name="fr.inria.arles.yarta.android.library.LibraryService" >
+                </action>
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="fr.inria.arles.yarta.android.library.BootUpReceiver"
+            android:enabled="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="fr.inria.arles.yarta.android.library.YartaContentProvider"
+            android:authorities="fr.inria.arles.yarta.android.library.YartaContentProvider"
+            android:exported="true"
+            android:permission="fr.inria.arles.yarta.ACCESS_DATA" >
+        </provider>
+    </application>
+
+</manifest>

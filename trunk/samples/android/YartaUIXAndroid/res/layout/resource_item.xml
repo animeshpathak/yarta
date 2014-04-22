@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true" >
+
+    <ImageView
+        android:id="@+id/itemIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="14dp"
+        android:contentDescription="@string/app_name"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/itemMessage"
+        android:layout_toRightOf="@+id/itemIcon" >
+
+        <TextView
+            android:id="@+id/itemTitle"
+            style="@style/AppActivityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="14.0sp" />
+
+        <TextView
+            android:id="@+id/itemInfo"
+            style="@style/AppActivityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:singleLine="true"
+            android:textSize="12.0sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/itemMessage"
+        style="@style/AppWhiteButton"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dip"
+        android:layout_toLeftOf="@+id/itemUpdate"
+        android:text="@string/main_message"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/itemUpdate"
+        style="@style/AppWhiteButton"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dip"
+        android:text="@string/main_update"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/itemCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dip"
+        android:visibility="gone" />
+
+</RelativeLayout>

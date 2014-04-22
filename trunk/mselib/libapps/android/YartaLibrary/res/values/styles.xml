@@ -1,0 +1,154 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="Theme.Sherlock.Light"></style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:textColor">@color/AppTextColor</item>
+        <item name="android:textSize">15sp</item>
+        <item name="actionBarStyle">@style/AppActionBar</item>
+        <item name="android:actionBarStyle">@style/AppActionBar</item>
+        <item name="android:windowBackground">@color/AppBackground</item>
+    </style>
+
+    <style name="AppThemeNoTitlebar" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppThemeTransparent" parent="AppThemeNoTitlebar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="AppActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/titlebar</item>
+        <item name="android:background">@drawable/titlebar</item>
+        <item name="android:icon">@drawable/icon_default</item>
+        <item name="icon">@drawable/icon_default</item>
+        <item name="android:titleTextStyle">@style/AppTitle</item>
+        <item name="titleTextStyle">@style/AppTitle</item>
+        <item name="indeterminateProgressStyle">@style/AppProgressBar</item>
+        <item name="android:indeterminateProgressStyle">@style/AppProgressBar</item>
+    </style>
+
+    <style name="AppTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/AppTitleColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AppProgressBar" parent="@android:style/Widget.Holo.ProgressBar">
+        <item name="android:maxHeight">32dp</item>
+        <item name="android:maxWidth">32dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="android:minWidth">32dp</item>
+    </style>
+
+    <style name="AppTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/AppTextColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ActivityText">
+        <item name="android:textColor">#3e3e3e</item>
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <style name="ActivitySubtext">
+        <item name="android:textColor">#7e7e7e</item>
+    </style>
+
+    <style name="AppContainer">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="ActivityTitle" parent="@style/AppContainer">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">@color/ActivityTitleTextColor</item>
+        <item name="android:background">@drawable/title_card</item>
+    </style>
+
+    <style name="AppGrayButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/button_white</item>
+        <item name="android:padding">0sp</item>
+        <item name="android:textColor">#7e7e7e</item>
+    </style>
+    
+    <style name="AppBrownButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/button_brown</item>
+        <item name="android:padding">0sp</item>
+        <item name="android:textColor">#ddd3bf</item>
+    </style>
+
+    <style name="AppCarrotButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:background">@drawable/button_carrot</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">0sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="AppBlueButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:textColor">@color/ActivityTitleTextColor</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">0sp</item>
+        <item name="android:background">@drawable/button_blue</item>
+    </style>
+
+    <style name="AppSideMenuItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="AppSideTitleItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppText" parent="@style/AppContainer">
+        <item name="android:background">@drawable/edit</item>
+        <item name="android:layout_marginLeft">0sp</item>
+        <item name="android:layout_marginRight">0sp</item>
+    </style>
+
+    <style name="AppDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowTitleStyle">@style/AppDialogTitle</item>
+        <item name="android:background">@color/AppBackground</item>
+    </style>
+
+    <style name="AppDialogTitle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/AppTitleColor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/titlebar</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+</resources>

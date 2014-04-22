@@ -1,0 +1,89 @@
+package $Class.PackageName;
+
+#foreach( $Import in $Class.InterfaceImportList )
+import $Import;
+#end
+
+/**
+ * 
+ * $Class.Name interface definition.
+ *
+ */
+public interface $Class.Name extends #foreach($SuperClass in $Class.SuperClasses)#if($SuperClass == $Class.Name)$YartaResourcePackage#end$SuperClass#if(!$foreach.last), #end#end {
+#if ($Class.New)
+	public static final String typeURI = ${MSEManagementClass}.baseMSEURI + "#$Class.Name";
+#end
+#foreach ( $DataProperty in $Class.DataProperties )
+
+	/** the URI for property $DataProperty.Name */
+#if (!$DataProperty.New)
+	public static final String PROPERTY_$DataProperty.Name.toUpperCase()_URI = baseMSEURI + "#$DataProperty.Name";
+#else
+	public static final String PROPERTY_$DataProperty.Name.toUpperCase()_URI = ${MSEManagementClass}.baseMSEURI + "#$DataProperty.Name";
+#end
+#end
+#foreach ( $ObjectProperty in $Class.ObjectProperties )
+
+	/** the URI for property $ObjectProperty.Name */
+#if (!$ObjectProperty.New)
+	public static final String PROPERTY_$ObjectProperty.Name.toUpperCase()_URI = baseMSEURI + "#$ObjectProperty.Name";
+#else
+	public static final String PROPERTY_$ObjectProperty.Name.toUpperCase()_URI = ${MSEManagementClass}.baseMSEURI + "#$ObjectProperty.Name";
+#end
+#end
+#foreach ( $DataProperty in $Class.DataProperties )
+#if ($DataProperty.Specific && $DataProperty.New)
+
+	/**
+	 * @return the $DataProperty.NameL
+	 */
+	public $DataProperty.RangeU get${DataProperty.NameU}();
+
+	/**
+	 * @param	$DataProperty.NameL
+	 * 			the $DataProperty.NameL to set
+	 */
+	public void set${DataProperty.NameU}($DataProperty.RangeU $DataProperty.NameL);
+#end
+#end
+#foreach ( $ObjectProperty in $Class.ObjectProperties )
+#if ($ObjectProperty.Specific && $ObjectProperty.New)
+
+	/**
+	 * Creates a "$ObjectProperty.NameL" edge between this $Class.Name.toLowerCase() and $ObjectProperty.RangeL
+	 * 
+	 * @param	$ObjectProperty.RangeL
+	 *			the $ObjectProperty.RangeU
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	public boolean add${ObjectProperty.NameU}($ObjectProperty.RangeU $ObjectProperty.RangeL);
+	
+	/**
+	 * deletes the "$ObjectProperty.NameL" link between this $Class.Name.toLowerCase() and $ObjectProperty.RangeL
+	 * 
+	 * @param	$ObjectProperty.RangeL
+	 * 			the $ObjectProperty.RangeU
+	 * @return true if success. false is something went wrong
+	 */
+	public boolean delete${ObjectProperty.NameU}($ObjectProperty.RangeU $ObjectProperty.RangeL);
+	
+	/**
+	 * 
+	 * @return	The list of resources linked by a "$ObjectProperty.NameL" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	public Set<$ObjectProperty.RangeU> get${ObjectProperty.NameU}();
+#end
+#end
+#foreach ($InverseProperty in $Class.InverseProperties )
+#if ($InverseProperty.Specific && $InverseProperty.New)
+
+	/**
+	 * inverse of {@link #get${InverseProperty.NameU}()}
+	 */
+	public Set<$InverseProperty.DomainU> get${InverseProperty.NameU}_inverse();
+#end
+#end
+}

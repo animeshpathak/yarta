@@ -1,0 +1,12 @@
+User stories regarding Yarta - Elgg collaboration
+
+Both Alice and Bob have an account on Elgg. Only Alice uses the mobile version which also integrates Yarta.
+
+Story 1. Alice updates her information using the mobile app. Bob sees her updates and is happy about it.
+Story 2. Bob adds Alice as a friend. Alice sees that and adds back Bob as a friend, both being happy about it.
+Story 3. Bob creates a group for developers. Alice joins the group. Bob sees that and is happy about it.
+Story 4. Bob was already a member of Alice's group which she created using the mobile app, but deciedes to leave the group. Alice sees that.
+
+
+Question 1. If there is a 1-1 mapping between users why not for groups as well? There should be one as well, since we want 4 to work.
+Question 2. If something gets updated in Yarta, should the Elgg be notified instantly? I suppose not, since networking can not happen on the UI thread (e.g. Person.setWebsite) so there should be a time-based pooling of information.

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <RelativeLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  
+  android:layout_height="fill_parent">
+
+<WebView  
+    		xmlns:android="http://schemas.android.com/apk/res/android"
+    		android:id="@+id/webview"
+    		android:layout_width="350dip"
+    		android:layout_height="375dip"
+    >
+</WebView>        
+
+<TextView  
+	
+	android:id="@+id/pinText"
+	android:layout_width="50dip"
+	android:layout_below="@id/webview"
+    android:layout_marginTop="20dip"
+    android:layout_height="wrap_content" 
+    android:text="PIN:"
+    ></TextView>
+
+<EditText   android:id="@+id/searchET"
+			android:layout_width="130dip"
+			android:layout_marginTop="5dip"
+			android:layout_below="@id/webview"
+			android:layout_toRightOf="@id/pinText"
+			android:layout_height="45dip"
+			android:singleLine="true"
+			android:textSize="15dip"></EditText>  
+
+<Button
+			android:id="@+id/SearchButton"
+			android:layout_marginTop="5dip"
+			android:layout_marginLeft="20dip"
+			android:layout_width="100dip"
+			android:layout_height="43dip"
+			android:layout_below="@id/webview"
+			android:layout_toRightOf="@id/searchET"
+			android:text="OK"
+			android:textSize="18sp"
+
+>
+</Button>
+    
+</RelativeLayout>

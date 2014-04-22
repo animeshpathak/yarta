@@ -1,0 +1,69 @@
+<project name="YartaGEN" default="dist" basedir=".">
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="${external}/desktop" />
+	
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${bin}" />
+	</target>
+	
+	<target name="compile" depends="init" description="compile the source">
+		<javac debug="true" debuglevel="lines,vars,source" target="1.6" srcdir="${src}" destdir="${bin}">
+			<classpath>
+				<fileset dir="${lib}">
+					<include name="jena-2.6.2.jar"/>
+					<include name="velocity-1.7.jar"/>
+					<include name="slf4j-api-1.5.6.jar"/>
+					<include name="slf4j-log4j12-1.5.6.jar"/>
+					<include name="log4j-1.2.13.jar"/>
+					<include name="xercesImpl-2.7.1.jar"/>
+					<include name="iri-0.7.jar"/>
+					<include name="icu4j-3.4.4.jar"/>
+					<include name="commons-collections-3.2.1.jar"/>
+					<include name="commons-lang-2.4.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="release" depends="compile">
+		
+		<!-- Copy all templates to dist -->
+		<copy todir="${dist}" overwrite="true">
+			<fileset dir=".">
+				<include name="*.vm"/>
+			</fileset>
+		</copy>
+		
+		<!-- Generate Jar file -->
+		<jar jarfile="${dist}/YartaGen.jar" basedir="${bin}">
+			<manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+				<attribute name="Class-Path" value="." />
+                <attribute name="Rsrc-Main-Class" value="fr.inria.arles.yarta.Main"/>
+				<attribute name="Rsrc-Class-Path" value="./ commons-lang-2.4.jar commons-collections-3.2.1.jar icu4j-3.4.4.jar iri-0.7.jar jena-2.6.2.jar velocity-1.7.jar slf4j-api-1.5.6.jar slf4j-log4j12-1.5.6.jar log4j-1.2.13.jar xercesImpl-2.7.1.jar"/>
+            </manifest>
+			
+			<zipfileset src="${lib}/jar-in-jar-loader.zip"/>
+			<fileset dir="${bin}"/>
+            <zipfileset dir="${lib}" includes="jena-2.6.2.jar"/>
+            <zipfileset dir="${lib}" includes="velocity-1.7.jar"/>
+            <zipfileset dir="${lib}" includes="slf4j-api-1.5.6.jar"/>
+            <zipfileset dir="${lib}" includes="slf4j-log4j12-1.5.6.jar"/>
+            <zipfileset dir="${lib}" includes="log4j-1.2.13.jar"/>
+            <zipfileset dir="${lib}" includes="xercesImpl-2.7.1.jar"/>
+            <zipfileset dir="${lib}" includes="iri-0.7.jar"/>
+            <zipfileset dir="${lib}" includes="icu4j-3.4.4.jar"/>
+            <zipfileset dir="${lib}" includes="commons-collections-3.2.1.jar"/>
+            <zipfileset dir="${lib}" includes="commons-lang-2.4.jar"/>
+		</jar>
+	</target>
+	
+	<target name="clean" description="clean up">
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+</project>
