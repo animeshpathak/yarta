@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include layout="@layout/header" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/userName"
+            style="@style/AppLoginEdit"
+            android:hint="@string/login_name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/userPassword"
+            style="@style/AppLoginEdit"
+            android:hint="@string/login_password"
+            android:inputType="textPassword" />
+
+        <CheckBox
+            android:id="@+id/rememberBe"
+            style="@style/AppLoginEdit"
+            android:text="@string/login_rememberme"
+            android:textColor="#9b9b9b" />
+
+        <Button
+            android:id="@+id/login"
+            style="@style/AppLoginButton"
+            android:onClick="onLoginButtonClicked"
+            android:text="@string/login_dologin" />
+    </LinearLayout>
+
+</RelativeLayout>

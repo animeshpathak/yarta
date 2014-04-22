@@ -1,0 +1,43 @@
+package $PackageName;
+
+import fr.inria.arles.yarta.knowledgebase.KBException;
+import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import fr.inria.arles.yarta.middleware.msemanagement.MSEManager;
+
+/**
+ * MSE Manager class extension.
+ */
+public class $MSEManagementClass extends MSEManager {
+	
+	/**
+	 * Base URI described in the custom ontology file.
+	 */
+	public static final String baseMSEURI = "$CustomURI";
+	
+	/**
+	 * Basic constructor.
+	 */
+	public MSEManagerEx() {
+		super();
+	}
+	
+	/**
+	 * Overridden initialize function to construct the custom storageAccessManager;
+	 */
+	@Override
+	public void initialize(String filePath, String policyPath, MSEApplication app, Object context)
+			throws KBException {
+		super.initialize(filePath, policyPath, userID, app, context);
+		
+		storageAccessManager = new ${StorageAcMgrClass}();
+		storageAccessManager.setKnowledgeBase(knowledgeBase);
+		storageAccessManager.setOwnerID(ownerUID);
+	}
+	
+	/**
+	 * Returns the factory instance used to create/list resources.
+	 */
+	public ${StorageAcMgrClass} get${StorageAcMgrClass}() {
+		return (${StorageAcMgrClass}) storageAccessManager;
+	}
+}

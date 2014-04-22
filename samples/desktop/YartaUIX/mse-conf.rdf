@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY demo-conference "http://yarta.gforge.inria.fr/ontologies/mse-conf.rdf#">
+  <!ENTITY mse "http://yarta.gforge.inria.fr/ontologies/mse.rdf#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&demo-conference;"
+         xmlns:mse="&mse;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;">
+		 
+		 <!-- Ontology Information -->
+		 <owl:Ontology rdf:about="">
+			<owl:imports>
+				<owl:Ontology rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#"/>
+			</owl:imports>
+		</owl:Ontology>
+		
+		<!-- Classes -->
+		<owl:Class rdf:about="#Building">
+			<rdfs:comment xml:lang="en">Some comments about the buildingSome comments about the building</rdfs:comment>
+			<rdfs:subClassOf rdf:resource="&mse;Place"/>
+		</owl:Class>
+		
+		<owl:Class rdf:about="#Speaker">
+			<rdfs:subClassOf rdf:resource="&mse;Person"/>
+		</owl:Class>
+		
+		<owl:Class rdf:about="#MegaSpeaker">
+			<rdfs:subClassOf rdf:resource="#Speaker"/>
+		</owl:Class>
+		
+		<owl:Class rdf:about="#Company">
+			<rdfs:subClassOf rdf:resource="&mse;Group"/>
+		</owl:Class>
+
+		<owl:Class rdf:about="#Conference">
+			<rdfs:subClassOf rdf:resource="&mse;Event"/>
+		</owl:Class>
+
+		<owl:Class rdf:about="#Presentation">
+			<rdfs:subClassOf rdf:resource="&mse;Event"/>
+		</owl:Class>
+
+		<owl:Class rdf:about="#Paper">
+			<rdfs:subClassOf rdf:resource="&mse;Content"/>
+		</owl:Class>
+		
+		<owl:Class rdf:about="#Mutant">
+			<rdfs:subClassOf rdf:resource="&mse;Person"/>
+			<rdfs:subClassOf rdf:resource="&mse;Agent"/>
+			<rdfs:subClassOf rdf:resource="&mse;Place"/>
+			<rdfs:subClassOf rdf:resource="&mse;Event"/>
+			<rdfs:subClassOf rdf:resource="&mse;Content"/>
+			<rdfs:subClassOf rdf:resource="&mse;Group"/>
+			<rdfs:subClassOf rdf:resource="&mse;Speaker"/>
+		</owl:Class>
+		
+		<!-- Annotation Properties -->
+		<owl:AnnotationProperty rdf:about="&rdfs;comment"/>
+		
+		<!-- Datatype Properties -->
+		
+		<owl:DatatypeProperty rdf:about="#type">
+			<rdfs:domain rdf:resource="#Building"/>
+			<rdfs:range rdf:resource="&xsd;string"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#number">
+			<rdfs:domain rdf:resource="#Building"/>
+			<rdfs:range rdf:resource="&xsd;float"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#gender">
+			<rdfs:domain rdf:resource="&mse;Person"/>
+			<rdfs:range rdf:resource="&xsd;string"/>
+		</owl:DatatypeProperty>
+		
+		<!-- Object Properties -->
+		<owl:ObjectProperty rdf:about="#isIncluded"
+                      rdfs:label="isIncluded">
+			<rdfs:domain rdf:resource="#Presentation"/>
+			<rdfs:range rdf:resource="#Conference"/>
+		</owl:ObjectProperty>
+		
+		<owl:ObjectProperty rdf:about="#contains"
+                      rdfs:label="isIncluded">
+			<rdfs:domain rdf:resource="#Presentation"/>
+			<rdfs:range rdf:resource="&mse;Topic"/>
+		</owl:ObjectProperty>
+		
+		<owl:ObjectProperty rdf:about="#follows"
+                      rdfs:label="follows">
+			<rdfs:domain rdf:resource="#Event"/>
+			<rdfs:range rdf:resource="&mse;Event"/>
+		</owl:ObjectProperty>
+</rdf:RDF>

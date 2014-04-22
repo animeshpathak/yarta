@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ui_background"
+>
+	<include android:id="@+id/main_titlebar" layout="@layout/header" />
+	<LinearLayout
+	    android:id="@+id/buttonContainer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:orientation="horizontal"
+	    android:layout_marginLeft="5dp"
+	    android:layout_marginRight="5dp"
+	    android:layout_marginBottom="5dp"
+	>
+		<Button
+			android:id="@+id/setButton"
+			android:layout_weight="1"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/resources_set"
+			android:background="@drawable/buttonstates"
+			android:textColor="#ffffff"
+		/>
+		<Button
+			android:id="@+id/cancelButton"
+			android:layout_weight="1"
+			android:text="@string/resources_cancel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/buttonstates"
+			android:textColor="#ffffff"
+		/>
+	</LinearLayout>
+	
+	<ScrollView
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_above="@+id/buttonContainer"
+	    android:layout_marginLeft="5dp"
+	    android:layout_marginRight="5dp"
+	    android:layout_marginTop="10dp"
+	    android:layout_below="@+id/main_titlebar"
+	>
+		<LinearLayout
+		    android:id="@+id/propertiesContainer"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:layout_marginLeft="10dp"
+		    android:layout_marginRight="10dp"
+		/>
+	</ScrollView>
+</RelativeLayout>

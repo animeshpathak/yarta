@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/AppActivityBackground" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/ActivityTitle"
+       
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/player_player_info" />
+
+        <RelativeLayout
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-6dp"
+            android:background="@drawable/content_card" >
+
+            <ImageView
+                android:id="@+id/player"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:src="@drawable/player_default" />
+
+            <Button
+                android:id="@+id/games"
+                style="@style/AppGrayButton"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:onClick="onGames"
+                android:text="@string/player_games" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/games"
+                android:layout_toRightOf="@+id/player"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/player_n_a" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            style="@style/ActivityTitle"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/player_statistics" />
+
+        <LinearLayout
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-6dp"
+            android:background="@drawable/content_card"
+            android:orientation="horizontal"
+            android:padding="5dp" >
+
+            <RelativeLayout
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <fr.inria.arles.foosball.CircleProgress
+                    android:id="@+id/winrate"
+                    android:layout_width="80sp"
+                    android:layout_height="80sp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/AppBlueColor"
+                    android:indeterminate="false"
+                    android:max="100" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24sp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/winratetext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/AppBlueColor"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="top"
+                        android:gravity="top"
+                        android:text="%"
+                        android:textColor="@color/AppBlueColor"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/winrate"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/player_winrate"
+                    android:textColor="@color/AppBlueColor" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <fr.inria.arles.foosball.CircleProgress
+                    android:id="@+id/scorepoints"
+                    android:layout_width="80sp"
+                    android:layout_height="80sp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/AppRedColor"
+                    android:indeterminate="false"
+                    android:max="10" />
+
+                <TextView
+                    android:id="@+id/scorepointstext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20sp"
+                    android:text="0"
+                    android:textColor="@color/AppRedColor"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/scorepoints"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/player_scorepoints"
+                    android:textColor="@color/AppRedColor" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/ActivityTitle"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/player_time_statistics"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</ScrollView>

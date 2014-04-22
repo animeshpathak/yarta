@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="AppBackground">#f8f8f8</color>
+    <color name="AppTextColor">#747474</color>
+    <color name="AppTextColorStrong">#323232</color>
+    <color name="AppTitleBackground">#00aad3</color>
+    <color name="AppDrawerBackground">#919191</color>
+    <color name="AppDrawerSelected">#55a9cd</color>
+    <color name="AppTitleTextColor">#ffffff</color>
+    <color name="AppContentColor">#ffffff</color>
+    <color name="ListNormal">#00000000</color>
+    <color name="ListSelected">#3355a9cd</color>
+    <color name="AppSubtitleBackground">#dddddd</color>
+    <color name="AppSubtitleTextColor">#444444</color>
+    <color name="AppButtonBgStart">#f58c1e</color>
+    <color name="AppButtonBgEnd">#e88014</color>
+    <color name="AppButtonStroke">#99f58c1e</color>
+    <color name="AppGrayBgStart">#efeff0</color>
+    <color name="AppGrayBgEnd">#e1e2e3</color>
+    <color name="AppGrayStroke">#99c1c1c1</color>
+    <color name="ActivityTitleTextColor">#51504d</color>
+    <color name="ActivityTitleBackground">#dcdad6</color>
+
+</resources>

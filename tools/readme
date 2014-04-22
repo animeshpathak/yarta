@@ -1,0 +1,7 @@
+Tools
+=====
+
+This is the Tools source tree which is organized as follows:
+
+- root
+	+ YartaGEN (console tool to generate Java code based on input RDF model)

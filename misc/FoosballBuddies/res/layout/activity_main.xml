@@ -1,0 +1,148 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/ActivityTitle"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/main_player_profile" />
+
+        <RelativeLayout
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
+            android:clickable="true"
+            android:onClick="onPlayerProfile"
+            android:background="@drawable/card" >
+
+            <ImageView
+                android:id="@+id/player"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:src="@drawable/player_default" />
+
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_more" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/more"
+                android:layout_toRightOf="@+id/player"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/info"
+                    android:layout_width="wrap_content"
+                    android:text="@string/player_n_a"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin" >
+
+            <Button
+                style="@style/AppCarrotButton"
+                android:layout_width="0sp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:onClick="onBuddies"
+                android:text="@string/main_buddies" />
+
+            <Button
+                style="@style/AppCarrotButton"
+                android:layout_width="0sp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:onClick="onQuickMatch"
+                android:text="@string/main_quick_match" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/ActivityTitle"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/main_latest_undisputed_match" />
+
+        <RelativeLayout
+            android:id="@+id/noLatestMatch"
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="-3dp"
+            android:background="@drawable/card"
+            android:padding="5dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/main_no_latest_match" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/latestMatch"
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="-3dp"
+            android:background="@drawable/card"
+            android:padding="5dp"
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/finishButton"
+                style="@style/AppCarrotButton"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:onClick="onFinishMatch"
+                android:text="@string/main_match_finish" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/finishButton"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/redTeam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/blueTeam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

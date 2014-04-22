@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/eulaAcceptance"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/AppContentColor"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <CheckBox
+            android:id="@+id/anonimousCheck"
+            style="@style/ActivitySubtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:gravity="left|center_vertical"
+            android:text="@string/eula_anonimous_usage"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_refuseEula"
+                style="@style/AppGrayButton"
+                android:layout_width="fill_parent"
+                android:layout_height="32dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1.0"
+                android:onClick="onEulaRefuse"
+                android:text="@string/eula_first_run_ignore" />
+
+            <Button
+                android:id="@+id/btn_acceptEula"
+                style="@style/AppBrownButton"
+                android:layout_width="fill_parent"
+                android:layout_height="32dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1.0"
+                android:onClick="onEulaAccept"
+                android:text="@string/eula_first_run_accept" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/eula_webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/eulaAcceptance"
+        android:background="#FF292929"
+        android:scrollbarAlwaysDrawHorizontalTrack="false"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:scrollbarStyle="outsideOverlay" />
+
+</RelativeLayout>

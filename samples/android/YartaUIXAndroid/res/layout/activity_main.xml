@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DashboardActivity" >
+
+    <include
+        android:id="@+id/main_titlebar"
+        layout="@layout/header" />
+
+    <Button
+        android:id="@+id/main_create"
+        style="@style/AppBlueButton"
+        android:onClick="onNewClicked"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="5dp"
+        android:enabled="false"
+        android:text="@string/main_create_new" />
+
+    <ListView
+        android:id="@+id/resourceList"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/main_create"
+        android:layout_below="@+id/main_titlebar"
+        android:cacheColorHint="#00000000" />
+
+</RelativeLayout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:mse="http://yarta.gforge.inria.fr/ontologies/mse.rdf#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" >
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ilie.halip@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ilie.halip@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ilie.halip</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_598942437@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000152877135@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000330028126@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000152877135@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mcimpoesu@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mcimpoesu@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mcimpoesu</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_598942437@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000330028126@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dgreceanu@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dgreceanu@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dgreceanu</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_595332910@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1316140936@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">radu.chirita.5@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">radu.chirita.5@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">radu.chirita.5</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_598942437@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000152877135@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000330028126@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_595332910@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rata.george@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rata.george@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rata.george</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000330028126@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_598942437@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ionela.vrabie2@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ionela.vrabie2@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ionela.vrabie2</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000152877135@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dragos.moinescu@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dragos.moinescu@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dragos.moinescu</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_595332910@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_598942437@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000152877135@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1316140936@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tziuname@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tziuname@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tziuname</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000330028126@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">stefangeorgeclaudiu@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">stefangeorgeclaudiu@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">stefangeorgeclaudiu</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_598942437@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000152877135@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000330028126@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com"/>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000034362722@facebook.com">
+		<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person"/>
+		<mse:email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">camelia.barbu.56@facebook.com</mse:email>
+		<mse:userId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">camelia.barbu.56@facebook.com</mse:userId>
+		<mse:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">camelia.barbu.56</mse:name>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_515466083@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_598942437@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_1841530224@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000152877135@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000330028126@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000498102988@facebook.com"/>
+		<mse:knows rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Person_100000547705568@facebook.com"/>
+	</rdf:Description>
+</rdf:RDF>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginLeft="14dp"
+    android:layout_marginRight="14dp"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/ActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="false"
+        android:text="@string/console_title" />
+
+    <TextView
+        style="@style/ActivitySubtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="false"
+        android:text="@string/console_info" />
+
+    <TextView
+        android:id="@+id/serviceStatus"
+        style="@style/ActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:singleLine="false"
+        android:text="@string/console_service_status_not_running" />
+
+    <TextView
+        style="@style/ActivitySubtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="false"
+        android:text="@string/console_service_status_info" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/stopService"
+            style="@style/AppGrayButton"
+            android:layout_width="0sp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:onClick="onClickStopService"
+            android:text="@string/console_stop_service" />
+
+        <Button
+            android:id="@+id/startService"
+            style="@style/AppBlueButton"
+            android:layout_width="0sp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:onClick="onClickStartService"
+            android:text="@string/console_start_service" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/ActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:singleLine="false"
+        android:text="@string/console_library_files" />
+
+    <TextView
+        style="@style/ActivitySubtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="false"
+        android:text="@string/console_library_files_info" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/dumpPolicy"
+            style="@style/AppGrayButton"
+            android:layout_width="0sp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:onClick="onClickDumpPolicy"
+            android:text="@string/console_dump_policy" />
+
+        <Button
+            android:id="@+id/dumpOntology"
+            style="@style/AppGrayButton"
+            android:layout_width="0sp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:onClick="onClickDumpOntology"
+            android:text="@string/console_dump_ontology" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fr.inria.arles.giveaway"
+    android:versionCode="11"
+    android:versionName="1.0.10" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <permission
+        android:name="fr.inria.arles.yarta.ACCESS_DATA"
+        android:label="Access Social Data"
+        android:permissionGroup="android.permission-group.PERSONAL_INFO"
+        android:protectionLevel="dangerous" />
+    <!-- Required to access YartaLibrary -->
+    <uses-permission android:name="fr.inria.arles.yarta.ACCESS_DATA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".DonationApp"
+        android:allowBackup="true"
+        android:persistent="true"
+        android:configChanges="orientation|keyboardHidden|screenSize"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".RequirementsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoTitlebar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".NewsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDrawer" >
+        </activity>
+        <activity
+            android:name=".ItemActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/additem_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".PhotoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>
