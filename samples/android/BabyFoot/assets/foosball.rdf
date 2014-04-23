@@ -26,35 +26,14 @@
 		<owl:Class rdf:about="#Match">
 			<rdfs:subClassOf rdf:resource="&mse;Event" />
 		</owl:Class>
+
+		<owl:Class rdf:about="#Player">
+			<rdfs:subClassOf rdf:resource="&mse;Person" />
+		</owl:Class>
 		
 		<!-- Datatype Properties -->
 		<owl:DatatypeProperty rdf:about="#time">
 			<rdfs:domain rdf:resource="#Match"/>
-			<rdfs:range rdf:resource="&xsd;long"/>
-		</owl:DatatypeProperty>
-		
-		<owl:DatatypeProperty rdf:about="#totalGames">
-			<rdfs:domain rdf:resource="&mse;Person"/>
-			<rdfs:range rdf:resource="&xsd;int"/>
-		</owl:DatatypeProperty>
-		
-		<owl:DatatypeProperty rdf:about="#winRate">
-			<rdfs:domain rdf:resource="&mse;Person"/>
-			<rdfs:range rdf:resource="&xsd;int"/>
-		</owl:DatatypeProperty>
-		
-		<owl:DatatypeProperty rdf:about="#scorePoints">
-			<rdfs:domain rdf:resource="&mse;Person"/>
-			<rdfs:range rdf:resource="&xsd;int"/>
-		</owl:DatatypeProperty>
-		
-		<owl:DatatypeProperty rdf:about="#nickName">
-			<rdfs:domain rdf:resource="&mse;Person"/>
-			<rdfs:range rdf:resource="&xsd;string"/>
-		</owl:DatatypeProperty>
-		
-		<owl:DatatypeProperty rdf:about="#lastPlayed">
-			<rdfs:domain rdf:resource="&mse;Person"/>
 			<rdfs:range rdf:resource="&xsd;long"/>
 		</owl:DatatypeProperty>
 		
@@ -67,29 +46,53 @@
 			<rdfs:domain rdf:resource="#Match"/>
 			<rdfs:range rdf:resource="&xsd;int"/>
 		</owl:DatatypeProperty>
+
+		<owl:DatatypeProperty rdf:about="#totalGames">
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#winRate">
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#scorePoints">
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="&xsd;int"/>
+		</owl:DatatypeProperty>
+		
+		<owl:DatatypeProperty rdf:about="#nickName">
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="&xsd;string"/>
+		</owl:DatatypeProperty>
 		
 		<!-- Object Properties -->
 		<owl:ObjectProperty rdf:about="#redO"
                       rdfs:label="redO">
-			<rdfs:domain rdf:resource="#Match"/>
-			<rdfs:range rdf:resource="&mse;Person"/>
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="#Match"/>
+			<rdfs:subPropertyOf rdf:resource="&mse;isAttending"/>
 		</owl:ObjectProperty>
 		
 		<owl:ObjectProperty rdf:about="#redD"
                       rdfs:label="redO">
-			<rdfs:domain rdf:resource="#Match"/>
-			<rdfs:range rdf:resource="&mse;Person"/>
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="#Match"/>
+			<rdfs:subPropertyOf rdf:resource="&mse;isAttending"/>
 		</owl:ObjectProperty>
 
 		<owl:ObjectProperty rdf:about="#blueO"
                       rdfs:label="redO">
-			<rdfs:domain rdf:resource="#Match"/>
-			<rdfs:range rdf:resource="&mse;Person"/>
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="#Match"/>
+			<rdfs:subPropertyOf rdf:resource="&mse;isAttending"/>
 		</owl:ObjectProperty>
 		
 		<owl:ObjectProperty rdf:about="#blueD"
                       rdfs:label="redO">
-			<rdfs:domain rdf:resource="#Match"/>
-			<rdfs:range rdf:resource="&mse;Person"/>
+			<rdfs:domain rdf:resource="#Player"/>
+			<rdfs:range rdf:resource="#Match"/>
+			<rdfs:subPropertyOf rdf:resource="&mse;isAttending"/>
 		</owl:ObjectProperty>
 </rdf:RDF>

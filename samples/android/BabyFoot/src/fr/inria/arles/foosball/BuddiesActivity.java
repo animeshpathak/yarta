@@ -9,8 +9,8 @@ import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.foosball.R;
 import fr.inria.arles.foosball.PlayersApp.Observer;
-import fr.inria.arles.foosball.resources.Person;
-import fr.inria.arles.foosball.resources.PersonImpl;
+import fr.inria.arles.foosball.resources.Player;
+import fr.inria.arles.foosball.resources.PlayerImpl;
 import fr.inria.arles.foosball.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
@@ -35,7 +35,7 @@ public class BuddiesActivity extends BaseActivity implements
 		setContentView(R.layout.activity_buddies);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		persons = new ArrayList<Person>();
+		players = new ArrayList<Player>();
 
 		adapter = new PlayerListAdapter(this);
 
@@ -164,33 +164,31 @@ public class BuddiesActivity extends BaseActivity implements
 
 	private void refreshPlayersList() {
 		try {
-			persons.clear();
+			players.clear();
 
 			Set<Agent> agents = getSAM().getMe().getKnows();
 
 			for (Agent agent : agents) {
-				Person p = (Person) agent;
-
-				persons.add(new PersonImpl(getSAM(), new MSEResource(p
-						.getUniqueId(), Person.typeURI)));
+				players.add(new PlayerImpl(getSAM(), new MSEResource(agent
+						.getUniqueId(), Player.typeURI)));
 
 			}
 		} catch (Exception ex) {
 		}
 
-		adapter.setItems(persons);
+		adapter.setItems(players);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Person selected = persons.get(position);
+		Player selected = players.get(position);
 		Intent intent = new Intent(this, PlayerActivity.class);
 		intent.putExtra(PlayerActivity.PlayerGUID, selected.getUniqueId());
 		startActivity(intent);
 	}
 
-	private List<Person> persons;
+	private List<Player> players;
 	private PlayerListAdapter adapter;
 
 	@Override
