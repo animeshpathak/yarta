@@ -27,7 +27,7 @@ public class $MSEManagementClass extends MSEManager {
 	@Override
 	public void initialize(String filePath, String policyPath, MSEApplication app, Object context)
 			throws KBException {
-		super.initialize(filePath, policyPath, userID, app, context);
+		super.initialize(filePath, policyPath, app, context);
 		
 		storageAccessManager = new ${StorageAcMgrClass}();
 		storageAccessManager.setKnowledgeBase(knowledgeBase);
