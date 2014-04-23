@@ -1,16 +1,18 @@
 package fr.inria.arles.foosball.resources;
 
 import fr.inria.arles.foosball.msemanagement.MSEManagerEx;
+import fr.inria.arles.yarta.resources.Person;
 import fr.inria.arles.yarta.resources.Agent;
 import java.util.Set;
 import fr.inria.arles.yarta.resources.Resource;
 
 /**
  * 
- * Person interface definition.
+ * Player interface definition.
  *
  */
-public interface Person extends Resource, fr.inria.arles.yarta.resources.Person {
+public interface Player extends Resource, Agent, Person {
+	public static final String typeURI = MSEManagerEx.baseMSEURI + "#Player";
 
 	/** the URI for property lastName */
 	public static final String PROPERTY_LASTNAME_URI = baseMSEURI + "#lastName";
@@ -36,9 +38,6 @@ public interface Person extends Resource, fr.inria.arles.yarta.resources.Person 
 	/** the URI for property winRate */
 	public static final String PROPERTY_WINRATE_URI = MSEManagerEx.baseMSEURI + "#winRate";
 
-	/** the URI for property lastPlayed */
-	public static final String PROPERTY_LASTPLAYED_URI = MSEManagerEx.baseMSEURI + "#lastPlayed";
-
 	/** the URI for property firstName */
 	public static final String PROPERTY_FIRSTNAME_URI = baseMSEURI + "#firstName";
 
@@ -57,11 +56,23 @@ public interface Person extends Resource, fr.inria.arles.yarta.resources.Person 
 	/** the URI for property hasInterest */
 	public static final String PROPERTY_HASINTEREST_URI = baseMSEURI + "#hasInterest";
 
+	/** the URI for property blueO */
+	public static final String PROPERTY_BLUEO_URI = MSEManagerEx.baseMSEURI + "#blueO";
+
 	/** the URI for property isMemberOf */
 	public static final String PROPERTY_ISMEMBEROF_URI = baseMSEURI + "#isMemberOf";
 
+	/** the URI for property redO */
+	public static final String PROPERTY_REDO_URI = MSEManagerEx.baseMSEURI + "#redO";
+
 	/** the URI for property participatesTo */
 	public static final String PROPERTY_PARTICIPATESTO_URI = baseMSEURI + "#participatesTo";
+
+	/** the URI for property redD */
+	public static final String PROPERTY_REDD_URI = MSEManagerEx.baseMSEURI + "#redD";
+
+	/** the URI for property blueD */
+	public static final String PROPERTY_BLUED_URI = MSEManagerEx.baseMSEURI + "#blueD";
 
 	/** the URI for property isLocated */
 	public static final String PROPERTY_ISLOCATED_URI = baseMSEURI + "#isLocated";
@@ -114,33 +125,110 @@ public interface Person extends Resource, fr.inria.arles.yarta.resources.Person 
 	public void setWinRate(Integer winrate);
 
 	/**
-	 * @return the lastplayed
+	 * Creates a "blueo" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
 	 */
-	public Long getLastPlayed();
+	public boolean addBlueO(Match match);
+	
+	/**
+	 * deletes the "blueo" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
+	 */
+	public boolean deleteBlueO(Match match);
+	
+	/**
+	 * 
+	 * @return	The list of resources linked by a "blueo" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	public Set<Match> getBlueO();
 
 	/**
-	 * @param	lastplayed
-	 * 			the lastplayed to set
+	 * Creates a "redo" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
 	 */
-	public void setLastPlayed(Long lastplayed);
+	public boolean addRedO(Match match);
+	
+	/**
+	 * deletes the "redo" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
+	 */
+	public boolean deleteRedO(Match match);
+	
+	/**
+	 * 
+	 * @return	The list of resources linked by a "redo" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	public Set<Match> getRedO();
 
 	/**
-	 * inverse of {@link #getBlueO()}
+	 * Creates a "redd" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
 	 */
-	public Set<Match> getBlueO_inverse();
+	public boolean addRedD(Match match);
+	
+	/**
+	 * deletes the "redd" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
+	 */
+	public boolean deleteRedD(Match match);
+	
+	/**
+	 * 
+	 * @return	The list of resources linked by a "redd" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	public Set<Match> getRedD();
 
 	/**
-	 * inverse of {@link #getRedO()}
+	 * Creates a "blued" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
 	 */
-	public Set<Match> getRedO_inverse();
-
+	public boolean addBlueD(Match match);
+	
 	/**
-	 * inverse of {@link #getRedD()}
+	 * deletes the "blued" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
 	 */
-	public Set<Match> getRedD_inverse();
-
+	public boolean deleteBlueD(Match match);
+	
 	/**
-	 * inverse of {@link #getBlueD()}
+	 * 
+	 * @return	The list of resources linked by a "blued" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
 	 */
-	public Set<Match> getBlueD_inverse();
+	public Set<Match> getBlueD();
 }

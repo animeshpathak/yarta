@@ -7,8 +7,8 @@ import java.util.Map;
 
 import fr.inria.arles.foosball.util.JobRunner.Job;
 import fr.inria.arles.foosball.resources.Match;
-import fr.inria.arles.foosball.resources.Person;
-import fr.inria.arles.foosball.resources.PersonImpl;
+import fr.inria.arles.foosball.resources.Player;
+import fr.inria.arles.foosball.resources.PlayerImpl;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
 import android.content.Intent;
@@ -21,7 +21,7 @@ public class GamesActivity extends BaseActivity implements
 		AdapterView.OnItemClickListener {
 
 	public static final String PlayerGUID = "PlayerGUID";
-	private Person player;
+	private Player player;
 	private MatchListAdapter adapter;
 
 	private List<Match> matches;
@@ -39,8 +39,8 @@ public class GamesActivity extends BaseActivity implements
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 
-		player = new PersonImpl(getSAM(), new MSEResource(getIntent()
-				.getStringExtra(PlayerGUID), Person.typeURI));
+		player = new PlayerImpl(getSAM(), new MSEResource(getIntent()
+				.getStringExtra(PlayerGUID), Player.typeURI));
 
 		execute(new Job() {
 
@@ -48,10 +48,10 @@ public class GamesActivity extends BaseActivity implements
 			public void doWork() {
 				matches = new ArrayList<Match>();
 
-				matches.addAll(player.getBlueD_inverse());
-				matches.addAll(player.getBlueO_inverse());
-				matches.addAll(player.getRedD_inverse());
-				matches.addAll(player.getRedO_inverse());
+				matches.addAll(player.getBlueD());
+				matches.addAll(player.getBlueO());
+				matches.addAll(player.getRedD());
+				matches.addAll(player.getRedO());
 
 				Map<Match, Long> matchTimes = new HashMap<Match, Long>();
 

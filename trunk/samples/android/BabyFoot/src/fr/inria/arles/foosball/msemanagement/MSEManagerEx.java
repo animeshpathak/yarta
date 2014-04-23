@@ -25,8 +25,7 @@ public class MSEManagerEx extends MSEManager {
 	 * Overridden initialize function to construct the custom storageAccessManager;
 	 */
 	@Override
-	public void initialize(String filePath, String policyPath,
-			MSEApplication app, Object context)
+	public void initialize(String filePath, String policyPath, MSEApplication app, Object context)
 			throws KBException {
 		super.initialize(filePath, policyPath, app, context);
 		

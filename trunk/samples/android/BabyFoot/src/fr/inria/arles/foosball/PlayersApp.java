@@ -70,7 +70,6 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 
 		case Message.TYPE_PUSH:
 			notifyAllObservers();
-			onResourcePush(id, message);
 			break;
 		}
 		return false;
@@ -166,50 +165,10 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 			sam.setOwnerID(userId);
 
 			notifyAllObservers();
-
-			new Thread(sendHelloRunnable).start();
 		} else {
 			uninitMSE();
 		}
 	}
-
-	public void submitResource(final String resourceId) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				getCOMM().sendResource(PlayersApp.InriaID, resourceId);
-			}
-		}).start();
-	}
-
-	private void onResourcePush(String id, Message message) {
-		new Thread(requestUpdateRunnable).start();
-	}
-
-	private Runnable requestUpdateRunnable = new Runnable() {
-
-		@Override
-		public void run() {
-			try {
-				getCOMM().sendUpdateRequest(InriaID);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	};
-
-	private Runnable sendHelloRunnable = new Runnable() {
-
-		@Override
-		public void run() {
-			try {
-				getCOMM().sendHello(InriaID);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	};
 
 	private String baseOntologyFilePath = "foosball.rdf";
 	private String basePolicyFilePath = "policies";

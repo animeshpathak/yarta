@@ -3,7 +3,7 @@ package fr.inria.arles.foosball;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.arles.foosball.resources.Person;
+import fr.inria.arles.foosball.resources.Player;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,21 +20,21 @@ public class PlayerListAdapter extends BaseAdapter {
 	}
 
 	private Context context;
-	private List<Person> persons;
+	private List<Player> players;
 
 	public PlayerListAdapter(Context context) {
 		this.context = context;
-		persons = new ArrayList<Person>();
+		players = new ArrayList<Player>();
 	}
 
 	@Override
 	public int getCount() {
-		return persons.size();
+		return players.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return persons.get(position);
+		return players.get(position);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class PlayerListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Person person = (Person) getItem(position);
+		Player player = (Player) getItem(position);
 
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
@@ -60,16 +60,16 @@ public class PlayerListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		String nickName = person.getNickName();
+		String nickName = player.getNickName();
 
 		if (nickName == null) {
-			nickName = person.getUserId().replace("@inria.fr", "");
+			nickName = player.getUserId().replace("@inria.fr", "");
 		}
 		holder.name.setText(nickName);
 
 		int totalGames = 0;
 		try {
-			totalGames = person.getTotalGames();
+			totalGames = player.getTotalGames();
 		} catch (Exception ex) {
 		}
 		holder.info.setText(String.format(
@@ -79,9 +79,9 @@ public class PlayerListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	public void setItems(List<Person> persons) {
-		this.persons.clear();
-		this.persons.addAll(persons);
+	public void setItems(List<Player> players) {
+		this.players.clear();
+		this.players.addAll(players);
 		notifyDataSetChanged();
 	}
 }

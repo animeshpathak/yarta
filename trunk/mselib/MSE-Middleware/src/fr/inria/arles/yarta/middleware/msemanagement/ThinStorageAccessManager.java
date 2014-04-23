@@ -489,13 +489,30 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 	 *            The node who is the "range" of this property
 	 * @param propertyUri
 	 *            The URI of the property needed
-	 * @param c
-	 *            The class to cast the
 	 * @return the list of objects who are linked to this node by this property.
 	 *         Null if something went wrong.
 	 */
 	public <K> Set<K> getObjectProperty_inverse(Node resourceNode,
 			String propertyUri) {
+		return getObjectProperty_inverse(resourceNode, propertyUri, null);
+	}
+
+	/**
+	 * Inverse of {@link #getObjectProperty(Node, String)}. Given an node and a
+	 * property, it finds all nodes which are linked to this node via this
+	 * property. Useful for finding out "who knows me" etc.
+	 * 
+	 * @param resourceNode
+	 *            The node who is the "range" of this property
+	 * @param propertyUri
+	 *            The URI of the property needed
+	 * @param c
+	 *            the class upon which the resources needs to be casted
+	 * @return the list of objects who are linked to this node by this property.
+	 *         Null if something went wrong.
+	 */
+	public <K> Set<K> getObjectProperty_inverse(Node resourceNode,
+			String propertyUri, Class<K> c) {
 		try {
 			tempTriples = thinKnowledgeBase.getPropertySubjectAsTriples(
 					getPropertyNode(propertyUri), resourceNode, this.ownerId);
@@ -517,19 +534,23 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 
 			for (Triple tempTriple : tempTriples) {
 				try {
-
 					Node subject = thinKnowledgeBase
 							.getResourceByURINoPolicies(tempTriple.getSubject()
 									.getName());
 					String className = getJavaClassNameFor(subject.getType());
 
+					if (c != null) {
+						// TODO: hacky
+						className = c.getCanonicalName() + "Impl";
+					}
+
 					Object instance = getCached(className, subject.getName());
 
 					if (instance == null) {
-						Class<? extends YartaResource> c = (Class<? extends YartaResource>) Class
+						Class<? extends YartaResource> cls = (Class<? extends YartaResource>) Class
 								.forName(className);
 
-						Constructor<? extends YartaResource> cons = c
+						Constructor<? extends YartaResource> cons = cls
 								.getConstructor(new Class[] {
 										ThinStorageAccessManager.class,
 										Node.class });

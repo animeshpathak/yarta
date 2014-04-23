@@ -15,20 +15,20 @@ import fr.inria.arles.yarta.resources.Topic;
 
 /**
  * 
- * Person class implementation.
+ * Player class implementation.
  *
  */
-public class PersonImpl extends YartaResource implements Person {
+public class PlayerImpl extends YartaResource implements Player {
 
 	/**
-	 * Wraps a given node into a PersonImpl object
+	 * Wraps a given node into a PlayerImpl object
 	 * 
 	 * @param	sam
 	 * 			The storage and access manager
 	 * @param	n
 	 * 			The node to wrap
 	 */
-	public PersonImpl(ThinStorageAccessManager sam, Node n) {
+	public PlayerImpl(ThinStorageAccessManager sam, Node n) {
 		super(sam, n);
 	}
 
@@ -43,8 +43,8 @@ public class PersonImpl extends YartaResource implements Person {
 	 *
 	 * @throws	KBException
 	 */
-	public PersonImpl(ThinStorageAccessManager sam, String uniqueRequestorId) {
-		super(sam, sam.createNewNode(fr.inria.arles.yarta.resources.Person.typeURI));
+	public PlayerImpl(ThinStorageAccessManager sam, String uniqueRequestorId) {
+		super(sam, sam.createNewNode(Player.typeURI));
 		this.setUserId(uniqueRequestorId);
 	}
 
@@ -201,25 +201,6 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * @return the lastPlayed. Null if value is not set.
-	 */
-	public Long getLastPlayed() {
-		return Long.valueOf(sam.getDataProperty(kbNode, PROPERTY_LASTPLAYED_URI,
-				String.class));
-	}
-
-	/**
-	 * Sets the lastPlayed.
-	 * 
-	 * @param	long
-	 *			the lastPlayed to be set
-	 */
-	public void setLastPlayed(Long lastplayed) {
-		sam.setDataProperty(kbNode, PROPERTY_LASTPLAYED_URI, String.class,
-				String.valueOf(lastplayed));
-	}
-
-	/**
 	 * @return the firstName. Null if value is not set.
 	 */
 	public String getFirstName() {
@@ -258,7 +239,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "knows" edge between this person and agent
+	 * Creates a "knows" edge between this player and agent
 	 * 
 	 * @param	agent
 	 *			the Agent
@@ -271,7 +252,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "knows" link between this person and agent
+	 * deletes the "knows" link between this player and agent
 	 * 
 	 * @param	agent
 	 * 			the Agent
@@ -294,7 +275,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "istagged" edge between this person and topic
+	 * Creates a "istagged" edge between this player and topic
 	 * 
 	 * @param	topic
 	 *			the Topic
@@ -307,7 +288,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "istagged" link between this person and topic
+	 * deletes the "istagged" link between this player and topic
 	 * 
 	 * @param	topic
 	 * 			the Topic
@@ -330,7 +311,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "isattending" edge between this person and event
+	 * Creates a "isattending" edge between this player and event
 	 * 
 	 * @param	event
 	 *			the Event
@@ -343,7 +324,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "isattending" link between this person and event
+	 * deletes the "isattending" link between this player and event
 	 * 
 	 * @param	event
 	 * 			the Event
@@ -366,7 +347,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "hasinterest" edge between this person and resource
+	 * Creates a "hasinterest" edge between this player and resource
 	 * 
 	 * @param	resource
 	 *			the Resource
@@ -379,7 +360,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "hasinterest" link between this person and resource
+	 * deletes the "hasinterest" link between this player and resource
 	 * 
 	 * @param	resource
 	 * 			the Resource
@@ -402,7 +383,43 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "ismemberof" edge between this person and group
+	 * Creates a "blueo" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addBlueO(Match match) {
+		return sam.setObjectProperty(kbNode, PROPERTY_BLUEO_URI, match);
+	}
+
+	/**
+	 * deletes the "blueo" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteBlueO(Match match) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_BLUEO_URI, match);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "blueo" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Match> getBlueO() {
+		return sam.getObjectProperty(kbNode, PROPERTY_BLUEO_URI);
+	}
+
+	/**
+	 * Creates a "ismemberof" edge between this player and group
 	 * 
 	 * @param	group
 	 *			the Group
@@ -415,7 +432,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "ismemberof" link between this person and group
+	 * deletes the "ismemberof" link between this player and group
 	 * 
 	 * @param	group
 	 * 			the Group
@@ -438,7 +455,43 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "participatesto" edge between this person and conversation
+	 * Creates a "redo" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addRedO(Match match) {
+		return sam.setObjectProperty(kbNode, PROPERTY_REDO_URI, match);
+	}
+
+	/**
+	 * deletes the "redo" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteRedO(Match match) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_REDO_URI, match);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "redo" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Match> getRedO() {
+		return sam.getObjectProperty(kbNode, PROPERTY_REDO_URI);
+	}
+
+	/**
+	 * Creates a "participatesto" edge between this player and conversation
 	 * 
 	 * @param	conversation
 	 *			the Conversation
@@ -451,7 +504,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "participatesto" link between this person and conversation
+	 * deletes the "participatesto" link between this player and conversation
 	 * 
 	 * @param	conversation
 	 * 			the Conversation
@@ -474,7 +527,79 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "islocated" edge between this person and place
+	 * Creates a "redd" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addRedD(Match match) {
+		return sam.setObjectProperty(kbNode, PROPERTY_REDD_URI, match);
+	}
+
+	/**
+	 * deletes the "redd" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteRedD(Match match) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_REDD_URI, match);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "redd" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Match> getRedD() {
+		return sam.getObjectProperty(kbNode, PROPERTY_REDD_URI);
+	}
+
+	/**
+	 * Creates a "blued" edge between this player and match
+	 * 
+	 * @param	match
+	 *			the Match
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addBlueD(Match match) {
+		return sam.setObjectProperty(kbNode, PROPERTY_BLUED_URI, match);
+	}
+
+	/**
+	 * deletes the "blued" link between this player and match
+	 * 
+	 * @param	match
+	 * 			the Match
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteBlueD(Match match) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_BLUED_URI, match);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "blued" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Match> getBlueD() {
+		return sam.getObjectProperty(kbNode, PROPERTY_BLUED_URI);
+	}
+
+	/**
+	 * Creates a "islocated" edge between this player and place
 	 * 
 	 * @param	place
 	 *			the Place
@@ -487,7 +612,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "islocated" link between this person and place
+	 * deletes the "islocated" link between this player and place
 	 * 
 	 * @param	place
 	 * 			the Place
@@ -510,7 +635,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "creator" edge between this person and content
+	 * Creates a "creator" edge between this player and content
 	 * 
 	 * @param	content
 	 *			the Content
@@ -523,7 +648,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "creator" link between this person and content
+	 * deletes the "creator" link between this player and content
 	 * 
 	 * @param	content
 	 * 			the Content
@@ -559,37 +684,5 @@ public class PersonImpl extends YartaResource implements Person {
 	@Override
 	public Set<Agent> getHasInterest_inverse() {
 		return sam.getObjectProperty_inverse(kbNode, Agent.PROPERTY_HASINTEREST_URI);
-	}
-
-	/**
-	 * inverse of {@link #getBlueO()}
-	 */
-	@Override
-	public Set<Match> getBlueO_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Match.PROPERTY_BLUEO_URI);
-	}
-
-	/**
-	 * inverse of {@link #getRedO()}
-	 */
-	@Override
-	public Set<Match> getRedO_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Match.PROPERTY_REDO_URI);
-	}
-
-	/**
-	 * inverse of {@link #getRedD()}
-	 */
-	@Override
-	public Set<Match> getRedD_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Match.PROPERTY_REDD_URI);
-	}
-
-	/**
-	 * inverse of {@link #getBlueD()}
-	 */
-	@Override
-	public Set<Match> getBlueD_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Match.PROPERTY_BLUED_URI);
 	}
 }

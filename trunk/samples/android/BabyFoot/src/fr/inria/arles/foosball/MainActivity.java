@@ -12,8 +12,10 @@ import com.actionbarsherlock.view.SubMenu;
 import fr.inria.arles.foosball.R;
 import fr.inria.arles.foosball.util.JobRunner.Job;
 import fr.inria.arles.foosball.resources.Match;
-import fr.inria.arles.foosball.resources.Person;
-import fr.inria.arles.foosball.resources.PersonImpl;
+import fr.inria.arles.foosball.resources.Player;
+import fr.inria.arles.foosball.resources.PlayerImpl;
+import fr.inria.arles.yarta.knowledgebase.KBException;
+import fr.inria.arles.yarta.resources.Person;
 import fr.inria.arles.yarta.resources.YartaResource;
 
 import android.content.Intent;
@@ -29,7 +31,7 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	public static final int MENU_NAME = 3;
 	public static final int MENU_ABOUT = 4;
 
-	private Person me;
+	private Player me;
 	private Match latestMatch;
 	public static final int RESULT_LOGIN = 1;
 
@@ -112,14 +114,14 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	}
 
 	public void onFinishMatch(View view) {
-		Set<Person> blue = latestMatch.getBlueD();
-		blue.addAll(latestMatch.getBlueO());
+		Set<Player> blue = latestMatch.getBlueD_inverse();
+		blue.addAll(latestMatch.getBlueO_inverse());
 
-		Set<Person> red = latestMatch.getRedO();
-		red.addAll(latestMatch.getRedD());
+		Set<Player> red = latestMatch.getRedO_inverse();
+		red.addAll(latestMatch.getRedD_inverse());
 
-		String blueTeam = peopleToString(blue);
-		String redTeam = peopleToString(red);
+		String blueTeam = playersToString(blue);
+		String redTeam = playersToString(red);
 
 		MatchDialog dialog = new MatchDialog(this, this);
 		dialog.setTeams(blueTeam, redTeam);
@@ -139,19 +141,19 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 
 			@Override
 			public void doWork() {
-				Set<Person> allPersons = new HashSet<Person>();
+				Set<Player> allPlayers = new HashSet<Player>();
 				for (Match match : getSAM().getAllMatchs()) {
-					Set<Person> blue = match.getBlueD();
-					blue.addAll(match.getBlueO());
+					Set<Player> blue = match.getBlueD_inverse();
+					blue.addAll(match.getBlueO_inverse());
 
-					Set<Person> red = match.getRedD();
-					red.addAll(match.getRedO());
+					Set<Player> red = match.getRedD_inverse();
+					red.addAll(match.getRedO_inverse());
 
-					Set<Person> all = new HashSet<Person>();
+					Set<Player> all = new HashSet<Player>();
 					all.addAll(blue);
 					all.addAll(red);
 
-					allPersons.addAll(all);
+					allPlayers.addAll(all);
 
 					int blueScore = 0;
 					int redScore = 0;
@@ -184,7 +186,7 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 					}
 				}
 
-				for (Person p : allPersons) {
+				for (Player p : allPlayers) {
 					String pid = p.getUniqueId();
 					p.setTotalGames(totalGames.get(pid));
 					p.setWinRate(100 * wonGames.get(pid) / totalGames.get(pid));
@@ -195,7 +197,6 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			@Override
 			public void doUIAfter() {
 				refreshUI();
-				getCOMM().sendNotify(PlayersApp.InriaID);
 			}
 		});
 	}
@@ -206,30 +207,37 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 
 	@Override
 	public void onNameSet(String nickName) {
-		if (me == null) {
-			Person p = getSAM().getMe();
-			me = new PersonImpl(getSAM(), ((YartaResource) p).getNode());
+		try {
+			if (me == null) {
+				Person p = getSAM().getMe();
+				me = new PlayerImpl(getSAM(), ((YartaResource) p).getNode());
+			}
+			me.setNickName(nickName);
+			setCtrlText(R.id.name, me.getNickName());
+		} catch (KBException ex) {
+			ex.printStackTrace();
 		}
-		me.setNickName(nickName);
-		setCtrlText(R.id.name, me.getNickName());
 		configureDlg = null;
 	}
 
 	@Override
 	protected void refreshUI() {
-		if (me == null) {
-			Person p = getSAM().getMe();
-			me = new PersonImpl(getSAM(), ((YartaResource) p).getNode());
-		}
+		try {
+			if (me == null) {
+				Person p = getSAM().getMe();
+				me = new PlayerImpl(getSAM(), ((YartaResource) p).getNode());
+			}
+			String nickName = me.getNickName();
 
-		String nickName = me.getNickName();
-
-		if (nickName == null) {
-			onConfigure();
+			if (nickName == null) {
+				onConfigure();
+			}
+			setCtrlText(R.id.name,
+					nickName == null ? me.getUserId().replace("@inria.fr", "")
+							: nickName);
+		} catch (KBException ex) {
+			ex.printStackTrace();
 		}
-		setCtrlText(R.id.name,
-				nickName == null ? me.getUserId().replace("@inria.fr", "")
-						: nickName);
 
 		int matchesPlayed = 0;
 
@@ -248,13 +256,19 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			@Override
 			public void doWork() {
 				try {
-					Set<Match> matches = getSAM().getAllMatchs();
+					// only the owner matches
+					Set<Match> ownerMatches = new HashSet<Match>();
+					ownerMatches.addAll(me.getBlueD());
+					ownerMatches.addAll(me.getBlueO());
+					ownerMatches.addAll(me.getRedD());
+					ownerMatches.addAll(me.getRedO());
+
 					long latestMatchTime = 0;
-					for (Match match : matches) {
-						Set<Person> players = match.getRedD();
-						players.addAll(match.getRedO());
-						players.addAll(match.getBlueD());
-						players.addAll(match.getBlueO());
+					for (Match match : ownerMatches) {
+						Set<Player> players = match.getRedD_inverse();
+						players.addAll(match.getRedO_inverse());
+						players.addAll(match.getBlueD_inverse());
+						players.addAll(match.getBlueO_inverse());
 
 						Integer blueScore = null, redScore = null;
 						try {
@@ -282,16 +296,16 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 					showView(R.id.latestMatch, true);
 					showView(R.id.noLatestMatch, false);
 
-					Set<Person> blue = latestMatch.getBlueD();
-					blue.addAll(latestMatch.getBlueO());
+					Set<Player> blue = latestMatch.getBlueD_inverse();
+					blue.addAll(latestMatch.getBlueO_inverse());
 
-					Set<Person> red = latestMatch.getRedO();
-					red.addAll(latestMatch.getRedD());
+					Set<Player> red = latestMatch.getRedO_inverse();
+					red.addAll(latestMatch.getRedD_inverse());
 
 					String blueText = getString(R.string.main_blue_team)
-							+ peopleToString(blue);
+							+ playersToString(blue);
 					String redText = getString(R.string.main_red_team)
-							+ peopleToString(red);
+							+ playersToString(red);
 
 					setCtrlText(R.id.blueTeam, blueText);
 					setCtrlText(R.id.redTeam, redText);
@@ -303,18 +317,22 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 		});
 	}
 
-	/*
-	 * From a set of Persons returns a string containing first names;
+	/**
+	 * Gets the string representation of a set.
+	 * 
+	 * @param players
+	 * @return
 	 */
-	protected String peopleToString(Set<Person> persons) {
+	protected String playersToString(Set<Player> players) {
 		String result = "";
-		for (Person person : persons) {
+		for (Player player : players) {
 			if (result.length() > 0) {
 				result += ", ";
 			}
-			String nickName = person.getNickName();
+
+			String nickName = player.getNickName();
 			if (nickName == null) {
-				nickName = person.getUserId().replace("@inria.fr", "");
+				nickName = player.getUserId().replace("@inria.fr", "");
 			}
 			result += nickName;
 		}

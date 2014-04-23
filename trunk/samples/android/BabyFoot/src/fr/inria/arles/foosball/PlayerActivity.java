@@ -3,9 +3,9 @@ package fr.inria.arles.foosball;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import fr.inria.arles.foosball.resources.Player;
+import fr.inria.arles.foosball.resources.PlayerImpl;
 import fr.inria.arles.foosball.util.JobRunner.Job;
-import fr.inria.arles.foosball.resources.Person;
-import fr.inria.arles.foosball.resources.PersonImpl;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ public class PlayerActivity extends BaseActivity {
 	private int totalGames;
 	private int winRate;
 	private int scorePoints;
-	private Person player;
+	private Player player;
 
 	private static final int MENU_UPDATE = 1;
 
@@ -30,8 +30,8 @@ public class PlayerActivity extends BaseActivity {
 		setContentView(R.layout.activity_player);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		player = new PersonImpl(getSAM(), new MSEResource(getIntent()
-				.getStringExtra(PlayerGUID), Person.typeURI));
+		player = new PlayerImpl(getSAM(), new MSEResource(getIntent()
+				.getStringExtra(PlayerGUID), Player.typeURI));
 
 		String nickName = player.getNickName();
 		if (nickName == null) {

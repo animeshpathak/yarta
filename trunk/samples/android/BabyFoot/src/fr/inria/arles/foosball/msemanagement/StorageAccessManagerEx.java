@@ -2,11 +2,10 @@ package fr.inria.arles.foosball.msemanagement;
 
 import java.util.Set;
 import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
+import fr.inria.arles.foosball.resources.PlayerImpl;
+import fr.inria.arles.foosball.resources.Player;
 import fr.inria.arles.foosball.resources.MatchImpl;
 import fr.inria.arles.foosball.resources.Match;
-import fr.inria.arles.foosball.resources.PersonImpl;
-import fr.inria.arles.yarta.resources.Person;
-import fr.inria.arles.yarta.resources.YartaResource;
 
 /**
  * StorageAccessManager class extension.
@@ -18,27 +17,32 @@ public class StorageAccessManagerEx extends StorageAccessManager {
 	 */
 	public StorageAccessManagerEx() {
 		super();
+		bindInterfacetoImplementation(Player.typeURI,
+				"fr.inria.arles.foosball.resources.PlayerImpl");
 		bindInterfacetoImplementation(Match.typeURI,
 				"fr.inria.arles.foosball.resources.MatchImpl");
-		bindInterfacetoImplementation(Person.typeURI,
-				"fr.inria.arles.foosball.resources.PersonImpl");
 	}
 
-	public fr.inria.arles.foosball.resources.Person getMe() {
-		try {
-			Person p = super.getMe();
-			return new PersonImpl(this, ((YartaResource) p).getNode());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-		}
+	/**
+	 * Creates a new instance of Player
+	 */
+	public Player createPlayer(String uniqueId) {
+		return (Player) new PlayerImpl(this, uniqueId);
+	}
+
+	/**
+	 * Returns all instances of type Player
+	 */
+	public Set<Player> getAllPlayers() {
+		return getAllResourcesOfType(getPropertyNode(Player.typeURI));
 	}
 
 	/**
 	 * Creates a new instance of Match
 	 */
 	public Match createMatch() {
-		return (Match) new MatchImpl(this, createNewNode(Match.typeURI));
+		return (Match) new MatchImpl(this,
+				createNewNode(Match.typeURI));
 	}
 
 	/**
@@ -46,19 +50,5 @@ public class StorageAccessManagerEx extends StorageAccessManager {
 	 */
 	public Set<Match> getAllMatchs() {
 		return getAllResourcesOfType(getPropertyNode(Match.typeURI));
-	}
-
-	/**
-	 * Creates a new instance of Person
-	 */
-	public Person createPerson(String uniqueId) {
-		return (Person) new PersonImpl(this, uniqueId);
-	}
-
-	/**
-	 * Returns all instances of type Person
-	 */
-	public Set<Person> getAllPersons() {
-		return getAllResourcesOfType(getPropertyNode(Person.typeURI));
 	}
 }

@@ -31,18 +31,6 @@ public interface Match extends Resource, Event {
 	/** the URI for property isTagged */
 	public static final String PROPERTY_ISTAGGED_URI = baseMSEURI + "#isTagged";
 
-	/** the URI for property blueO */
-	public static final String PROPERTY_BLUEO_URI = MSEManagerEx.baseMSEURI + "#blueO";
-
-	/** the URI for property redO */
-	public static final String PROPERTY_REDO_URI = MSEManagerEx.baseMSEURI + "#redO";
-
-	/** the URI for property redD */
-	public static final String PROPERTY_REDD_URI = MSEManagerEx.baseMSEURI + "#redD";
-
-	/** the URI for property blueD */
-	public static final String PROPERTY_BLUED_URI = MSEManagerEx.baseMSEURI + "#blueD";
-
 	/** the URI for property isLocated */
 	public static final String PROPERTY_ISLOCATED_URI = baseMSEURI + "#isLocated";
 
@@ -80,110 +68,22 @@ public interface Match extends Resource, Event {
 	public void setRedScore(Integer redscore);
 
 	/**
-	 * Creates a "blueo" edge between this match and person
-	 * 
-	 * @param	person
-	 *			the Person
-	 *
-	 * @return true if all went well, false otherwise
+	 * inverse of {@link #getBlueO()}
 	 */
-	public boolean addBlueO(Person person);
-	
-	/**
-	 * deletes the "blueo" link between this match and person
-	 * 
-	 * @param	person
-	 * 			the Person
-	 * @return true if success. false is something went wrong
-	 */
-	public boolean deleteBlueO(Person person);
-	
-	/**
-	 * 
-	 * @return	The list of resources linked by a "blueo" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	public Set<Person> getBlueO();
+	public Set<Player> getBlueO_inverse();
 
 	/**
-	 * Creates a "redo" edge between this match and person
-	 * 
-	 * @param	person
-	 *			the Person
-	 *
-	 * @return true if all went well, false otherwise
+	 * inverse of {@link #getRedO()}
 	 */
-	public boolean addRedO(Person person);
-	
-	/**
-	 * deletes the "redo" link between this match and person
-	 * 
-	 * @param	person
-	 * 			the Person
-	 * @return true if success. false is something went wrong
-	 */
-	public boolean deleteRedO(Person person);
-	
-	/**
-	 * 
-	 * @return	The list of resources linked by a "redo" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	public Set<Person> getRedO();
+	public Set<Player> getRedO_inverse();
 
 	/**
-	 * Creates a "redd" edge between this match and person
-	 * 
-	 * @param	person
-	 *			the Person
-	 *
-	 * @return true if all went well, false otherwise
+	 * inverse of {@link #getRedD()}
 	 */
-	public boolean addRedD(Person person);
-	
-	/**
-	 * deletes the "redd" link between this match and person
-	 * 
-	 * @param	person
-	 * 			the Person
-	 * @return true if success. false is something went wrong
-	 */
-	public boolean deleteRedD(Person person);
-	
-	/**
-	 * 
-	 * @return	The list of resources linked by a "redd" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	public Set<Person> getRedD();
+	public Set<Player> getRedD_inverse();
 
 	/**
-	 * Creates a "blued" edge between this match and person
-	 * 
-	 * @param	person
-	 *			the Person
-	 *
-	 * @return true if all went well, false otherwise
+	 * inverse of {@link #getBlueD()}
 	 */
-	public boolean addBlueD(Person person);
-	
-	/**
-	 * deletes the "blued" link between this match and person
-	 * 
-	 * @param	person
-	 * 			the Person
-	 * @return true if success. false is something went wrong
-	 */
-	public boolean deleteBlueD(Person person);
-	
-	/**
-	 * 
-	 * @return	The list of resources linked by a "blued" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	public Set<Person> getBlueD();
+	public Set<Player> getBlueD_inverse();
 }

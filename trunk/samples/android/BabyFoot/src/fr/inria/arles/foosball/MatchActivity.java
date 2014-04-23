@@ -11,8 +11,8 @@ import fr.inria.arles.foosball.R;
 import fr.inria.arles.foosball.util.JobRunner.Job;
 import fr.inria.arles.foosball.resources.Match;
 import fr.inria.arles.foosball.resources.MatchImpl;
-import fr.inria.arles.foosball.resources.Person;
-import fr.inria.arles.foosball.resources.PersonImpl;
+import fr.inria.arles.foosball.resources.Player;
+import fr.inria.arles.foosball.resources.PlayerImpl;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import android.app.AlertDialog;
@@ -86,10 +86,10 @@ public class MatchActivity extends BaseActivity implements
 		execute(new Job() {
 			@Override
 			public void doWork() {
-				blueD = toPerson(currentMatch.getBlueD());
-				blueO = toPerson(currentMatch.getBlueO());
-				redD = toPerson(currentMatch.getRedD());
-				redO = toPerson(currentMatch.getRedO());
+				blueD = toPlayer(currentMatch.getBlueD_inverse());
+				blueO = toPlayer(currentMatch.getBlueO_inverse());
+				redD = toPlayer(currentMatch.getRedD_inverse());
+				redO = toPlayer(currentMatch.getRedO_inverse());
 			}
 
 			@Override
@@ -112,14 +112,20 @@ public class MatchActivity extends BaseActivity implements
 		});
 	}
 
-	protected Person toPerson(Set<Person> person) {
-		if (person.size() > 0) {
-			return person.iterator().next();
+	/**
+	 * Gets one item from a set;
+	 * 
+	 * @param players
+	 * @return
+	 */
+	protected Player toPlayer(Set<Player> players) {
+		if (players.size() > 0) {
+			return players.iterator().next();
 		}
 		return null;
 	}
 
-	protected String playerToString(Person player) {
+	protected String playerToString(Player player) {
 		String nickName = player.getNickName();
 
 		if (nickName == null) {
@@ -132,8 +138,8 @@ public class MatchActivity extends BaseActivity implements
 		selectPlayer(new PlayerSelector() {
 
 			@Override
-			public void onPlayerSelected(Person person) {
-				blueD = person;
+			public void onPlayerSelected(Player player) {
+				blueD = player;
 				setCtrlText(R.id.blueD, playerToString(blueD));
 			}
 		});
@@ -143,8 +149,8 @@ public class MatchActivity extends BaseActivity implements
 		selectPlayer(new PlayerSelector() {
 
 			@Override
-			public void onPlayerSelected(Person person) {
-				blueO = person;
+			public void onPlayerSelected(Player player) {
+				blueO = player;
 				setCtrlText(R.id.blueO, playerToString(blueO));
 			}
 		});
@@ -154,8 +160,8 @@ public class MatchActivity extends BaseActivity implements
 		selectPlayer(new PlayerSelector() {
 
 			@Override
-			public void onPlayerSelected(Person person) {
-				redD = person;
+			public void onPlayerSelected(Player player) {
+				redD = player;
 				setCtrlText(R.id.redD, playerToString(redD));
 			}
 		});
@@ -165,15 +171,15 @@ public class MatchActivity extends BaseActivity implements
 		selectPlayer(new PlayerSelector() {
 
 			@Override
-			public void onPlayerSelected(Person person) {
-				redO = person;
+			public void onPlayerSelected(Player player) {
+				redO = player;
 				setCtrlText(R.id.redO, playerToString(redO));
 			}
 		});
 	}
 
 	private interface PlayerSelector {
-		public void onPlayerSelected(Person person);
+		public void onPlayerSelected(Player player);
 	}
 
 	protected void selectPlayer(final PlayerSelector selector) {
@@ -182,7 +188,7 @@ public class MatchActivity extends BaseActivity implements
 		}
 		execute(new Job() {
 			String items[];
-			List<Person> buddies;
+			List<Player> buddies;
 
 			@Override
 			public void doWork() {
@@ -191,7 +197,7 @@ public class MatchActivity extends BaseActivity implements
 				items = new String[buddies.size()];
 
 				for (int i = 0; i < items.length; i++) {
-					Person p = buddies.get(i);
+					Player p = buddies.get(i);
 					String firstName = p.getFirstName();
 					if (firstName == null) {
 						items[i] = p.getUserId();
@@ -239,15 +245,13 @@ public class MatchActivity extends BaseActivity implements
 		return agents;
 	}
 
-	protected List<Person> getRemaniningBuddies() {
-		List<Person> result = new ArrayList<Person>();
+	protected List<Player> getRemaniningBuddies() {
+		List<Player> result = new ArrayList<Player>();
 		Set<Agent> agents = getKnownAgents();
 
 		for (Agent agent : agents) {
-			Person p = (Person) agent;
-
-			result.add(new PersonImpl(getSAM(), new MSEResource(
-					p.getUniqueId(), Person.typeURI)));
+			result.add(new PlayerImpl(getSAM(), new MSEResource(agent
+					.getUniqueId(), Player.typeURI)));
 
 		}
 
@@ -264,28 +268,35 @@ public class MatchActivity extends BaseActivity implements
 			if (currentMatch == null) {
 				currentMatch = getSAM().createMatch();
 			} else {
-				for (Person p : currentMatch.getBlueD()) {
-					currentMatch.deleteBlueD(p);
+				for (Player p : currentMatch.getBlueD_inverse()) {
+					p.deleteBlueD(currentMatch);
 				}
-				for (Person p : currentMatch.getBlueO()) {
-					currentMatch.deleteBlueO(p);
+				for (Player p : currentMatch.getBlueO_inverse()) {
+					p.deleteBlueO(currentMatch);
 				}
-				for (Person p : currentMatch.getRedD()) {
-					currentMatch.deleteRedD(p);
+				for (Player p : currentMatch.getRedD_inverse()) {
+					p.deleteRedD(currentMatch);
 				}
-				for (Person p : currentMatch.getRedO()) {
-					currentMatch.deleteRedO(p);
+				for (Player p : currentMatch.getRedO_inverse()) {
+					p.deleteRedO(currentMatch);
 				}
 			}
-			currentMatch.addBlueD(blueD);
-			currentMatch.addBlueO(blueO);
-			currentMatch.addRedD(redD);
-			currentMatch.addRedO(redO);
+			if (blueD != null) {
+				blueD.addBlueD(currentMatch);
+			}
+			if (blueO != null) {
+				blueO.addBlueO(currentMatch);
+			}
+
+			if (redD != null) {
+				redD.addRedD(currentMatch);
+			}
+
+			if (redO != null) {
+				redO.addRedO(currentMatch);
+			}
 
 			currentMatch.setTime(System.currentTimeMillis());
-
-			((PlayersApp) getApplication()).submitResource(currentMatch
-					.getUniqueId());
 			finish();
 		} else {
 			Toast.makeText(this, R.string.match_not_enogh_players,
@@ -293,10 +304,10 @@ public class MatchActivity extends BaseActivity implements
 		}
 	}
 
-	private Person redO;
-	private Person redD;
-	private Person blueO;
-	private Person blueD;
+	private Player redO;
+	private Player redD;
+	private Player blueO;
+	private Player blueD;
 
 	@Override
 	public void onSetConfiguration(int team) {
