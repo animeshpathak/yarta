@@ -26,7 +26,6 @@ public class DashboardActivity extends BaseActivity implements
 
 	public static final int MENU_ABOUT = 1;
 	public static final int MENU_CONSOLE = 2;
-	public static final int MENU_SOCIAL_NETWORKS = 4;
 	public static final int MENU_FEEDBACK = 5;
 
 	// DRAWER
@@ -146,8 +145,6 @@ public class DashboardActivity extends BaseActivity implements
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SOCIAL_NETWORKS, 0,
-				R.string.dashboard_menu_socialnetworks);
 		menu.add(0, MENU_CONSOLE, 0, R.string.dashboard_menu_console);
 		menu.add(0, MENU_ABOUT, 0, R.string.dashboard_menu_about);
 
@@ -178,10 +175,6 @@ public class DashboardActivity extends BaseActivity implements
 		case MENU_CONSOLE:
 			trackUI("DashboardActivity.Console");
 			startActivity(new Intent(this, ConsoleActivity.class));
-			break;
-		case MENU_SOCIAL_NETWORKS:
-			trackUI("DashboardActivity.Plugins");
-			startActivity(new Intent(this, PluginsActivity.class));
 			break;
 		case MENU_FEEDBACK:
 			trackUI("DashboardActivity.Feedback");
