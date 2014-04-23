@@ -59,7 +59,6 @@
     <string name="conversation_send">Send</string>
     <string name="conversation_add_participant">Add participant</string>
     <string name="conversation_empty_content_not_allowed">Empty content not allowed!</string>
-    <string name="dashboard_menu_socialnetworks">Plugins</string>
     <string name="dashboard_menu_sync_now">Sync now</string>
     <string name="plugins_title">Social Plugins</string>
     <string name="dashboard_tab_people">People</string>
