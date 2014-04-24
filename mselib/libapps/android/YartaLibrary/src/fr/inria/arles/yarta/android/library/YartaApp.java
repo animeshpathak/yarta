@@ -72,7 +72,9 @@ public class YartaApp extends Application implements MSEApplication {
 	}
 
 	public void initMSE(Observer observer) {
-		addObserver(observer);
+		if (observer != null) {
+			addObserver(observer);
+		}
 
 		ensureBaseFiles(this);
 
@@ -91,7 +93,13 @@ public class YartaApp extends Application implements MSEApplication {
 				mse = null;
 			}
 		} else {
-			observer.updateInfo();
+			if (observer != null) {
+				observer.updateInfo();
+			} else {
+				// no observer, but initialized already
+				// so we might call it manually
+				handleKBReady(mse.getOwnerUID());
+			}
 		}
 	}
 
@@ -125,7 +133,7 @@ public class YartaApp extends Application implements MSEApplication {
 	 * Starts the main activity of the app;
 	 */
 	private void startMainActivity() {
-		Intent intent = new Intent(this, DashboardActivity.class);
+		Intent intent = new Intent(this, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
@@ -198,7 +206,9 @@ public class YartaApp extends Application implements MSEApplication {
 	 * @param userId
 	 */
 	public void onLogin(String userId) {
-		loginObserver.updateInfo();
+		if (loginObserver != null) {
+			loginObserver.updateInfo();
+		}
 	}
 
 	/**

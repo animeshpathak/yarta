@@ -48,9 +48,9 @@ public class PeopleActivity extends BaseActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		Person p = persons.get(position);
-		Intent intent = new Intent(this, PersonActivity.class);
-		intent.putExtra(PersonActivity.PersonGUID, p.getUniqueId());
-		startActivity(intent);
+		//Intent intent = new Intent(this, PersonActivity.class);
+		//intent.putExtra(PersonActivity.PersonGUID, p.getUniqueId());
+		//startActivity(intent);
 	}
 
 	@Override

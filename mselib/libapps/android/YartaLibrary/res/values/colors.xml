@@ -7,25 +7,27 @@
     <color name="AppTextColor">#000000</color>
     <color name="AppTextColorStrong">#f17b3e</color>
     <color name="AppBackground">#dbd6db</color>
-    
     <color name="AppMenuBackground">#84455a</color>
-    
     <color name="AppButtonBgStart">#f7c346</color>
     <color name="AppButtonBgEnd">#dfb03b</color>
     <color name="AppButtonStroke">#dfb03b</color>
     <color name="AppGrayBgStart">#cbcbcb</color>
     <color name="AppGrayBgEnd">#b7b7b7</color>
     <color name="AppGrayStroke">#b7b7b7</color>
+    <color name="AppDrawerDivider">#b7b7b7</color>
+    <color name="AppTextColorLow">#666666</color>
+    <color name="AppDrawerTextSelected">#000000</color>
+    <color name="AppDrawerText">#272727</color>
+    <color name="AppListNormal">#00000000</color>
+    <color name="AppListSelected">#66ef793e</color>
+    <color name="AppDrawerBackground">#dbd6db</color>
+    <color name="AppDrawerSelected">#dfb03b</color>
+    <color name="AppContentColor">#ffffff</color>
+    <color name="AppContentStroke">#cac5ca</color>
 
     <!-- OLD YARTA -->
-    <color name="AppListNormal">#00000000</color>
-    <color name="AppListSelected">#3355a9cd</color>
 
-    <color name="AppContentStroke">#a1a1a1</color>
-    <color name="AppContentColor">#ffffff</color>
     <color name="ActivityTitleTextColor">#51504d</color>
     <color name="ActivityTitleBackground">#dcdad6</color>
-    <color name="AppDrawerBackground">#cecece</color>
-    <color name="AppDrawerSelected">#3355a9cd</color>
 
 </resources>

@@ -29,7 +29,27 @@ public class IrisBridge {
 		log("fetchPropertyObject (%s, %s)", s, p);
 
 		if (s.contains("Person") && p.equals(Agent.PROPERTY_KNOWS_URI)) {
-			fetchFriends(kb, subject);
+			runAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					fetchFriends(kb, subject);
+				}
+			});
+		}
+	}
+
+	/**
+	 * runAndWait
+	 * @param runnable
+	 */
+	private static void runAndWait(Runnable runnable) {
+		Thread thread = new Thread(runnable);
+		thread.start();
+		try {
+			thread.join();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -85,11 +105,11 @@ public class IrisBridge {
 
 		return result;
 	}
-	
+
 	private static void log(String format, Object... args) {
 		YLoggerFactory.getLogger().d("IrisBridge", String.format(format, args));
 	}
-	
+
 	private static final String TYPE_STRING_URI = "http://www.w3.org/2001/XMLSchema#string";
 	private static WebClient client = WebClient.getInstance();
 }

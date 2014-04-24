@@ -3,7 +3,6 @@ package fr.inria.arles.yarta.android.library;
 import com.actionbarsherlock.app.SherlockActivity;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.YartaApp.Observer;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import android.os.Bundle;
 import android.view.View;
@@ -52,13 +51,8 @@ public class EulaActivity extends SherlockActivity {
 
 	protected void proceedToApplication() {
 		YartaApp app = (YartaApp) getApplication();
-		app.initMSE(new Observer() {
-
-			@Override
-			public void updateInfo() {
-				// does nothing;
-			}
-		});
+		app.initMSE(null);
+		
 		// finish since handleKBReady will be called
 		finish();
 	}
