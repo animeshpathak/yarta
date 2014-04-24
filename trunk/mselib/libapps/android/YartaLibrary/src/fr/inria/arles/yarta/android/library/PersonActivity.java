@@ -229,7 +229,7 @@ public class PersonActivity extends BaseActivity {
 		} else {
 			MenuItem item = menu.add(0, MENU_UPDATE, 0, R.string.person_update);
 
-			item.setIcon(R.drawable.icon_sync);
+			item.setIcon(R.drawable.icon_update);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 		return super.onCreateOptionsMenu(menu);

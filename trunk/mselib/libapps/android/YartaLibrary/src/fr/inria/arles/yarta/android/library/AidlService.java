@@ -3,9 +3,11 @@ package fr.inria.arles.yarta.android.library;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.inria.arles.yarta.android.library.web.IrisBridge;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBaseUtils;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
+import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
 import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
@@ -276,8 +278,14 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			// log("ILibraryService.getPropertyObjectAsTriples[knowledgeBase = %s]",
 			// knowledgeBase);
+
+			Node subject = Conversion.toNode(s);
+			Node predicate = Conversion.toNode(p);
+
+			IrisBridge.fetchPropertyObject(knowledgeBase, subject, predicate);
+
 			List<Triple> triples = knowledgeBase.getPropertyObjectAsTriples(
-					Conversion.toNode(s), Conversion.toNode(p), requestorId);
+					subject, predicate, requestorId);
 
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
