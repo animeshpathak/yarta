@@ -1,9 +1,10 @@
 package fr.inria.arles.yarta.android.library;
 
 import android.os.Bundle;
+import android.text.Spanned;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
@@ -20,11 +21,11 @@ import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
 /**
  * Base activity containing common functionality.
  */
-public class BaseActivity extends SherlockActivity implements
+public class BaseActivity extends SherlockFragmentActivity implements
 		YartaApp.Observer, WebClient.WebErrorCallback {
 
 	private YartaApp app;
-	private JobRunner runner;
+	protected JobRunner runner;
 	private YLogger log = YLoggerFactory.getLogger();
 	protected Settings settings;
 
@@ -145,12 +146,23 @@ public class BaseActivity extends SherlockActivity implements
 		}
 	}
 
+	protected void setCtrlText(int resId, Spanned text) {
+		TextView txt = (TextView) findViewById(resId);
+		if (txt != null) {
+			txt.setText(text);
+		}
+	}
+
 	protected String getCtrlText(int resId) {
 		TextView txt = (TextView) findViewById(resId);
 		if (txt != null) {
 			return txt.getText().toString();
 		}
 		return null;
+	}
+
+	protected void setFocusable(int viewId, boolean focusable) {
+		findViewById(viewId).setFocusable(focusable);
 	}
 
 	protected void sendNotify(String peerId) {

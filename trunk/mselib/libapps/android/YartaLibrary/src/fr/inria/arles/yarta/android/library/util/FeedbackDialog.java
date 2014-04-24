@@ -1,4 +1,4 @@
-package fr.inria.arles.yarta.android.library;
+package fr.inria.arles.yarta.android.library.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,21 +6,17 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.android.library.web.WebClient;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class FeedbackDialog extends Dialog implements View.OnClickListener {
+public class FeedbackDialog extends BaseDialog implements View.OnClickListener {
 
-	private Handler handler;
-
-	public interface Handler {
-		public void onSendFeedback(String content);
-	}
+	private JobRunner runner;
 
 	public FeedbackDialog(Context context) {
 		super(context, R.style.AppDialog);
@@ -41,8 +37,8 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener {
 		findViewById(R.id.buggy).setOnClickListener(this);
 	}
 
-	public void setHandler(Handler handler) {
-		this.handler = handler;
+	public void setRunner(JobRunner runner) {
+		this.runner = runner;
 	}
 
 	@Override
@@ -54,7 +50,7 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener {
 		case R.id.set:
 			String content = getCtrlText(R.id.content);
 			if (content.length() > 0) {
-				handler.onSendFeedback(content);
+				sendFeedback(content);
 				dismiss();
 			} else {
 				Toast.makeText(getContext(), R.string.feedback_content_empty,
@@ -63,32 +59,49 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener {
 			break;
 
 		case R.id.nice:
-			handler.onSendFeedback(getContext().getString(
-					R.string.feedback_app_nice));
+			sendFeedback(getContext().getString(R.string.feedback_app_nice)
+					+ " | " + getCtrlText(R.id.content));
 			dismiss();
 			break;
 		case R.id.slow:
-			handler.onSendFeedback(getContext().getString(
-					R.string.feedback_app_slow));
+			sendFeedback(getContext().getString(R.string.feedback_app_slow)
+					+ " | " + getCtrlText(R.id.content));
 			dismiss();
 			break;
 		case R.id.buggy:
-			handler.onSendFeedback(getContext().getString(
-					R.string.feedback_app_bug));
+			sendFeedback(getContext().getString(R.string.feedback_app_bug)
+					+ " | " + getCtrlText(R.id.content));
 			dismiss();
 			break;
 		}
 	}
 
-	private String getCtrlText(int resId) {
-		TextView txt = (TextView) findViewById(resId);
-		if (txt != null) {
-			return txt.getText().toString();
-		}
-		return null;
+	private void sendFeedback(final String content) {
+		runner.runBackground(new Job() {
+
+			private boolean success = false;
+
+			@Override
+			public void doWork() {
+				success = sendFeedback("fr.inria.arles.iris", WebClient
+						.getInstance().getUsername(), content);
+			}
+
+			@Override
+			public void doUIAfter() {
+				Toast.makeText(
+						getContext().getApplicationContext(),
+						success ? R.string.feedback_sent_ok
+								: R.string.feedback_sent_error,
+						Toast.LENGTH_LONG).show();
+				if (success) {
+					dismiss();
+				}
+			}
+		});
 	}
 
-	public static boolean sendFeedback(String appId, String from, String content) {
+	public boolean sendFeedback(String appId, String from, String content) {
 		String feedbackURL = "http://arles.rocq.inria.fr/yarta/feedback/?";
 
 		try {

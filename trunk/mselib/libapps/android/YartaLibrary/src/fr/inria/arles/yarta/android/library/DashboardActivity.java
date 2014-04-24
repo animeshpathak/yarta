@@ -7,8 +7,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.util.MenuListAdapter;
 import fr.inria.arles.yarta.android.library.util.SideMenuItem;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,7 +20,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class DashboardActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener, FeedbackDialog.Handler {
+		AdapterView.OnItemClickListener {
 
 	public static final int MENU_ABOUT = 1;
 	public static final int MENU_CONSOLE = 2;
@@ -44,8 +42,8 @@ public class DashboardActivity extends BaseActivity implements
 				break;
 			case 1:
 				try {
-					Intent intent = new Intent(this, PersonActivity.class);
-					startActivity(intent);
+					// Intent intent = new Intent(this, PersonActivity.class);
+					// startActivity(intent);
 				} catch (Exception ex) {
 					Toast.makeText(this, R.string.dashboard_error,
 							Toast.LENGTH_SHORT).show();
@@ -74,7 +72,7 @@ public class DashboardActivity extends BaseActivity implements
 		list.add(new SideMenuItem(getString(R.string.dashboard_dashboard), 0));
 		list.add(new SideMenuItem(getString(R.string.dashboard_profile), 1));
 		list.add(new SideMenuItem(getString(R.string.dashboard_signout), 2));
-		drawerAdapter = new MenuListAdapter(this, list);
+		// drawerAdapter = new MenuListAdapter(this, list);
 
 		drawerList.setAdapter(drawerAdapter);
 		drawerList.setOnItemClickListener(this);
@@ -136,8 +134,6 @@ public class DashboardActivity extends BaseActivity implements
 	}
 
 	public void onClickMessages(View view) {
-		Intent intent = new Intent(this, ConversationsActivity.class);
-		startActivity(intent);
 	}
 
 	/**
@@ -178,41 +174,8 @@ public class DashboardActivity extends BaseActivity implements
 			break;
 		case MENU_FEEDBACK:
 			trackUI("DashboardActivity.Feedback");
-			FeedbackDialog dlg = new FeedbackDialog(this);
-			dlg.setHandler(this);
-			dlg.show();
 			break;
 		}
 		return true;
-	}
-
-	@Override
-	public void onSendFeedback(final String content) {
-		execute(new Job() {
-			boolean success;
-
-			@Override
-			public void doWork() {
-				String userId = "";
-
-				try {
-					userId = getSAM().getMe().getUserId();
-				} catch (Exception ex) {
-					userId = "err";
-				}
-
-				success = FeedbackDialog.sendFeedback("fr.inria.arles.yarta",
-						userId, content);
-			}
-
-			@Override
-			public void doUIAfter() {
-				Toast.makeText(
-						getApplicationContext(),
-						success ? R.string.feedback_sent_ok
-								: R.string.feedback_sent_error,
-						Toast.LENGTH_LONG).show();
-			}
-		});
 	}
 }

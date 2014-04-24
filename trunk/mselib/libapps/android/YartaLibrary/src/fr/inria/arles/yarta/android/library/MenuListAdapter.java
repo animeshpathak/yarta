@@ -1,12 +1,10 @@
-package fr.inria.arles.yarta.android.library.util;
+package fr.inria.arles.yarta.android.library;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.inria.arles.iris.R;
-
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 public class MenuListAdapter extends BaseAdapter {
 
 	class ViewHolder {
-		TextView title;
 		TextView item;
 	}
 
@@ -54,7 +51,6 @@ public class MenuListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 			holder.item = (TextView) convertView.findViewById(R.id.menuTitle);
-			holder.title = (TextView) convertView.findViewById(R.id.titleTitle);
 
 			convertView.setTag(holder);
 		} else {
@@ -63,21 +59,18 @@ public class MenuListAdapter extends BaseAdapter {
 
 		SideMenuItem item = items.get(position);
 
-		if (item.isSeparator()) {
-			holder.item.setVisibility(View.GONE);
-			holder.title.setVisibility(View.VISIBLE);
-			holder.title.setText(item.getText());
-		} else {
-			holder.title.setVisibility(View.GONE);
-			holder.item.setVisibility(View.VISIBLE);
-			holder.item.setText(item.getText());
-		}
+		holder.item.setText(item.getText());
 
 		if (position == selectedPosition) {
+			holder.item.setTextColor(context.getResources().getColor(
+					R.color.AppDrawerTextSelected));
 			convertView.setBackgroundColor(context.getResources().getColor(
 					R.color.AppDrawerSelected));
 		} else {
-			convertView.setBackgroundColor(Color.TRANSPARENT);
+			holder.item.setTextColor(context.getResources().getColor(
+					R.color.AppDrawerText));
+			convertView.setBackgroundColor(context.getResources().getColor(
+					R.color.AppDrawerBackground));
 		}
 
 		return convertView;
