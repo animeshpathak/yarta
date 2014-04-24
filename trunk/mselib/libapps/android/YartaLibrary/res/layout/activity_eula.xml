@@ -39,17 +39,19 @@
                 android:layout_marginRight="1dp"
                 android:layout_weight="1.0"
                 android:onClick="onEulaRefuse"
+                android:padding="0dp"
                 android:text="@string/eula_first_run_ignore" />
 
             <Button
                 android:id="@+id/btn_acceptEula"
-                style="@style/AppBrownButton"
+                style="@style/AppCarrotButton"
                 android:layout_width="fill_parent"
                 android:layout_height="32dp"
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="3dp"
                 android:layout_weight="1.0"
                 android:onClick="onEulaAccept"
+                android:padding="0dp"
                 android:text="@string/eula_first_run_accept" />
         </LinearLayout>
     </LinearLayout>

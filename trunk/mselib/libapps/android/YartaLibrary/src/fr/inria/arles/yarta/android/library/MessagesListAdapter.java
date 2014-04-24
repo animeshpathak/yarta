@@ -3,7 +3,7 @@ package fr.inria.arles.yarta.android.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Message;
 

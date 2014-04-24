@@ -2,9 +2,9 @@ package fr.inria.arles.yarta.android.library;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
+import fr.inria.arles.yarta.android.library.YartaApp.Observer;
 import fr.inria.arles.yarta.android.library.util.Settings;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -19,23 +19,23 @@ public class EulaActivity extends SherlockActivity {
 		settings = new Settings(this);
 
 		if (settings.getBoolean(Settings.EULA_ACCEPTED)) {
-			startDashboard();
-			return;
-		}
-		setContentView(R.layout.activity_eula);
+			proceedToApplication();
+		} else {
+			setContentView(R.layout.activity_eula);
 
-		WebView w = (WebView) findViewById(R.id.eula_webView);
-		w.getSettings().setSupportZoom(false);
-		w.loadUrl("file:///android_asset/eula_en.html");
+			WebView w = (WebView) findViewById(R.id.eula_webView);
+			w.getSettings().setSupportZoom(false);
+			w.loadUrl("file:///android_asset/eula_en.html");
+		}
 	}
-	
+
 	public void onEulaAccept(View view) {
 		settings.setBoolean(Settings.EULA_ACCEPTED, true);
 		settings.setBoolean(Settings.AUR_ACCEPTED,
 				getCheckbox(R.id.anonimousCheck));
-		startDashboard();
+		proceedToApplication();
 	}
-	
+
 	public void onEulaRefuse(View view) {
 		finish();
 	}
@@ -50,8 +50,16 @@ public class EulaActivity extends SherlockActivity {
 		return false;
 	}
 
-	protected void startDashboard() {
-		startActivity(new Intent(this, DashboardActivity.class));
+	protected void proceedToApplication() {
+		YartaApp app = (YartaApp) getApplication();
+		app.initMSE(new Observer() {
+
+			@Override
+			public void updateInfo() {
+				// does nothing;
+			}
+		});
+		// finish since handleKBReady will be called
 		finish();
 	}
 }

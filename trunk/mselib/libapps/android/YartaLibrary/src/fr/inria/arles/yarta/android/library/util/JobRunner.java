@@ -1,7 +1,6 @@
 package fr.inria.arles.yarta.android.library.util;
 
 import fr.inria.arles.yarta.android.library.BaseActivity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 public class JobRunner {
@@ -22,8 +21,8 @@ public class JobRunner {
 	}
 
 	public void run(int messageStringId, Job job) {
-		ProgressDialog dialog = ProgressDialog.show(parent, "Wait",
-				parent.getString(messageStringId), true);
+		ProgressDialog dialog = ProgressDialog.show(parent,
+				parent.getString(messageStringId));
 		new AsyncRunnerTask(job).execute(dialog);
 	}
 

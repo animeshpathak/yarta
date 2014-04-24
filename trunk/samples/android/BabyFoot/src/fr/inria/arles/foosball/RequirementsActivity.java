@@ -2,6 +2,7 @@ package fr.inria.arles.foosball;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
+import fr.inria.arles.foosball.PlayersApp.Observer;
 import fr.inria.arles.yarta.android.library.DependencyCheck;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,8 +15,7 @@ public class RequirementsActivity extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (DependencyCheck.isYartaInstalled(this)) {
-			startActivity(new Intent(this, MainActivity.class));
-			finish();
+			proceedToApplication();
 		} else {
 			setContentView(R.layout.activity_requirements);
 		}
@@ -25,13 +25,25 @@ public class RequirementsActivity extends SherlockActivity {
 	protected void onResume() {
 		super.onResume();
 		if (DependencyCheck.isYartaInstalled(this)) {
-			startActivity(new Intent(this, MainActivity.class));
-			finish();
+			proceedToApplication();
 		}
 	}
 
 	public void onClickProceed(View view) {
-		String url = "market://details?id=fr.inria.arles.yarta";
+		String url = "market://details?id=fr.inria.arles.iris";
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+	}
+
+	private void proceedToApplication() {
+		PlayersApp app = (PlayersApp) getApplication();
+		app.initMSE(new Observer() {
+
+			@Override
+			public void updateInfo() {
+				// does nothing;
+			}
+		});
+		// finish since handleKBReady will be called
+		finish();
 	}
 }

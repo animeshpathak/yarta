@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Message;

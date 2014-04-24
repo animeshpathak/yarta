@@ -5,13 +5,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEManager;
 import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 
 /**
@@ -113,9 +114,20 @@ public class YartaApp extends Application implements MSEApplication {
 			sam.setOwnerID(userId);
 
 			notifyAllObservers();
+
+			startMainActivity();
 		} else {
 			uninitMSE();
 		}
+	}
+
+	/**
+	 * Starts the main activity of the app;
+	 */
+	private void startMainActivity() {
+		Intent intent = new Intent(this, DashboardActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 	}
 
 	@Override

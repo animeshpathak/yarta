@@ -82,12 +82,8 @@
     <string name="person_add_dialog_text">Type in the id of your friend or scan his QR if the person is present.</string>
     <string name="person_add_scan_qr">Scan QR</string>
     <string name="person_add">Add</string>
-    <string name="login_using_cas">Connect</string>
-    <string name="login_inria_identifiant">Username LDAP</string>
-    <string name="login_inria_password">Password</string>
     <string name="login_inria_logging_in">Connecting…</string>
     <string name="login_inria_login_error">Login error. Check Internet and Password!</string>
-    <string name="login_proceed_browser"><u>Login using CAS</u></string>
     <string name="person_email_hint">enter your e-mail</string>
     <string name="person_save">Save</string>
     <string name="person_location">Location</string>
@@ -113,4 +109,14 @@
     <string name="feedback_app_bug">The app is buggy!</string>
     <string name="feedback_sent_ok">Thank you for the feedback!</string>
     <string name="feedback_sent_error">You need Internet to send feedback!</string>
+
+    <!-- IRIS -->
+    <string name="login_authenticate_cas">CAS Login</string>
+    <string name="login_or">OR</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_authenticate">Authenticate</string>
+    <string name="login_empty_fields">Username and password should not be empty!</string>
+    <string name="login_wait_logging">Please wait while you are being logged in…</string>
+
 </resources>

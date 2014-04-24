@@ -9,6 +9,8 @@ import com.actionbarsherlock.view.Window;
 
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.android.library.util.Settings;
+import fr.inria.arles.yarta.android.library.web.WebClient;
 import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
@@ -18,17 +20,20 @@ import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
 /**
  * Base activity containing common functionality.
  */
-public class BaseActivity extends SherlockActivity implements YartaApp.Observer {
+public class BaseActivity extends SherlockActivity implements
+		YartaApp.Observer, WebClient.WebErrorCallback {
 
 	private YartaApp app;
 	private JobRunner runner;
 	private YLogger log = YLoggerFactory.getLogger();
+	protected Settings settings;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
+		settings = new Settings(this);
 		app = (YartaApp) getApplication();
 		runner = new JobRunner(this);
 		tracker.start(this);
@@ -91,7 +96,7 @@ public class BaseActivity extends SherlockActivity implements YartaApp.Observer 
 	protected void uninitMSE() {
 		app.uninitMSE();
 	}
-	
+
 	protected MSEManager getMSE() {
 		return app.getMSE();
 	}
@@ -150,5 +155,15 @@ public class BaseActivity extends SherlockActivity implements YartaApp.Observer 
 
 	protected void sendNotify(String peerId) {
 		app.sendNotify(peerId);
+	}
+
+	// from iris web client
+	// TODO: maybe move in application
+	@Override
+	public void onAuthenticationFailed() {
+	}
+
+	@Override
+	public void onNetworkFailed() {
 	}
 }

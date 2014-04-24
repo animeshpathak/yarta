@@ -2,7 +2,7 @@ package fr.inria.arles.yarta.android.library;
 
 import java.util.Set;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.resources.Person;
 import android.app.Dialog;
 import android.content.Context;

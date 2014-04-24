@@ -34,7 +34,7 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:layout_marginBottom="5dp"
-        style="@style/AppBlueButton"
+        style="@style/AppCarrotButton"
         android:text="@string/about_visit_project" />
 
 </RelativeLayout>

@@ -3,7 +3,7 @@ package fr.inria.arles.yarta.android.library;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.YartaApp.Observer;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import fr.inria.arles.yarta.knowledgebase.KBException;
@@ -65,20 +65,20 @@ public class LibraryService extends Service implements MSEApplication,
 
 	@Override
 	public boolean init() {
-		if (initialized && settings.getString(Settings.USER_ID).length() > 0) {
-			handleKBReady(settings.getString(Settings.USER_ID));
+		if (initialized && getUserId() != null) {
+			handleKBReady(getUserId());
 			log("Already initialized.");
 			return true;
 		}
 
-		String lastUser = settings.getString(Settings.USER_ID);
+		String lastUser = getUserId();
 		if (lastUser == null || lastUser.length() == 0) {
 			YartaApp app = (YartaApp) getApplication();
 			app.setLoginObserver(new Observer() {
 
 				@Override
 				public void updateInfo() {
-					String userId = settings.getString(Settings.USER_ID);
+					String userId = getUserId();
 					if (userId != null && userId.length() > 0) {
 						init(userId);
 					} else {
@@ -120,11 +120,11 @@ public class LibraryService extends Service implements MSEApplication,
 					getApplicationContext());
 			communicationMgr.setMessageReceiver(this);
 
-			settings.setString(Settings.USER_ID, userId);
+			settings.setString(Settings.USER_NAME, userId);
 
 			initialized = true;
 
-			handleKBReady(settings.getString(Settings.USER_ID));
+			handleKBReady(getUserId());
 		} catch (KBException ex) {
 			ex.printStackTrace();
 			return false;
@@ -142,9 +142,12 @@ public class LibraryService extends Service implements MSEApplication,
 
 	@Override
 	public String getUserId() {
-		String userId = settings.getString(Settings.USER_ID);
+		String userId = settings.getString(Settings.USER_NAME);
 		if (userId != null) {
 			if (userId.length() > 0) {
+				if (!userId.contains("@")) {
+					userId += "@inria.fr";
+				}
 				return userId;
 			}
 		}
@@ -192,8 +195,8 @@ public class LibraryService extends Service implements MSEApplication,
 		service = new AidlService(this, tracker, knowledgeBase,
 				communicationMgr);
 
-		if (settings.getString(Settings.USER_ID).length() > 0) {
-			init(settings.getString(Settings.USER_ID));
+		if (getUserId() != null) {
+			init(getUserId());
 		}
 	}
 
@@ -394,8 +397,10 @@ public class LibraryService extends Service implements MSEApplication,
 
 	@Override
 	public boolean clear() {
-		settings.setString(Settings.USER_ID, null);
-		settings.setBoolean(Settings.USER_VERIFIED, false);
+		settings.setString(Settings.USER_NAME, null);
+		settings.setString(Settings.USER_GUID, null);
+		settings.setString(Settings.USER_TOKEN, null);
+		settings.setString(Settings.USER_RANDOM_GUID, null);
 		uninit(true);
 		return true;
 	}

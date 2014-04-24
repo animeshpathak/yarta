@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
