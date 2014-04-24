@@ -29,7 +29,6 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	public static final int MENU_LOGOUT = 1;
 	public static final int MENU_FEEDBACK = 2;
 	public static final int MENU_NAME = 3;
-	public static final int MENU_ABOUT = 4;
 
 	private Player me;
 	private Match latestMatch;
@@ -76,9 +75,6 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			break;
 		case MENU_FEEDBACK:
 			onFeedback();
-			break;
-		case MENU_ABOUT:
-			onAbout();
 			break;
 		case MENU_NAME:
 			onConfigure();
@@ -351,10 +347,6 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 		FeedbackDialog dialog = new FeedbackDialog(this);
 		dialog.setHandler(this);
 		dialog.show();
-	}
-
-	protected void onAbout() {
-		startActivity(new Intent(this, AboutActivity.class));
 	}
 
 	private NameConfigureDialog configureDlg;

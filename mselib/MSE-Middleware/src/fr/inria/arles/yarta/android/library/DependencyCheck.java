@@ -37,7 +37,7 @@ public class DependencyCheck {
 		if (packageManager != null) {
 			try {
 				packageManager.getPackageInfo(
-						"fr.inria.arles.yarta",
+						"fr.inria.arles.iris",
 						PackageManager.GET_ACTIVITIES);
 				return true;
 			} catch (NameNotFoundException ex) {

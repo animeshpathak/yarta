@@ -1,5 +1,6 @@
 package fr.inria.arles.giveaway;
 
+import fr.inria.arles.giveaway.DonationApp.Observer;
 import fr.inria.arles.yarta.android.library.DependencyCheck;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,8 +13,7 @@ public class RequirementsActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (DependencyCheck.isYartaInstalled(this)) {
-			startActivity(new Intent(this, NewsActivity.class));
-			finish();
+			proceedToApplication();
 		} else {
 			setContentView(R.layout.activity_requirements);
 		}
@@ -23,13 +23,25 @@ public class RequirementsActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		if (DependencyCheck.isYartaInstalled(this)) {
-			startActivity(new Intent(this, NewsActivity.class));
-			finish();
+			proceedToApplication();
 		}
 	}
 
 	public void onClickProceed(View view) {
-		String url = "market://details?id=fr.inria.arles.yarta";
+		String url = "market://details?id=fr.inria.arles.iris";
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+	}
+
+	private void proceedToApplication() {
+		DonationApp app = (DonationApp) getApplication();
+		app.initMSE(new Observer() {
+
+			@Override
+			public void updateInfo() {
+				// does nothing;
+			}
+		});
+		// finish since handleKBReady will be called
+		finish();
 	}
 }

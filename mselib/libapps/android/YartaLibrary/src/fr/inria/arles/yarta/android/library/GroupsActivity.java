@@ -1,6 +1,6 @@
 package fr.inria.arles.yarta.android.library;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 import android.os.Bundle;
 
 public class GroupsActivity extends BaseActivity {

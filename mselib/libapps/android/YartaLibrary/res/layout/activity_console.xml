@@ -54,7 +54,7 @@
 
         <Button
             android:id="@+id/startService"
-            style="@style/AppBlueButton"
+            style="@style/AppCarrotButton"
             android:layout_width="0sp"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"

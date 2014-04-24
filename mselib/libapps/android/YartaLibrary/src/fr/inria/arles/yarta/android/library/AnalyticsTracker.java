@@ -3,7 +3,7 @@ package fr.inria.arles.yarta.android.library;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.Settings;
 
 import android.content.Context;

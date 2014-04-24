@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import fr.inria.arles.yarta.R;
+import fr.inria.arles.iris.R;
 
 import android.app.Dialog;
 import android.content.Context;

@@ -5,120 +5,118 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.UUID;
 
-import fr.inria.arles.yarta.R;
-import fr.inria.arles.yarta.android.library.util.CASUtil;
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.android.library.util.Settings;
+import fr.inria.arles.yarta.android.library.web.WebClient;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements
+		TextView.OnEditorActionListener {
 
-	private Settings settings;
+	public static final String NoStart = "NoStart";
 
-	public static final String Logout = "Logout";
+	private boolean nostart = false;
+	private WebClient client = WebClient.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
 
-		settings = new Settings(this);
-		if (getIntent().hasExtra(Logout)) {
-			// perform logout
-			uninitMSE();
-			settings.setString(Settings.USER_ID, "");
-			settings.setBoolean(Settings.USER_VERIFIED, false);
-			finish();
-		} else if (settings.getBoolean(Settings.USER_VERIFIED)) {
-			finish();
-		} else {
-			setTheme(R.style.AppThemeNoTitlebar);
-			setContentView(R.layout.activity_login);
+		String username = settings.getString(Settings.USER_NAME);
+		String usertoken = settings.getString(Settings.USER_TOKEN);
+		String userguid = settings.getString(Settings.USER_GUID);
+
+		setCtrlText(R.id.username, username);
+
+		if (getIntent().hasExtra(NoStart)) {
+			nostart = true;
+		} else if (usertoken.length() > 0) {
+			// TODO: check if logged in;
+			client.setUsername(username);
+			client.setUserToken(usertoken);
+			client.setUserGuid(userguid);
+			proceedToMain();
 		}
+
+		EditText textPassword = (EditText) findViewById(R.id.password);
+		textPassword.setOnEditorActionListener(this);
 	}
 
-	public void onClickLogin(View view) {
-
-		final String username = getCtrlText(R.id.username);
-		final String password = getCtrlText(R.id.password);
-
-		executeWithMessage(R.string.app_name, new Job() {
-
-			private boolean success;
-
-			public void doWork() {
-				success = util.performLogin(username, password);
-			}
-
-			@Override
-			public void doUIAfter() {
-				if (success) {
-					onUserId(username + "@inria.fr");
-				} else {
-					Toast.makeText(getApplicationContext(),
-							R.string.login_inria_login_error, Toast.LENGTH_LONG)
-							.show();
-				}
-			}
-		});
-	}
-
-	public void onClickCASLogin(View view) {
-		String guid = UUID.randomUUID().toString();
-		settings.setString(Settings.USER_SID, guid);
-
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-				Uri.parse("http://arles.rocq.inria.fr/yarta/?r=" + guid));
-		startActivity(browserIntent);
+	@Override
+	public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+		if (actionId == EditorInfo.IME_ACTION_GO) {
+			onClickLogin(view);
+		}
+		return false;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		final String guid = settings.getString(Settings.USER_RANDOM_GUID);
+		if (guid.length() > 0) {
+			executeWithMessage(R.string.login_wait_logging, new Job() {
 
-		if (!settings.getBoolean(Settings.USER_VERIFIED))
-			execute(new Job() {
-
-				private String userId;
+				private boolean ok = false;;
 
 				@Override
 				public void doWork() {
-					String userSID = settings.getString(Settings.USER_SID);
-					String yartaURL = "http://arles.rocq.inria.fr/yarta/?r="
-							+ userSID + "&get";
+					try {
+						String url = WebClient.ElggCAS + "read&guid=" + guid;
+						String tokenAndUser = readURL(url).trim();
 
-					String content = readURL(yartaURL);
+						if (tokenAndUser.length() > 3) {
+							String token = tokenAndUser.substring(0,
+									tokenAndUser.indexOf(','));
+							String username = tokenAndUser
+									.substring(tokenAndUser.indexOf(',') + 1);
+							client.setUsername(username);
+							client.setUserToken(token);
+							client.setUserGuid(client.getUserGuid(username));
 
-					userId = content.trim();
+							settings.setString(Settings.USER_NAME,
+									client.getUsername());
+							settings.setString(Settings.USER_GUID,
+									client.getUserGuid());
+
+							// TODO: remove it afterwards
+							settings.setString(Settings.USER_TOKEN,
+									client.getUserToken());
+
+							settings.setString(Settings.USER_RANDOM_GUID, "");
+
+							ok = true;
+
+							readURL(url.replace("read", "remove"));
+						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 
 				@Override
 				public void doUIAfter() {
-					if (userId.length() > 0) {
-						onUserId(userId + "@inria.fr");
+					if (ok) {
+						if (nostart) {
+							finish();
+						} else {
+							proceedToMain();
+						}
 					}
 				}
 			});
-	}
-
-	private void onUserId(String userId) {
-		settings.setString(Settings.USER_ID, userId);
-		settings.setBoolean(Settings.USER_VERIFIED, true);
-		finish();
-	}
-
-	@Override
-	public void finish() {
-		String userId = settings.getString(Settings.USER_ID);
-
-		YartaApp app = (YartaApp) getApplication();
-		app.onLogin(userId.length() == 0 ? null : userId);
-
-		super.finish();
+		}
 	}
 
 	private String readURL(String url) {
@@ -138,5 +136,67 @@ public class LoginActivity extends BaseActivity {
 		return content;
 	}
 
-	private CASUtil util = new CASUtil();
+	public void onClickLoginCAS(View view) {
+		String guid = UUID.randomUUID().toString();
+		settings.setString(Settings.USER_RANDOM_GUID, guid);
+
+		String url = WebClient.ElggCAS + "guid=" + guid;
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		startActivity(browserIntent);
+	}
+
+	public void onClickLogin(View view) {
+		final String username = getCtrlText(R.id.username);
+		final String password = getCtrlText(R.id.password);
+
+		if (username.length() == 0 || password.length() == 0) {
+			Toast.makeText(this, R.string.login_empty_fields, Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+
+		execute(new Job() {
+			private int result = -1;
+
+			@Override
+			public void doWork() {
+				result = client.authenticate(username, password);
+			}
+
+			@Override
+			public void doUIAfter() {
+				if (result == WebClient.RESULT_OK) {
+					settings.setString(Settings.USER_NAME, client.getUsername());
+					settings.setString(Settings.USER_GUID, client.getUserGuid());
+
+					// TODO: remove it afterwards
+					settings.setString(Settings.USER_TOKEN,
+							client.getUserToken());
+
+					if (nostart) {
+						finish();
+					} else {
+						proceedToMain();
+					}
+				} else {
+					Toast.makeText(LoginActivity.this, client.getLastError(),
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void finish() {
+		String userId = settings.getString(Settings.USER_NAME);
+
+		YartaApp app = (YartaApp) getApplication();
+		app.onLogin(userId.length() == 0 ? null : userId);
+
+		super.finish();
+	}
+
+	private void proceedToMain() {
+		finish();
+	}
 }
