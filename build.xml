@@ -53,6 +53,14 @@
 		<java jar="version.jar" fork="true">
 			<arg line="samples/android/YartaUIXAndroid/AndroidManifest.xml"/>
 		</java>
+
+		<java jar="version.jar" fork="true">
+			<arg line="samples/android/BabyFoot/AndroidManifest.xml"/>
+		</java>
+
+		<java jar="version.jar" fork="true">
+			<arg line="samples/android/INRIADonations/AndroidManifest.xml"/>
+		</java>
 		
 		<!-- Android Library -->
 
