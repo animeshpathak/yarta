@@ -66,34 +66,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.AboutActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="fr.inria.arles.yarta.android.library.ConsoleActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/console_title"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="fr.inria.arles.yarta.android.library.PeopleActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/people_title"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="fr.inria.arles.yarta.android.library.GroupsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/groups_title"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="fr.inria.arles.yarta.android.library.EventsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/events_title"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name="fr.inria.arles.yarta.android.library.MessageActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/message_title" />

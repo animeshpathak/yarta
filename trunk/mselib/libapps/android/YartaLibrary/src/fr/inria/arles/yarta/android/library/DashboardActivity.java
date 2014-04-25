@@ -119,18 +119,12 @@ public class DashboardActivity extends BaseActivity implements
 	}
 
 	public void onClickPeople(View view) {
-		Intent intent = new Intent(this, PeopleActivity.class);
-		startActivity(intent);
 	}
 
 	public void onClickGroups(View view) {
-		Intent intent = new Intent(this, GroupsActivity.class);
-		startActivity(intent);
 	}
 
 	public void onClickEvents(View view) {
-		Intent intent = new Intent(this, EventsActivity.class);
-		startActivity(intent);
 	}
 
 	public void onClickMessages(View view) {
@@ -166,11 +160,9 @@ public class DashboardActivity extends BaseActivity implements
 			break;
 		case MENU_ABOUT:
 			trackUI("DashboardActivity.About");
-			startActivity(new Intent(this, AboutActivity.class));
 			break;
 		case MENU_CONSOLE:
 			trackUI("DashboardActivity.Console");
-			startActivity(new Intent(this, ConsoleActivity.class));
 			break;
 		case MENU_FEEDBACK:
 			trackUI("DashboardActivity.Feedback");
