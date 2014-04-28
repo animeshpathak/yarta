@@ -20,6 +20,7 @@
             android:checked="true"
             android:gravity="left|center_vertical"
             android:text="@string/eula_anonimous_usage"
+            android:textColor="@color/AppTextColor"
             android:textSize="12sp" />
 
         <LinearLayout

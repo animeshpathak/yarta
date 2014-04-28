@@ -169,11 +169,16 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 						Integer score = scorePoints.containsKey(pid) ? scorePoints
 								.get(pid) : 0;
 						total += 1;
-						score += blueScore;
-						if (blueScore > redScore && blue.contains(p)) {
-							won += 1;
-						} else if (redScore > blueScore && red.contains(p)) {
-							won += 1;
+						if (blue.contains(p)) {
+							score += blueScore;
+							if (blueScore > redScore) {
+								won += 1;
+							}
+						} else if (red.contains(p)) {
+							score += redScore;
+							if (redScore > blueScore) {
+								won += 1;
+							}
 						}
 
 						totalGames.put(pid, total);
