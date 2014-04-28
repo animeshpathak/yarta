@@ -107,8 +107,8 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 			log("imported file with success = %b", success);
 		} catch (Exception ex) {
-			logError("ILibraryService.initialize ex: %s", ex.getMessage());
-			ex.printStackTrace();
+			logError("ILibraryService.initialize ex: %s", ex.toString());
+			logError("when reading %s", source);
 		}
 		tracker.sendAPIUsage("MSEKnowledgeBaseUtils.import");
 	}

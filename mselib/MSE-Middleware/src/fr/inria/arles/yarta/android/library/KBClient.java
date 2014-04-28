@@ -441,15 +441,14 @@ public class KBClient implements KnowledgeBase {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			mIRemoteService = ILibraryService.Stub.asInterface(service);
 			try {
-				mIRemoteService.initialize(source, namespace, policyFile,
-						null);
+				mIRemoteService.initialize(source, namespace, policyFile, null);
 
 			} catch (Exception ex) {
 				log("Exception on initialize: %s", ex.getMessage());
 			}
 
-			/// removePublicFile(policyFile);
-			/// removePublicFile(source);
+			removePublicFile(policyFile);
+			removePublicFile(source);
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
@@ -491,7 +490,7 @@ public class KBClient implements KnowledgeBase {
 			FileOutputStream fos = context.openFileOutput(outFile,
 					Context.MODE_WORLD_READABLE);
 
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[4096];
 			int count = 0;
 			while ((count = fin.read(buffer)) != -1) {
 				fos.write(buffer, 0, count);
