@@ -136,7 +136,7 @@ public class DonationApp extends Application implements MSEApplication,
 					+ fileName);
 
 			int count = 0;
-			byte buffer[] = new byte[1024];
+			byte buffer[] = new byte[4096];
 
 			while ((count = fin.read(buffer)) != -1) {
 				fout.write(buffer, 0, count);
