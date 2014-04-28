@@ -1,5 +1,6 @@
 package fr.inria.arles.yarta.android.library;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
@@ -110,7 +111,10 @@ public class LibraryService extends Service implements MSEApplication,
 
 			try {
 				String kbPath = dataPath + "/kb.rdf";
-				MSEKnowledgeBaseUtils.importDataFromRDF(kbPath, knowledgeBase);
+				if (new File(kbPath).exists()) {
+					MSEKnowledgeBaseUtils.importDataFromRDF(kbPath,
+							knowledgeBase);
+				}
 			} catch (Exception ex) {
 				// do nothing
 			}

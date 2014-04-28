@@ -484,7 +484,7 @@ public class KBClient implements KnowledgeBase {
 	 * @return the destination path for the temporary file
 	 */
 	private String createPublicFile(String sourcePath) {
-		String outFile = "" + System.currentTimeMillis();
+		String outFile = "pub" + new File(sourcePath).getName();
 		try {
 			FileInputStream fin = new FileInputStream(sourcePath);
 			FileOutputStream fos = context.openFileOutput(outFile,
@@ -496,8 +496,8 @@ public class KBClient implements KnowledgeBase {
 				fos.write(buffer, 0, count);
 			}
 
-			fos.close();
 			fin.close();
+			fos.close();
 
 			return context.getFilesDir() + "/" + outFile;
 		} catch (Exception ex) {
