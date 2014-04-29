@@ -26,33 +26,6 @@ public class CMClient implements CommunicationManager {
 	 * TODO: move these platform specfic implementation to their original yarta
 	 * implementation;
 	 */
-	/**
-	 * The MSEApplication stub to receive notifications back from the actual
-	 * CommunicationManager.
-	 */
-	IMSEApplication.Stub applicationStub = new IMSEApplication.Stub() {
-
-		@Override
-		public boolean handleQuery(String query) throws RemoteException {
-			return application.handleQuery(query);
-		}
-
-		@Override
-		public void handleNotification(String notification)
-				throws RemoteException {
-			application.handleNotification(notification);
-		}
-
-		@Override
-		public void handleKBReady(String userId) throws RemoteException {
-			application.handleKBReady(userId);
-		}
-
-		public String getAppId() throws RemoteException {
-			return application.getAppId();
-		}
-
-	};
 
 	/**
 	 * The Receiver stub to receive message notifications from the actual
@@ -123,7 +96,6 @@ public class CMClient implements CommunicationManager {
 
 		try {
 			mIRemoteService.unregisterReceiver(receiverStub);
-			mIRemoteService.unregisterCallback(applicationStub);
 			mIRemoteService.uninitialize();
 		} catch (Exception ex) {
 			logError("uninitialize ex: %s", ex.getMessage());
@@ -259,10 +231,6 @@ public class CMClient implements CommunicationManager {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			mIRemoteService = ILibraryService.Stub.asInterface(service);
 			try {
-				if (!mIRemoteService.registerCallback(applicationStub)) {
-					logError("registerCallback() failed.");
-				}
-
 				if (!mIRemoteService.registerReceiver(receiverStub)) {
 					logError("registerReceiver() failed.");
 				}
