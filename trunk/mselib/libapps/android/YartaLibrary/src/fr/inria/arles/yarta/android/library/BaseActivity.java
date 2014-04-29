@@ -73,6 +73,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	private AnalyticsTracker tracker = LibraryService.getTracker();
 
 	protected void trackUI(String message) {
+		tracker.trackUIUsage(message);
 	}
 
 	public void showProgress() {

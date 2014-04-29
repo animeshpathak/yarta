@@ -36,7 +36,7 @@ public class PostActivity extends BaseActivity implements
 
 	private PostsListAdapter adapter;
 	private PullToRefreshListView list;
-	
+
 	private WebClient client = WebClient.getInstance();
 
 	@Override
@@ -53,6 +53,8 @@ public class PostActivity extends BaseActivity implements
 		list = (PullToRefreshListView) findViewById(R.id.listComents);
 		list.setAdapter(adapter);
 		list.setOnRefreshListener(this);
+
+		trackUI("PostView");
 	}
 
 	@Override

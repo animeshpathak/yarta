@@ -43,6 +43,7 @@ public class CommentAddDialog extends BaseDialog implements
 
 		findViewById(R.id.cancel).setOnClickListener(this);
 		findViewById(R.id.set).setOnClickListener(this);
+		trackUI("CommentAdd");
 	}
 
 	@Override

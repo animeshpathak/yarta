@@ -74,6 +74,8 @@ public class WireAddDialog extends BaseDialog implements View.OnClickListener {
 
 		findViewById(R.id.cancel).setOnClickListener(this);
 		findViewById(R.id.set).setOnClickListener(this);
+
+		trackUI("WireAdd");
 	}
 
 	@Override
