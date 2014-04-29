@@ -71,8 +71,6 @@ public class KBClient implements KnowledgeBase {
 	public KBClient(MSEApplication application, Object context) {
 		this.application = application;
 		this.context = (Context) context;
-		DependencyCheck
-				.checkYartaInstallationAndPromptWithUninstall(this.context);
 	}
 
 	@Override

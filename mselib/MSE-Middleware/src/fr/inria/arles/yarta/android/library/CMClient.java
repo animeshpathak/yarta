@@ -72,9 +72,6 @@ public class CMClient implements CommunicationManager {
 		this.context = (Context) context;
 		this.application = application;
 
-		DependencyCheck
-				.checkYartaInstallationAndPromptWithUninstall(this.context);
-
 		doStartService();
 		doBindService();
 		return 0;
