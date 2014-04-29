@@ -77,7 +77,7 @@
     <string name="login_inria_login_error">Erreur vous connecter</string>
     <string name="login_proceed_browser"><u>Connectez-vous en utilisant CAS</u></string>
     <string name="missing_platform">Platform Missing</string>
-    <string name="missing_needs_yarta_installed">You need to install Yarta Middleware.</string>
+    <string name="missing_needs_yarta_installed">You need to install Yarta Middleware v2.</string>
     <string name="missing_proceed">Install platform</string>
     <string name="position_text">Your position at the table</string>
     <string name="position_title">Choose side</string>

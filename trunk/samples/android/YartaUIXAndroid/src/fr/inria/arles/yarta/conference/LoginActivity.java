@@ -1,6 +1,5 @@
 package fr.inria.arles.yarta.conference;
 
-import fr.inria.arles.yarta.android.library.DependencyCheck;
 import fr.inria.arles.yarta.conference.AsyncRunner.Job;
 import fr.inria.arles.yarta.core.Settings;
 import android.content.Intent;
@@ -14,11 +13,12 @@ public class LoginActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		DependencyCheck.checkYartaInstallationAndPromptWithUninstall(this);
 
 		String userId = getString(R.string.app_user);
 		String cachedUserId = settings.getString(Settings.USER_ID);
-		setCtrlText(R.id.userName, cachedUserId == null || cachedUserId.length() == 0 ? userId : cachedUserId);
+		setCtrlText(R.id.userName,
+				cachedUserId == null || cachedUserId.length() == 0 ? userId
+						: cachedUserId);
 	}
 
 	public void onLoginButtonClicked(View view) {

@@ -30,7 +30,7 @@ public class RequirementsActivity extends SherlockActivity {
 	}
 
 	public void onClickProceed(View view) {
-		String url = "market://details?id=fr.inria.arles.iris";
+		String url = "https://play.google.com/apps/testing/fr.inria.arles.iris";
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 	}
 

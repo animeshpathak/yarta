@@ -1,5 +1,7 @@
 package fr.inria.arles.giveaway;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import fr.inria.arles.giveaway.DonationApp.Observer;
 import fr.inria.arles.yarta.android.library.DependencyCheck;
 import android.content.Intent;
@@ -7,7 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
-public class RequirementsActivity extends BaseActivity {
+public class RequirementsActivity extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class RequirementsActivity extends BaseActivity {
 	}
 
 	public void onClickProceed(View view) {
-		String url = "market://details?id=fr.inria.arles.iris";
+		String url = "https://play.google.com/apps/testing/fr.inria.arles.iris";
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 	}
 
