@@ -478,13 +478,14 @@ public class KBClient implements KnowledgeBase {
 				if (!mIRemoteService.registerCallback(applicationStub)) {
 					logError("registerCallback() failed.");
 				}
-				mIRemoteService.initialize(source, namespace, policyFile, null);
+				mIRemoteService.initialize(applicationStub, source, namespace,
+						policyFile, null);
 			} catch (Exception ex) {
 				log("Exception on initialize: %s", ex.getMessage());
 			}
 
-			removePublicFile(policyFile);
-			removePublicFile(source);
+			// removePublicFile(policyFile);
+			// removePublicFile(source);
 		}
 
 		public void onServiceDisconnected(ComponentName className) {

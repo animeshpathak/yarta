@@ -85,9 +85,10 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	}
 
 	@Override
-	public void initialize(String source, String namespace, String policyFile,
-			String userId) throws RemoteException {
-		service.init();
+	public void initialize(IMSEApplication app, String source,
+			String namespace, String policyFile, String userId)
+			throws RemoteException {
+		service.init(app, source, namespace, policyFile);
 
 		tracker.beforeAPIUsage();
 		try {
@@ -630,7 +631,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public boolean registerCallback(IMSEApplication callback)
 			throws RemoteException {
 		boolean result = false;
-		log("ILibraryService.registerCallback(%s)", callback);
+		log("ILibraryService.registerCallback(%s)", callback.getAppId());
 		if (callback != null) {
 			result = appCallbacks.register(callback);
 		}
@@ -641,7 +642,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public boolean unregisterCallback(IMSEApplication callback)
 			throws RemoteException {
 		boolean result = false;
-		log("ILibraryService.unregisterCallback(%s)", callback);
+		log("ILibraryService.unregisterCallback(%s)", callback.getAppId());
 		if (callback != null) {
 			result = appCallbacks.unregister(callback);
 		}
@@ -754,10 +755,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 		int n = appCallbacks.beginBroadcast();
 		log("handleKBReady <%d>", n);
-		
+
 		for (int i = 0; i < n; i++) {
 			IMSEApplication application = appCallbacks.getBroadcastItem(i);
 			try {
+				log("handleKBReady<%s>", application.getAppId());
 				application.handleKBReady(userId);
 			} catch (Exception ex) {
 				log("handleKBReady ex: %s", ex.getMessage());

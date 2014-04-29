@@ -38,7 +38,6 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app = (YartaApp) getApplication();
 		runner = new JobRunner(this);
 		tracker.start(this);
-		app.initMSE(this);
 	}
 
 	protected void log(String format, Object... args) {

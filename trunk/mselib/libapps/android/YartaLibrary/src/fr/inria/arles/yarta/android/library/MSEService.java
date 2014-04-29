@@ -8,9 +8,19 @@ public interface MSEService {
 
 	/**
 	 * Initializes the pure MSE objects.
+	 * 
+	 * @param app
+	 *            caller app
+	 * @param source
+	 *            source rdf file
+	 * @param namespace
+	 *            source rdf namespace
+	 * @param policyFile
+	 *            the policies file
 	 * @return
 	 */
-	public boolean init();
+	public boolean init(IMSEApplication app, String source, String namespace,
+			String policyFile);
 
 	/**
 	 * Periodic save of KB.
