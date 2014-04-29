@@ -20,6 +20,8 @@ public class ProfileActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		trackUI("ProfileView");
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class MessageActivity extends BaseActivity {
 	private MessageItem reply;
 
 	private List<UserItem> friends;
-	
+
 	private WebClient client = WebClient.getInstance();
 
 	@Override
@@ -43,6 +43,8 @@ public class MessageActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_message);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		trackUI("MessageView");
 	}
 
 	@Override

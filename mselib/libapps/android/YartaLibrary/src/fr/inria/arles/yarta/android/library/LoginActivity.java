@@ -51,6 +51,8 @@ public class LoginActivity extends BaseActivity implements
 
 		EditText textPassword = (EditText) findViewById(R.id.password);
 		textPassword.setOnEditorActionListener(this);
+
+		trackUI("LoginView");
 	}
 
 	@Override
@@ -137,6 +139,7 @@ public class LoginActivity extends BaseActivity implements
 	}
 
 	public void onClickLoginCAS(View view) {
+		trackUI("LoginCas");
 		String guid = UUID.randomUUID().toString();
 		settings.setString(Settings.USER_RANDOM_GUID, guid);
 
@@ -146,6 +149,7 @@ public class LoginActivity extends BaseActivity implements
 	}
 
 	public void onClickLogin(View view) {
+		trackUI("LoginNormal");
 		final String username = getCtrlText(R.id.username);
 		final String password = getCtrlText(R.id.password);
 

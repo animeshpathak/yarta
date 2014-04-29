@@ -158,10 +158,12 @@ public class MainActivity extends BaseActivity implements
 
 		// TODO: do this better
 		if (position == sideMenuItems.size() - 1) {
+			trackUI("Logout");
 			drawerLayout.closeDrawer(drawerList);
 			onLogout();
 			return;
 		} else if (position == sideMenuItems.size() - 2) {
+			trackUI("Feedback");
 			drawerLayout.closeDrawer(drawerList);
 			onFeedback();
 			return;
@@ -174,6 +176,7 @@ public class MainActivity extends BaseActivity implements
 		BaseFragment fragment = sideMenuItems.get(position).getFragment();
 		setTitle(sideMenuItems.get(position).getText());
 
+		trackUI(sideMenuItems.get(position).getText());
 		if (!fragment.isAdded()) {
 			ft.replace(R.id.content_frame, fragment);
 		} else {

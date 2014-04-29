@@ -1,6 +1,7 @@
 package fr.inria.arles.yarta.android.library.util;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.yarta.android.library.LibraryService;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +17,10 @@ public class BaseDialog extends Dialog {
 
 	public BaseDialog(Context context, int style) {
 		super(context, style);
+	}
+
+	protected void trackUI(String name) {
+		LibraryService.getTracker().trackUIUsage(name);
 	}
 
 	protected String getString(int strId) {
