@@ -54,7 +54,7 @@ public class MSEManager {
 		if (isAndroid()) {
 			commManager = new fr.inria.arles.yarta.android.library.CMClient();
 			knowledgeBase = new fr.inria.arles.yarta.android.library.KBClient(
-					context);
+					app, context);
 		} else {
 			commManager = new fr.inria.arles.yarta.desktop.library.CMClient();
 			knowledgeBase = new fr.inria.arles.yarta.desktop.library.KBClient(

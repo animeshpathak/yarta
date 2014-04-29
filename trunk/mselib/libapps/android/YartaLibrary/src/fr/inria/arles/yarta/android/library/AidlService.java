@@ -752,8 +752,9 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public void handleKBReady(String userId) {
 		tracker.beforeAPIUsage();
 
-		log("handleKBReady");
 		int n = appCallbacks.beginBroadcast();
+		log("handleKBReady <%d>", n);
+		
 		for (int i = 0; i < n; i++) {
 			IMSEApplication application = appCallbacks.getBroadcastItem(i);
 			try {

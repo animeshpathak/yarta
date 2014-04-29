@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 
 import fr.inria.arles.yarta.Criteria;
 import fr.inria.arles.yarta.knowledgebase.KBException;
@@ -22,6 +23,7 @@ import fr.inria.arles.yarta.knowledgebase.interfaces.PolicyManager;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
 import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
+import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 import fr.inria.arles.yarta.android.library.ILibraryService;
 
 /**
@@ -30,13 +32,44 @@ import fr.inria.arles.yarta.android.library.ILibraryService;
  */
 public class KBClient implements KnowledgeBase {
 
+	private MSEApplication application;
+
+	/**
+	 * The MSEApplication stub to receive notifications back from the actual
+	 * CommunicationManager.
+	 */
+	IMSEApplication.Stub applicationStub = new IMSEApplication.Stub() {
+
+		@Override
+		public boolean handleQuery(String query) throws RemoteException {
+			return application.handleQuery(query);
+		}
+
+		@Override
+		public void handleNotification(String notification)
+				throws RemoteException {
+			application.handleNotification(notification);
+		}
+
+		@Override
+		public void handleKBReady(String userId) throws RemoteException {
+			application.handleKBReady(userId);
+		}
+
+		public String getAppId() throws RemoteException {
+			return application.getAppId();
+		}
+
+	};
+
 	/**
 	 * Context & application based constructor.
 	 * 
 	 * @param context
 	 * @param application
 	 */
-	public KBClient(Object context) {
+	public KBClient(MSEApplication application, Object context) {
+		this.application = application;
 		this.context = (Context) context;
 		DependencyCheck
 				.checkYartaInstallationAndPromptWithUninstall(this.context);
@@ -58,6 +91,7 @@ public class KBClient implements KnowledgeBase {
 	public void uninitialize() throws KBException {
 		log("unitialize");
 		try {
+			mIRemoteService.unregisterCallback(applicationStub);
 			mIRemoteService.uninitialize();
 		} catch (Exception ex) {
 			logError("uninitialize ex: %s", ex.getMessage());
@@ -441,8 +475,10 @@ public class KBClient implements KnowledgeBase {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			mIRemoteService = ILibraryService.Stub.asInterface(service);
 			try {
+				if (!mIRemoteService.registerCallback(applicationStub)) {
+					logError("registerCallback() failed.");
+				}
 				mIRemoteService.initialize(source, namespace, policyFile, null);
-
 			} catch (Exception ex) {
 				log("Exception on initialize: %s", ex.getMessage());
 			}
