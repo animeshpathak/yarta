@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/grosca/yarta/mselib/libapps/android/YartaLibrary/src/fr/inria/arles/yarta/android/library/ILibraryService.aidl
+ * Original file: /home/grosca/work/yarta/trunk/mselib/libapps/android/YartaLibrary/src/fr/inria/arles/yarta/android/library/ILibraryService.aidl
  */
 package fr.inria.arles.yarta.android.library;
 public interface ILibraryService extends android.os.IInterface
@@ -61,15 +61,17 @@ return true;
 case TRANSACTION_initialize:
 {
 data.enforceInterface(DESCRIPTOR);
-java.lang.String _arg0;
-_arg0 = data.readString();
+fr.inria.arles.yarta.android.library.IMSEApplication _arg0;
+_arg0 = fr.inria.arles.yarta.android.library.IMSEApplication.Stub.asInterface(data.readStrongBinder());
 java.lang.String _arg1;
 _arg1 = data.readString();
 java.lang.String _arg2;
 _arg2 = data.readString();
 java.lang.String _arg3;
 _arg3 = data.readString();
-this.initialize(_arg0, _arg1, _arg2, _arg3);
+java.lang.String _arg4;
+_arg4 = data.readString();
+this.initialize(_arg0, _arg1, _arg2, _arg3, _arg4);
 reply.writeNoException();
 return true;
 }
@@ -730,12 +732,13 @@ _data.recycle();
 return _result;
 }
 /*** KnowledgeBase related functions */
-@Override public void initialize(java.lang.String source, java.lang.String namespace, java.lang.String policyFile, java.lang.String userId) throws android.os.RemoteException
+@Override public void initialize(fr.inria.arles.yarta.android.library.IMSEApplication app, java.lang.String source, java.lang.String namespace, java.lang.String policyFile, java.lang.String userId) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
 android.os.Parcel _reply = android.os.Parcel.obtain();
 try {
 _data.writeInterfaceToken(DESCRIPTOR);
+_data.writeStrongBinder((((app!=null))?(app.asBinder()):(null)));
 _data.writeString(source);
 _data.writeString(namespace);
 _data.writeString(policyFile);
@@ -1630,7 +1633,7 @@ static final int TRANSACTION_unregisterCallback = (android.os.IBinder.FIRST_CALL
 public java.lang.String getUserId() throws android.os.RemoteException;
 public boolean clear() throws android.os.RemoteException;
 /*** KnowledgeBase related functions */
-public void initialize(java.lang.String source, java.lang.String namespace, java.lang.String policyFile, java.lang.String userId) throws android.os.RemoteException;
+public void initialize(fr.inria.arles.yarta.android.library.IMSEApplication app, java.lang.String source, java.lang.String namespace, java.lang.String policyFile, java.lang.String userId) throws android.os.RemoteException;
 public void uninitialize() throws android.os.RemoteException;
 public android.os.Bundle addLiteral(java.lang.String value, java.lang.String dataType, java.lang.String requestorId) throws android.os.RemoteException;
 public android.os.Bundle addResource(java.lang.String nodeURI, java.lang.String typeURI, java.lang.String requestorId) throws android.os.RemoteException;

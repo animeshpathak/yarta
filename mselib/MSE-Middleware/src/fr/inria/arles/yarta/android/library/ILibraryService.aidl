@@ -10,7 +10,7 @@ interface ILibraryService {
 	boolean clear();
 	 
 	/*** KnowledgeBase related functions ***/
-	void initialize(in String source, in String namespace, in String policyFile, in String userId);
+	void initialize(in IMSEApplication app, in String source, in String namespace, in String policyFile, in String userId);
 	void uninitialize();
 
 	Bundle addLiteral(in String value, in String dataType, in String requestorId);

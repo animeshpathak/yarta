@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/grosca/yarta/mselib/libapps/android/YartaLibrary/src/fr/inria/arles/yarta/android/library/IMSEApplication.aidl
+ * Original file: /home/grosca/work/yarta/trunk/mselib/libapps/android/YartaLibrary/src/fr/inria/arles/yarta/android/library/IMSEApplication.aidl
  */
 package fr.inria.arles.yarta.android.library;
 public interface IMSEApplication extends android.os.IInterface

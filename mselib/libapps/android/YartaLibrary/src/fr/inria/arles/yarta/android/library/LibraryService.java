@@ -64,24 +64,50 @@ public class LibraryService extends Service implements MSEApplication,
 
 	private boolean initialized = false;
 
+	/**
+	 * loads the client data and calls back the mse application
+	 * 
+	 * @param app
+	 * @param source
+	 * @param namespace
+	 * @param policyFile
+	 * @return
+	 */
+	private boolean loadClientDataAndNotify(IMSEApplication app, String source,
+			String namespace, String policyFile) {
+		boolean result = true;
+		try {
+			result &= MSEKnowledgeBaseUtils.importDataFromRDF(source,
+					knowledgeBase);
+			log("loadClientDataAndNotify<%s>", app.getAppId());
+			app.handleKBReady(getUserId());
+		} catch (Exception ex) {
+			logError("error: %s", ex);
+		}
+		return result;
+	}
+
 	@Override
-	public boolean init() {
+	public boolean init(final IMSEApplication app, final String source,
+			final String namespace, final String policyFile) {
 		if (initialized && getUserId() != null) {
-			handleKBReady(getUserId());
 			log("Already initialized.");
+			loadClientDataAndNotify(app, source, namespace, policyFile);
 			return true;
 		}
 
 		String lastUser = getUserId();
 		if (lastUser == null || lastUser.length() == 0) {
-			YartaApp app = (YartaApp) getApplication();
-			app.setLoginObserver(new Observer() {
+			YartaApp application = (YartaApp) getApplication();
+			application.setLoginObserver(new Observer() {
 
 				@Override
 				public void updateInfo() {
 					String userId = getUserId();
 					if (userId != null && userId.length() > 0) {
 						init(userId);
+						loadClientDataAndNotify(app, source, namespace,
+								policyFile);
 					} else {
 						handleKBReady(null);
 					}
@@ -94,7 +120,10 @@ public class LibraryService extends Service implements MSEApplication,
 			startActivity(intent);
 			return true;
 		} else {
-			return init(lastUser);
+			boolean result = init(lastUser);
+			result &= loadClientDataAndNotify(app, source, namespace,
+					policyFile);
+			return result;
 		}
 	}
 
@@ -127,8 +156,6 @@ public class LibraryService extends Service implements MSEApplication,
 			settings.setString(Settings.USER_NAME, userId);
 
 			initialized = true;
-
-			handleKBReady(getUserId());
 		} catch (KBException ex) {
 			ex.printStackTrace();
 			return false;
