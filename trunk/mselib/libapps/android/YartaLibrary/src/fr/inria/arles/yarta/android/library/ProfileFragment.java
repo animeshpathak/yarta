@@ -52,7 +52,7 @@ public class ProfileFragment extends BaseFragment {
 	}
 
 	private boolean isEditable() {
-		return username.equals(client.getUsername());
+		return client.getUsername().equals(username);
 	}
 
 	@Override

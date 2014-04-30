@@ -8,7 +8,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.SideMenuItem;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;

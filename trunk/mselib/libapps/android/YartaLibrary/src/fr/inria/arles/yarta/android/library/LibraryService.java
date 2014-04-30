@@ -7,6 +7,7 @@ import java.io.InputStream;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.YartaApp.Observer;
 import fr.inria.arles.yarta.android.library.util.Settings;
+import fr.inria.arles.yarta.android.library.web.WebClient;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBaseUtils;
@@ -214,6 +215,10 @@ public class LibraryService extends Service implements MSEApplication,
 		log("YartaLibrary is being started.");
 
 		settings = new Settings(this);
+
+		client.setUsername(settings.getString(Settings.USER_NAME));
+		client.setUserGuid(settings.getString(Settings.USER_GUID));
+		client.setUserToken(settings.getString(Settings.USER_TOKEN));
 
 		tracker.start(this);
 
@@ -425,6 +430,7 @@ public class LibraryService extends Service implements MSEApplication,
 
 	// the settings object
 	private Settings settings;
+	private WebClient client = WebClient.getInstance();
 
 	@Override
 	public boolean clear() {
