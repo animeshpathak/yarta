@@ -54,6 +54,10 @@ public class KBClient implements KnowledgeBase {
 		@Override
 		public void handleKBReady(String userId) throws RemoteException {
 			application.handleKBReady(userId);
+
+			// service already loaded the files;
+			removePublicFile(policyFile);
+			removePublicFile(source);
 		}
 
 		public String getAppId() throws RemoteException {
@@ -92,7 +96,7 @@ public class KBClient implements KnowledgeBase {
 			mIRemoteService.unregisterCallback(applicationStub);
 			mIRemoteService.uninitialize();
 		} catch (Exception ex) {
-			logError("uninitialize ex: %s", ex.getMessage());
+			logError("uninitialize ex: %s", ex);
 		}
 		doUnbindService();
 	}
@@ -105,7 +109,7 @@ public class KBClient implements KnowledgeBase {
 					requestorId);
 			return (Node) result.getSerializable("Node");
 		} catch (Exception ex) {
-			logError("Exception on addLiteral: %s", ex.getMessage());
+			logError("Exception on addLiteral: %s", ex);
 		}
 		return null;
 	}
@@ -117,7 +121,7 @@ public class KBClient implements KnowledgeBase {
 					Conversion.toBundle(node), requestorId);
 			return Conversion.toNode(result);
 		} catch (Exception ex) {
-			logError("Exception on addResource: %s", ex.getMessage());
+			logError("Exception on addResource: %s", ex);
 		}
 		return null;
 	}
@@ -129,7 +133,7 @@ public class KBClient implements KnowledgeBase {
 			return Conversion.toNode(mIRemoteService.addResource(nodeURI,
 					typeURI, requestorId));
 		} catch (Exception ex) {
-			logError("Exception on addResource: %s", ex.getMessage());
+			logError("Exception on addResource: %s", ex);
 		}
 		return null;
 	}
@@ -142,7 +146,7 @@ public class KBClient implements KnowledgeBase {
 		try {
 			return mIRemoteService.getMyNameSpace();
 		} catch (Exception ex) {
-			logError("Exception on getMyNameSpace: %s", ex.getMessage());
+			logError("Exception on getMyNameSpace: %s", ex);
 		}
 		return null;
 	}
@@ -156,7 +160,7 @@ public class KBClient implements KnowledgeBase {
 							Conversion.toBundle(o), requestorId);
 			return Conversion.toTriple(result);
 		} catch (Exception ex) {
-			logError("Exception on addTriple: %s", ex.getMessage());
+			logError("Exception on addTriple: %s", ex);
 		}
 		return null;
 	}
@@ -170,7 +174,7 @@ public class KBClient implements KnowledgeBase {
 							Conversion.toBundle(o), requestorId);
 			return Conversion.toTriple(result);
 		} catch (Exception ex) {
-			logError("Exception on getTriple: %s", ex.getMessage());
+			logError("Exception on getTriple: %s", ex);
 		}
 		return null;
 	}
@@ -184,7 +188,7 @@ public class KBClient implements KnowledgeBase {
 					Conversion.toBundle(o), requestorId);
 			return Conversion.toTriple(result);
 		} catch (Exception ex) {
-			logError("Exception on removeTriple: %s", ex.getMessage());
+			logError("Exception on removeTriple: %s", ex);
 		}
 		return null;
 	}
@@ -196,7 +200,7 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.getResourceByURI(URI, requestorId);
 			return Conversion.toNode(result);
 		} catch (Exception ex) {
-			logError("Exception on getResourceByURI: %s", ex.getMessage());
+			logError("Exception on getResourceByURI: %s", ex);
 		}
 		return null;
 	}
@@ -207,8 +211,7 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.getResourceByURINoPolicies(URI);
 			return Conversion.toNode(result);
 		} catch (Exception ex) {
-			logError("Exception on getResourceByURINoPolicies: %s",
-					ex.getMessage());
+			logError("Exception on getResourceByURINoPolicies: %s", ex);
 		}
 		return null;
 	}
@@ -224,8 +227,7 @@ public class KBClient implements KnowledgeBase {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
 		} catch (Exception ex) {
-			logError("Exception on getAllPropertiesAsTriples: %s",
-					ex.getMessage());
+			logError("Exception on getAllPropertiesAsTriples: %s", ex);
 		}
 		return lstResult;
 	}
@@ -239,7 +241,7 @@ public class KBClient implements KnowledgeBase {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
 		} catch (Exception ex) {
-			logError("Exception on getKBAsTriples: %s", ex.getMessage());
+			logError("Exception on getKBAsTriples: %s", ex);
 		}
 		return lstResult;
 	}
@@ -256,7 +258,7 @@ public class KBClient implements KnowledgeBase {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
 		} catch (Exception ex) {
-			logError("Exception on getPropertyAsTriples: %s", ex.getMessage());
+			logError("Exception on getPropertyAsTriples: %s", ex);
 		}
 		return lstResult;
 	}
@@ -273,8 +275,7 @@ public class KBClient implements KnowledgeBase {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
 		} catch (Exception ex) {
-			logError("Exception on getPropertyObjectAsTriples: %s",
-					ex.getMessage());
+			logError("Exception on getPropertyObjectAsTriples: %s", ex);
 		}
 		return lstResult;
 	}
@@ -291,8 +292,7 @@ public class KBClient implements KnowledgeBase {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
 		} catch (Exception ex) {
-			logError("Exception on getPropertySubjectAsTriples: %s",
-					ex.getMessage());
+			logError("Exception on getPropertySubjectAsTriples: %s", ex);
 		}
 		return lstResult;
 	}
@@ -306,7 +306,7 @@ public class KBClient implements KnowledgeBase {
 							Conversion.toBundle(p), requestorId);
 			return Conversion.toGraph(result);
 		} catch (Exception ex) {
-			logError("Exception on getPropertyObject: %s", ex.getMessage());
+			logError("Exception on getPropertyObject: %s", ex);
 		}
 		return null;
 	}
@@ -320,7 +320,7 @@ public class KBClient implements KnowledgeBase {
 							Conversion.toBundle(o), requestorId);
 			return Conversion.toGraph(result);
 		} catch (Exception ex) {
-			logError("Exception on getPropertySubject: %s", ex.getMessage());
+			logError("Exception on getPropertySubject: %s", ex);
 		}
 		return null;
 	}
@@ -332,7 +332,7 @@ public class KBClient implements KnowledgeBase {
 					requestorId);
 			return Conversion.toGraph(result);
 		} catch (Exception ex) {
-			logError("Exception on addGraph: %s", ex.getMessage());
+			logError("Exception on addGraph: %s", ex);
 		}
 		return null;
 	}
@@ -345,7 +345,7 @@ public class KBClient implements KnowledgeBase {
 					Conversion.toBundle(o), requestorId);
 			return Conversion.toGraph(result);
 		} catch (Exception ex) {
-			logError("Exception on getProperty: %s", ex.getMessage());
+			logError("Exception on getProperty: %s", ex);
 		}
 		return null;
 	}
@@ -358,7 +358,7 @@ public class KBClient implements KnowledgeBase {
 					Conversion.toBundle(s), requestorId);
 			return Conversion.toGraph(result);
 		} catch (Exception ex) {
-			logError("Exception on getAllProperties: %s", ex.getMessage());
+			logError("Exception on getAllProperties: %s", ex);
 		}
 		return null;
 	}
@@ -375,7 +375,7 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.getKB(requestorId);
 			return Conversion.toGraph(result);
 		} catch (Exception ex) {
-			logError("Exception on getKB: %s", ex.getMessage());
+			logError("Exception on getKB: %s", ex);
 		}
 		return null;
 	}
@@ -386,7 +386,7 @@ public class KBClient implements KnowledgeBase {
 			mIPolicyManager = mIRemoteService.getPolicyManager();
 			return policyManager;
 		} catch (Exception ex) {
-			logError("Exception on getPolicyManager: %s", ex.getMessage());
+			logError("Exception on getPolicyManager: %s", ex);
 		}
 		return null;
 	}
@@ -407,7 +407,7 @@ public class KBClient implements KnowledgeBase {
 				try {
 					mIPolicyManager.removeRule(position);
 				} catch (Exception ex) {
-					logError("removeRule: %s", ex.getMessage());
+					logError("removeRule: %s", ex);
 				}
 			}
 		}
@@ -418,7 +418,7 @@ public class KBClient implements KnowledgeBase {
 				try {
 					return mIPolicyManager.getRulesCount();
 				} catch (Exception ex) {
-					logError("getRulesCount: %s", ex.getMessage());
+					logError("getRulesCount: %s", ex);
 				}
 			}
 			return 0;
@@ -430,7 +430,7 @@ public class KBClient implements KnowledgeBase {
 				try {
 					return mIPolicyManager.getRule(position);
 				} catch (Exception ex) {
-					logError("getRule: %s", ex.getMessage());
+					logError("getRule: %s", ex);
 				}
 			}
 			return null;
@@ -442,7 +442,7 @@ public class KBClient implements KnowledgeBase {
 				try {
 					mIPolicyManager.addRule(rule);
 				} catch (Exception ex) {
-					logError("addRule: %s", ex.getMessage());
+					logError("addRule: %s", ex);
 				}
 			}
 		}
@@ -471,23 +471,30 @@ public class KBClient implements KnowledgeBase {
 	private ServiceConnection mConnection = new ServiceConnection() {
 
 		public void onServiceConnected(ComponentName className, IBinder service) {
+			log("onServiceConnected");
 			mIRemoteService = ILibraryService.Stub.asInterface(service);
 			try {
 				if (!mIRemoteService.registerCallback(applicationStub)) {
 					logError("registerCallback() failed.");
 				}
-				mIRemoteService.initialize(applicationStub, source, namespace,
-						policyFile, null);
-			} catch (Exception ex) {
-				log("Exception on initialize: %s", ex.getMessage());
-			}
 
-			// removePublicFile(policyFile);
-			// removePublicFile(source);
+				if (!rebind) {
+					mIRemoteService.initialize(applicationStub, source,
+							namespace, policyFile, null);
+				}
+			} catch (Exception ex) {
+				log("Exception on initialize: %s", ex);
+			}
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
+			log("onServiceDisconnected");
 			mIRemoteService = null;
+
+			// avoid calling initialize twice;
+			rebind = true;
+			doStartService();
+			doBindService();
 		}
 	};
 
@@ -536,8 +543,7 @@ public class KBClient implements KnowledgeBase {
 
 			return context.getFilesDir() + "/" + outFile;
 		} catch (Exception ex) {
-			log("Exception ex: %s", ex.getMessage());
-			ex.printStackTrace();
+			log("Exception ex: %s", ex);
 		}
 
 		return null;
@@ -560,6 +566,7 @@ public class KBClient implements KnowledgeBase {
 	private String namespace;
 	private String policyFile;
 	private Context context;
+	private boolean rebind;
 
 	private final static String LOGTAG = "KBCLIENT";
 }

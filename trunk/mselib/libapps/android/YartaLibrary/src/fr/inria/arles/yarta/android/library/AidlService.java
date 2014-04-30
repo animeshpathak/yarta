@@ -89,29 +89,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			String namespace, String policyFile, String userId)
 			throws RemoteException {
 		service.init(app, source, namespace, policyFile);
-
-		tracker.beforeAPIUsage();
-		try {
-			// TODO: in case it is not logged in kb is not ready here
-			boolean success = false;
-			log("ILibraryService.initialize[source = %s, policy = %s]", source,
-					policyFile);
-
-			success = MSEKnowledgeBaseUtils.importDataFromRDF(source,
-					knowledgeBase);
-
-			// TODO: remove passed files which are temporary
-			// TODO: knowledgeBase read/write rdf;
-			// TODO: unit tests for new code
-			// TODO: handleKBRead(userId) sets automatically the userid for mse
-			// and sam;
-
-			log("imported file with success = %b", success);
-		} catch (Exception ex) {
-			logError("ILibraryService.initialize ex: %s", ex.toString());
-			logError("when reading %s", source);
-		}
-		tracker.sendAPIUsage("MSEKnowledgeBaseUtils.import");
 	}
 
 	@Override

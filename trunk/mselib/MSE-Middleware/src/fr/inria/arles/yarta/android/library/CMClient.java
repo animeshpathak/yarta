@@ -95,7 +95,7 @@ public class CMClient implements CommunicationManager {
 			mIRemoteService.unregisterReceiver(receiverStub);
 			mIRemoteService.uninitialize();
 		} catch (Exception ex) {
-			logError("uninitialize ex: %s", ex.getMessage());
+			logError("uninitialize ex: %s", ex);
 			ex.printStackTrace();
 		}
 		doUnbindService();
@@ -108,7 +108,7 @@ public class CMClient implements CommunicationManager {
 		try {
 			return mIRemoteService.sendHello(partnerID);
 		} catch (Exception ex) {
-			logError("sendHello ex: %s", ex.getMessage());
+			logError("sendHello ex: %s", ex);
 			ex.printStackTrace();
 		}
 		return -1;
@@ -120,7 +120,7 @@ public class CMClient implements CommunicationManager {
 		try {
 			return mIRemoteService.sendUpdateRequest(partnerID);
 		} catch (Exception ex) {
-			logError("sendUpdateRequest ex: %s", ex.getMessage());
+			logError("sendUpdateRequest ex: %s", ex);
 			ex.printStackTrace();
 		}
 		return -1;
@@ -134,7 +134,7 @@ public class CMClient implements CommunicationManager {
 			return mIRemoteService.sendMessage(peerId,
 					Conversion.toBundle(message));
 		} catch (Exception ex) {
-			logError("sendMessage ex: %s", ex.getMessage());
+			logError("sendMessage ex: %s", ex);
 			ex.printStackTrace();
 		}
 		return -1;
@@ -146,7 +146,7 @@ public class CMClient implements CommunicationManager {
 		try {
 			return mIRemoteService.sendResource(peerId, uniqueId);
 		} catch (Exception ex) {
-			logError("sendMessage ex: %s", ex.getMessage());
+			logError("sendMessage ex: %s", ex);
 			ex.printStackTrace();
 		}
 		return -1;
@@ -158,7 +158,7 @@ public class CMClient implements CommunicationManager {
 		try {
 			return mIRemoteService.sendNotify(peerId);
 		} catch (Exception ex) {
-			logError("sendMessage ex: %s", ex.getMessage());
+			logError("sendMessage ex: %s", ex);
 			ex.printStackTrace();
 		}
 		return -1;
@@ -198,7 +198,7 @@ public class CMClient implements CommunicationManager {
 		try {
 			context.unbindService(mConnection);
 		} catch (Exception ex) {
-			logError("unbind exception: %s", ex.getMessage());
+			logError("unbind exception: %s", ex);
 		}
 	}
 
@@ -226,6 +226,7 @@ public class CMClient implements CommunicationManager {
 	private ServiceConnection mConnection = new ServiceConnection() {
 
 		public void onServiceConnected(ComponentName className, IBinder service) {
+			log("onServiceConnected");
 			mIRemoteService = ILibraryService.Stub.asInterface(service);
 			try {
 				if (!mIRemoteService.registerReceiver(receiverStub)) {
@@ -233,13 +234,17 @@ public class CMClient implements CommunicationManager {
 				}
 
 			} catch (Exception ex) {
-				logError("onServiceConnected exception: %s", ex.getMessage());
-				ex.printStackTrace();
+				logError("onServiceConnected exception: %s", ex);
 			}
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
+			log("onServiceDisconnected");
 			mIRemoteService = null;
+
+			// restart & rebind
+			doStartService();
+			doBindService();
 		}
 	};
 

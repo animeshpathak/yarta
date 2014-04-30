@@ -128,8 +128,10 @@ public class MatchActivity extends BaseActivity implements
 	protected String playerToString(Player player) {
 		String nickName = player.getNickName();
 
-		if (nickName == null) {
+		if (nickName == null && player.getUserId() != null) {
 			nickName = player.getUserId().replace("@inria.fr", "");
+		} else {
+			nickName = "NULL";
 		}
 		return nickName;
 	}
@@ -203,6 +205,11 @@ public class MatchActivity extends BaseActivity implements
 						items[i] = p.getUserId();
 					} else {
 						items[i] = p.getFirstName() + " " + p.getLastName();
+					}
+
+					// wcs
+					if (items[i] == null) {
+						items[i] = "NULL";
 					}
 				}
 			}

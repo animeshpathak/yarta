@@ -231,11 +231,12 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			String nickName = me.getNickName();
 
 			if (nickName == null) {
+				if (me.getUserId() != null) {
+					nickName = me.getUserId().replace("@inria.fr", "");
+				}
 				onConfigure();
 			}
-			setCtrlText(R.id.name,
-					nickName == null ? me.getUserId().replace("@inria.fr", "")
-							: nickName);
+			setCtrlText(R.id.name, nickName);
 		} catch (KBException ex) {
 			ex.printStackTrace();
 		}
@@ -245,7 +246,7 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 		try {
 			matchesPlayed = me.getTotalGames();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			// do nothing, it's normal
 		}
 		setCtrlText(R.id.info, String.format(
 				getString(R.string.main_player_matches_played), matchesPlayed));
@@ -359,7 +360,7 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	protected void onConfigure() {
 		String nickName = me.getNickName();
 
-		if (nickName == null) {
+		if (nickName == null && me.getUserId() != null) {
 			nickName = me.getUserId().replace("@inria.fr", "");
 		}
 

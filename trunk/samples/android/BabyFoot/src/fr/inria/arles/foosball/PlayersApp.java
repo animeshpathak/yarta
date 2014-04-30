@@ -84,7 +84,9 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	public void uninitMSE() {
 		if (mse != null) {
 			try {
-				comm.setMessageReceiver(null);
+				if (comm != null) {
+					comm.setMessageReceiver(null);
+				}
 				mse.shutDown();
 			} catch (Exception ex) {
 				ex.printStackTrace();
