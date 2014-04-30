@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -117,7 +118,11 @@ public class WebClient {
 	}
 
 	public void setUsername(String userName) {
-		this.userName = userName;
+		if (userName.contains("@")) {
+			this.userName = userName.substring(0, userName.indexOf('@'));
+		} else {
+			this.userName = userName;
+		}
 	}
 
 	public void setUserToken(String userToken) {
@@ -130,16 +135,6 @@ public class WebClient {
 
 	public String getLastError() {
 		return lastError;
-	}
-
-	public int renewToken(String username) {
-		String urlParams = "method=auth.renewtoken&username=" + username;
-		try {
-			String xml = doAuthenticatedPost(ElggBase, urlParams);
-		} catch (Exception ex) {
-			lastError = ex.toString();
-		}
-		return 0;
 	}
 
 	private boolean noInternet() {
@@ -256,7 +251,7 @@ public class WebClient {
 	public int setUser(String username, UserItem user) {
 		lastError = null;
 		String urlParams = "method=user.save_profile&username=" + username;
-		String array = "&profile[website]=" + user.getWebsite();
+		String array = "&profile[website]=" + encode(user.getWebsite());
 		array += "&profile[name]=" + encode(user.getName());
 		urlParams += array;
 
@@ -1285,8 +1280,6 @@ public class WebClient {
 						.item(0)).getElementsByTagName("guid").item(0)
 						.getTextContent();
 
-				// TODO: baaad!
-				// will use guid instead of username;
 				UserItem author = new UserItem(name, userguid, avatar_url);
 
 				items.add(new WireItem(guid, content, time, author));
@@ -1515,7 +1508,7 @@ public class WebClient {
 		// API Authentication
 		double ftime = System.currentTimeMillis();
 		ftime /= 1000.0;
-		String microtime = String.format("%.4f", ftime);
+		String microtime = String.format(Locale.getDefault(), "%.4f", ftime);
 
 		String postHash = calcMD5(urlParameters);
 
@@ -1581,7 +1574,7 @@ public class WebClient {
 		// API Authentication
 		double ftime = System.currentTimeMillis();
 		ftime /= 1000.0;
-		String microtime = String.format("%.4f", ftime);
+		String microtime = String.format(Locale.getDefault(), "%.4f", ftime);
 
 		String nonce = "randomstring";
 		String hmac = calcHMAC(microtime, nonce, PublicKey, PrivateKey,
