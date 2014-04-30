@@ -69,7 +69,9 @@ public class DonationApp extends Application implements MSEApplication,
 	public void uninitMSE() {
 		if (mse != null) {
 			try {
-				comm.setMessageReceiver(null);
+				if (comm != null) {
+					comm.setMessageReceiver(null);
+				}
 				mse.shutDown();
 			} catch (Exception ex) {
 				ex.printStackTrace();
