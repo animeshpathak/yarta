@@ -5,7 +5,6 @@ import java.util.List;
 
 import fr.inria.arles.yarta.android.library.web.IrisBridge;
 import fr.inria.arles.yarta.knowledgebase.KBException;
-import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBaseUtils;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;

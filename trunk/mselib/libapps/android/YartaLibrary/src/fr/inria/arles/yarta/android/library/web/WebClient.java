@@ -1321,7 +1321,6 @@ public class WebClient {
 
 			n = doc.getElementsByTagName("result").item(0);
 			if (n != null) {
-				lastError = n.getTextContent();
 				userToken = n.getTextContent();
 				WebClient.this.userName = username;
 			}
