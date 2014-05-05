@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.UUID;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.yarta.android.library.util.ProgressDialog;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import fr.inria.arles.yarta.android.library.web.WebClient;
 import android.accounts.Account;
@@ -60,6 +61,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 			new AsyncTask<Void, Void, Intent>() {
 
 				private boolean ok;
+				private ProgressDialog dialog;
+
+				protected void onPreExecute() {
+					dialog = ProgressDialog.show(AuthenticatorActivity.this,
+							getString(R.string.login_wait_logging));
+				}
 
 				@Override
 				protected Intent doInBackground(Void... params) {
@@ -97,6 +104,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				}
 
 				protected void onPostExecute(Intent result) {
+					dialog.dismiss();
 					if (ok) {
 						final Intent res = new Intent();
 						res.putExtra(AccountManager.KEY_ACCOUNT_NAME,
@@ -143,6 +151,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		new AsyncTask<Void, Void, Intent>() {
 
 			private int result = -1;
+			private ProgressDialog dialog;
+
+			protected void onPreExecute() {
+				dialog = ProgressDialog.show(AuthenticatorActivity.this,
+						getString(R.string.login_wait_logging));
+			}
 
 			@Override
 			protected Intent doInBackground(Void... params) {
@@ -152,6 +166,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 			@Override
 			protected void onPostExecute(Intent intent) {
+				dialog.dismiss();
 				if (result == WebClient.RESULT_OK) {
 					settings.setString(Settings.USER_NAME, client.getUsername());
 					settings.setString(Settings.USER_GUID, client.getUserGuid());
