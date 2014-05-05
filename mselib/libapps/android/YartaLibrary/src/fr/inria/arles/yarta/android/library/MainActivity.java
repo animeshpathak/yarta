@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity implements
 		}
 	}
 
-	private void onLogout() {
+	private void onLogoutClicked() {
 		AlertDialog.show(this, getString(R.string.main_logout_are_you_sure),
 				getString(R.string.main_logout_confirm),
 				getString(R.string.main_logout_ok),
@@ -76,14 +76,13 @@ public class MainActivity extends BaseActivity implements
 
 					@Override
 					public void onOK() {
-						getMSE().clear();
-						uninitMSE();
+						clearMSE();
 						finish();
 					}
 				});
 	}
 
-	private void onFeedback() {
+	private void onFeedbackClicked() {
 		FeedbackDialog dlg = new FeedbackDialog(this);
 		dlg.setRunner(runner);
 		dlg.show();
@@ -160,12 +159,12 @@ public class MainActivity extends BaseActivity implements
 		if (position == sideMenuItems.size() - 1) {
 			trackUI("Logout");
 			drawerLayout.closeDrawer(drawerList);
-			onLogout();
+			onLogoutClicked();
 			return;
 		} else if (position == sideMenuItems.size() - 2) {
 			trackUI("Feedback");
 			drawerLayout.closeDrawer(drawerList);
-			onFeedback();
+			onFeedbackClicked();
 			return;
 		}
 

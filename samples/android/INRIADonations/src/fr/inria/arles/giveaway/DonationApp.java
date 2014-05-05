@@ -28,6 +28,14 @@ public class DonationApp extends Application implements MSEApplication,
 		public void updateInfo();
 	}
 
+	/**
+	 * This is the Observer which will let the activities know when the MSE is
+	 * logged out
+	 */
+	public interface LoginObserver {
+		public void onLogout();
+	}
+
 	private CommunicationManager comm;
 	private StorageAccessManagerEx sam;
 	private MSEManagerEx mse;
@@ -48,6 +56,7 @@ public class DonationApp extends Application implements MSEApplication,
 	}
 
 	private List<Observer> observers = new ArrayList<Observer>();
+	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
 
 	public void initMSE(Observer observer) {
 		addObserver(observer);
@@ -74,11 +83,43 @@ public class DonationApp extends Application implements MSEApplication,
 				}
 				mse.shutDown();
 			} catch (Exception ex) {
+				System.out.println("uninitMSE ex: " + ex);
+			}
+			mse = null;
+			sam = null;
+			comm = null;
+		}
+	}
+
+	public void clearMSE() {
+		if (mse != null) {
+			try {
+				if (comm != null) {
+					comm.setMessageReceiver(null);
+				}
+				mse.clear();
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 			mse = null;
 			sam = null;
 			comm = null;
+		}
+	}
+
+	public void addLoginObserver(LoginObserver observer) {
+		if (!loginObservers.contains(observer)) {
+			loginObservers.add(observer);
+		}
+	}
+
+	public void removeLoginObserver(LoginObserver observer) {
+		loginObservers.remove(observer);
+	}
+
+	private void notifyAllLoginObservers() {
+		for (LoginObserver observer : loginObservers) {
+			observer.onLogout();
 		}
 	}
 
@@ -194,8 +235,8 @@ public class DonationApp extends Application implements MSEApplication,
 
 			notifyAllObservers();
 			startMainActivity();
-			// new Thread(sendServerHello).start();
 		} else {
+			notifyAllLoginObservers();
 			uninitMSE();
 		}
 	}

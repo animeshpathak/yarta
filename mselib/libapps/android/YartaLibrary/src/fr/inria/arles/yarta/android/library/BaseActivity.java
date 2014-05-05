@@ -22,7 +22,7 @@ import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
  * Base activity containing common functionality.
  */
 public class BaseActivity extends SherlockFragmentActivity implements
-		YartaApp.Observer, WebClient.WebErrorCallback {
+		YartaApp.Observer, YartaApp.LoginObserver, WebClient.WebErrorCallback {
 
 	private YartaApp app;
 	protected JobRunner runner;
@@ -38,6 +38,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app = (YartaApp) getApplication();
 		runner = new JobRunner(this);
 		tracker.start(this);
+		app.addLoginObserver(this);
 	}
 
 	protected void log(String format, Object... args) {
@@ -50,6 +51,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onDestroy() {
+		app.removeLoginObserver(this);
 		tracker.stop();
 		super.onDestroy();
 	}
@@ -96,6 +98,10 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	protected void uninitMSE() {
 		app.uninitMSE();
+	}
+	
+	protected void clearMSE() {
+		app.clearMSE();
 	}
 
 	protected MSEManager getMSE() {
@@ -177,5 +183,10 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onNetworkFailed() {
+	}
+
+	@Override
+	public void onLogout() {
+		finish();
 	}
 }

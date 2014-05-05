@@ -99,7 +99,19 @@ public class Connection implements ReceiverListener, SenderListener {
 		}
 
 		if (ibiReceiver != null) {
-			ibiReceiver.stop();
+			Thread thread = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					ibiReceiver.stop();
+				}
+			});
+			thread.start();
+			try {
+				thread.join();
+			} catch (InterruptedException ex) {
+				error("Thread.join: %s", ex);
+			}
 		}
 
 		synchronized (ibicoopRefCount) {

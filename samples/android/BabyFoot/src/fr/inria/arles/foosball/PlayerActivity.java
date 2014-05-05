@@ -7,6 +7,7 @@ import fr.inria.arles.foosball.resources.Player;
 import fr.inria.arles.foosball.resources.PlayerImpl;
 import fr.inria.arles.foosball.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.logging.YLoggerFactory;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -92,7 +93,8 @@ public class PlayerActivity extends BaseActivity {
 			scorePoints = player.getScorePoints();
 			winRate = player.getWinRate();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			YLoggerFactory.getLogger().e("Players",
+					"displayStats ex: " + ex.toString());
 		}
 
 		setCtrlText(R.id.info, String.format(

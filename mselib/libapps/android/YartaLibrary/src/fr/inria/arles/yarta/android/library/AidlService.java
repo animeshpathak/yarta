@@ -735,7 +735,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		for (int i = 0; i < n; i++) {
 			IMSEApplication application = appCallbacks.getBroadcastItem(i);
 			try {
-				log("handleKBReady<%s>", application.getAppId());
+				log("handleKBReady: %s", application.getAppId());
 				application.handleKBReady(userId);
 			} catch (Exception ex) {
 				log("handleKBReady ex: %s", ex.getMessage());

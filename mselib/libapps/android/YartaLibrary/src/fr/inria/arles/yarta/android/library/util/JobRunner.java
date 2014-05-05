@@ -65,7 +65,12 @@ public class JobRunner {
 			} catch (Exception ex) {
 				// do nothing
 			}
-			job.doUIAfter();
+
+			try {
+				job.doUIAfter();
+			} catch (IllegalStateException ex) {
+				// activity not attached anymore;
+			}
 		}
 
 		private ProgressDialog dialog;

@@ -28,11 +28,20 @@ public class YartaApp extends Application implements MSEApplication {
 		public void updateInfo();
 	}
 
+	/**
+	 * This is the Observer which will let the activities know when the MSE is
+	 * logged out
+	 */
+	public interface LoginObserver {
+		public void onLogout();
+	}
+
 	private MSEManager mse;
 	private CommunicationManager comm;
 	private StorageAccessManager sam;
 
 	private List<Observer> observers = new ArrayList<Observer>();
+	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
 
 	/**
 	 * In case it's the very first time, copy the base rdf & policy to the
@@ -112,6 +121,15 @@ public class YartaApp extends Application implements MSEApplication {
 		}
 	}
 
+	public void clearMSE() {
+		try {
+			mse.clear();
+		} catch (Exception ex) {
+		} finally {
+			mse = null;
+		}
+	}
+
 	@Override
 	public void handleKBReady(String userId) {
 		if (userId != null && userId.length() > 0) {
@@ -125,6 +143,7 @@ public class YartaApp extends Application implements MSEApplication {
 
 			startMainActivity();
 		} else {
+			notifyAllLoginObservers();
 			uninitMSE();
 		}
 	}
@@ -154,9 +173,25 @@ public class YartaApp extends Application implements MSEApplication {
 		observers.remove(observer);
 	}
 
+	public void addLoginObserver(LoginObserver observer) {
+		if (!loginObservers.contains(observer)) {
+			loginObservers.add(observer);
+		}
+	}
+
+	public void removeLoginObserver(LoginObserver observer) {
+		loginObservers.remove(observer);
+	}
+
 	private void notifyAllObservers() {
 		for (Observer observer : observers) {
 			observer.updateInfo();
+		}
+	}
+
+	private void notifyAllLoginObservers() {
+		for (LoginObserver observer : loginObservers) {
+			observer.onLogout();
 		}
 	}
 
@@ -195,28 +230,5 @@ public class YartaApp extends Application implements MSEApplication {
 	@Override
 	public String getAppId() {
 		return "fr.inria.arles.yarta";
-	}
-
-	// TODO: login workaround
-	private Observer loginObserver;
-
-	/**
-	 * This is called from login activity.
-	 * 
-	 * @param userId
-	 */
-	public void onLogin(String userId) {
-		if (loginObserver != null) {
-			loginObserver.updateInfo();
-		}
-	}
-
-	/**
-	 * The service will set this before starting the login activity.
-	 * 
-	 * @param observer
-	 */
-	public void setLoginObserver(Observer observer) {
-		this.loginObserver = observer;
 	}
 }

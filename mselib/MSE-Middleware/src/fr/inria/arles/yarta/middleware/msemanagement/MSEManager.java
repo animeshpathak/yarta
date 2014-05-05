@@ -110,7 +110,7 @@ public class MSEManager {
 		try {
 			return shutDown();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.e(LOGTAG, "shutDown exception: " + ex);
 		}
 		return false;
 	}
