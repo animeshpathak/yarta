@@ -5,7 +5,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.YartaApp.Observer;
+import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
+import fr.inria.arles.yarta.android.library.auth.FakeActivity;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import fr.inria.arles.yarta.android.library.web.WebClient;
 import fr.inria.arles.yarta.knowledgebase.KBException;
@@ -21,6 +22,11 @@ import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.communication.YCommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.OnAccountsUpdateListener;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,7 +36,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.AssetManager;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
@@ -39,7 +48,7 @@ import android.widget.RemoteViews;
  * CommunicationManager which is shared among all Yarta applications.
  */
 public class LibraryService extends Service implements MSEApplication,
-		Receiver, MSEService {
+		Receiver, MSEService, OnAccountsUpdateListener {
 	/**
 	 * The AIDL stub (for both KB & CM)
 	 */
@@ -51,6 +60,11 @@ public class LibraryService extends Service implements MSEApplication,
 	private CommunicationManager communicationMgr = new YCommunicationManager();
 	private KnowledgeBase knowledgeBase = new MSEKnowledgeBase();
 	private UpdateHelper helper = null;
+
+	/**
+	 * Account manager
+	 */
+	private AccountManager accountMgr;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -99,26 +113,30 @@ public class LibraryService extends Service implements MSEApplication,
 
 		String lastUser = getUserId();
 		if (lastUser == null || lastUser.length() == 0) {
-			YartaApp application = (YartaApp) getApplication();
-			application.setLoginObserver(new Observer() {
+			Handler handler = new Handler(Looper.getMainLooper());
+			handler.post(new Runnable() {
 
 				@Override
-				public void updateInfo() {
-					String userId = getUserId();
-					if (userId != null && userId.length() > 0) {
-						init(userId);
-						loadClientDataAndNotify(app, source, namespace,
-								policyFile);
-					} else {
-						handleKBReady(null);
-					}
+				public void run() {
+					accountMgr.addAccount(AuthenticatorActivity.ACCOUNT_TYPE,
+							AuthenticatorActivity.ACCOUNT_TOKEN, null, null,
+							new FakeActivity(getApplicationContext()),
+							new AccountManagerCallback<Bundle>() {
+								@Override
+								public void run(
+										AccountManagerFuture<Bundle> future) {
+									String userId = getUserId();
+									if (userId != null && userId.length() > 0) {
+										init(userId);
+										loadClientDataAndNotify(app, source,
+												namespace, policyFile);
+									} else {
+										handleKBReady(null);
+									}
+								}
+							}, null);
 				}
 			});
-			Intent intent = new Intent(
-					"fr.inria.arles.yarta.android.library.LoginActivity");
-			intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION
-					| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
 			return true;
 		} else {
 			boolean result = init(lastUser);
@@ -174,14 +192,11 @@ public class LibraryService extends Service implements MSEApplication,
 
 	@Override
 	public String getUserId() {
-		String userId = settings.getString(Settings.USER_NAME);
-		if (userId != null) {
-			if (userId.length() > 0) {
-				if (!userId.contains("@")) {
-					userId += "@inria.fr";
-				}
-				return userId;
-			}
+		Account[] accounts = accountMgr
+				.getAccountsByType(AuthenticatorActivity.ACCOUNT_TYPE);
+		if (accounts.length > 0) {
+			Account account = accounts[0];
+			return account.name + "@" + account.type;
 		}
 		return null;
 	}
@@ -218,12 +233,14 @@ public class LibraryService extends Service implements MSEApplication,
 		log("YartaLibrary is being started.");
 
 		settings = new Settings(this);
+		accountMgr = AccountManager.get(this);
+		tracker.start(this);
+
+		accountMgr.addOnAccountsUpdatedListener(this, null, false);
 
 		client.setUsername(settings.getString(Settings.USER_NAME));
 		client.setUserGuid(settings.getString(Settings.USER_GUID));
 		client.setUserToken(settings.getString(Settings.USER_TOKEN));
-
-		tracker.start(this);
 
 		initStrings();
 
@@ -247,12 +264,14 @@ public class LibraryService extends Service implements MSEApplication,
 		YartaApp app = (YartaApp) getApplication();
 		app.uninitMSE();
 
+		uninit(true);
+
 		unregisterReceiver(helloReceiver);
 
-		settings = null;
+		accountMgr.removeOnAccountsUpdatedListener(this);
 
 		tracker.stop();
-		uninit(true);
+		settings = null;
 		log("YartaLibrary has been destroyed.");
 	}
 
@@ -437,7 +456,7 @@ public class LibraryService extends Service implements MSEApplication,
 
 	@Override
 	public boolean clear() {
-		log("clear MSE");
+		log("clearing MSE...");
 
 		settings.setString(Settings.USER_NAME, null);
 		settings.setString(Settings.USER_GUID, null);
@@ -448,7 +467,29 @@ public class LibraryService extends Service implements MSEApplication,
 		client.setUserGuid(null);
 		client.setUserToken(null);
 
+		Account[] accounts = accountMgr
+				.getAccountsByType(AuthenticatorActivity.ACCOUNT_TYPE);
+
+		for (Account account : accounts) {
+			accountMgr.removeAccount(account, null, null);
+		}
+
 		uninit(true);
 		return true;
+	}
+
+	@Override
+	public void onAccountsUpdated(Account[] accounts) {
+		log("onAccountsUpdated(%d)", accounts.length);
+		boolean found = false;
+		for (Account account : accounts) {
+			if (account.type.equals(AuthenticatorActivity.ACCOUNT_TYPE)) {
+				found = true;
+			}
+		}
+
+		if (!found && initialized) {
+			handleKBReady(null);
+		}
 	}
 }

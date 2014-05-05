@@ -19,7 +19,7 @@ import fr.inria.arles.yarta.middleware.msemanagement.MSEManager;
  * Base activity containing common functionality.
  */
 public class BaseActivity extends SherlockFragmentActivity implements
-		DonationApp.Observer {
+		DonationApp.Observer, DonationApp.LoginObserver {
 
 	private DonationApp app;
 	private JobRunner runner;
@@ -33,6 +33,14 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app = (DonationApp) getApplication();
 		runner = new JobRunner(this);
 		app.initMSE(this);
+
+		((DonationApp) getApplication()).addLoginObserver(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		((DonationApp) getApplication()).removeLoginObserver(this);
+		super.onDestroy();
 	}
 
 	protected void log(String format, Object... args) {
@@ -80,6 +88,10 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app.uninitMSE();
 	}
 
+	protected void clearMSE() {
+		app.clearMSE();
+	}
+
 	protected void initMSE() {
 		app.initMSE(this);
 	}
@@ -91,7 +103,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected CommunicationManager getCOMM() {
 		return app.getCOMM();
 	}
-	
+
 	protected MSEManager getMSE() {
 		return app.getMSE();
 	}
@@ -142,5 +154,10 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	protected void sendNotify(String peerId) {
 		app.sendNotify(peerId);
+	}
+
+	@Override
+	public void onLogout() {
+		finish();
 	}
 }

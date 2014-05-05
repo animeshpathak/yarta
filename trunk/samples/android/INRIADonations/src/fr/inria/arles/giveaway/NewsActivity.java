@@ -57,8 +57,7 @@ public class NewsActivity extends BaseActivity implements
 	private MenuListAdapter drawerAdapter;
 
 	public void onClickLogout(View view) {
-		getMSE().clear();
-		uninitMSE();
+		clearMSE();
 		finish();
 	}
 

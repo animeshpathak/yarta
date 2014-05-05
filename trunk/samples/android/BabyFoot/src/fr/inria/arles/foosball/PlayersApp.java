@@ -22,11 +22,20 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 		public void updateInfo();
 	}
 
+	/**
+	 * This is the Observer which will let the activities know when the MSE is
+	 * logged out
+	 */
+	public interface LoginObserver {
+		public void onLogout();
+	}
+
 	private CommunicationManager comm;
 	private StorageAccessManagerEx sam;
 	private MSEManagerEx mse;
 
 	private List<Observer> observers = new ArrayList<PlayersApp.Observer>();
+	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
 
 	public void initMSE(Observer observer) {
 		addObserver(observer);
@@ -59,6 +68,22 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	public void notifyAllObservers() {
 		for (Observer observer : observers) {
 			observer.updateInfo();
+		}
+	}
+
+	public void addLoginObserver(LoginObserver observer) {
+		if (!loginObservers.contains(observer)) {
+			loginObservers.add(observer);
+		}
+	}
+
+	public void removeLoginObserver(LoginObserver observer) {
+		loginObservers.remove(observer);
+	}
+
+	private void notifyAllLoginObservers() {
+		for (LoginObserver observer : loginObservers) {
+			observer.onLogout();
 		}
 	}
 
@@ -187,6 +212,7 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 
 			startMainActivity();
 		} else {
+			notifyAllLoginObservers();
 			uninitMSE();
 		}
 	}

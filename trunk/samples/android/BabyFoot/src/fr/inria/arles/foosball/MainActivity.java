@@ -71,10 +71,10 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_LOGOUT:
-			onLogout();
+			onLogoutClicked();
 			break;
 		case MENU_FEEDBACK:
-			onFeedback();
+			onFeedbackClicked();
 			break;
 		case MENU_NAME:
 			onConfigure();
@@ -341,15 +341,12 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 		return result;
 	}
 
-	protected void onLogout() {
-		// TODO: call mse.clear and mse = null;
-		// TODO: remove uninit mse which is useless;
-		getMSE().clear();
-		uninitMSE();
+	protected void onLogoutClicked() {
+		clearMSE();
 		finish();
 	}
 
-	protected void onFeedback() {
+	protected void onFeedbackClicked() {
 		FeedbackDialog dialog = new FeedbackDialog(this);
 		dialog.setHandler(this);
 		dialog.show();

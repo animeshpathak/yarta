@@ -9,6 +9,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+import fr.inria.arles.foosball.PlayersApp.LoginObserver;
 import fr.inria.arles.foosball.PlayersApp.Observer;
 import fr.inria.arles.foosball.util.JobRunner;
 import fr.inria.arles.foosball.util.JobRunner.Job;
@@ -17,7 +18,8 @@ import fr.inria.arles.foosball.msemanagement.MSEManagerEx;
 import fr.inria.arles.foosball.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 
-public class BaseActivity extends SherlockActivity implements Observer {
+public class BaseActivity extends SherlockActivity implements Observer,
+		LoginObserver {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +33,12 @@ public class BaseActivity extends SherlockActivity implements Observer {
 		runner = new JobRunner(this);
 
 		initMSE(this);
+		((PlayersApp) getApplication()).addLoginObserver(this);
 	}
 
 	@Override
 	protected void onDestroy() {
+		((PlayersApp) getApplication()).removeLoginObserver(this);
 		super.onDestroy();
 	}
 
@@ -156,6 +160,11 @@ public class BaseActivity extends SherlockActivity implements Observer {
 		if (progress != null) {
 			progress.setProgress(percent);
 		}
+	}
+
+	@Override
+	public void onLogout() {
+		finish();
 	}
 
 	protected Settings settings;

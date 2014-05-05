@@ -118,7 +118,7 @@ public class WebClient {
 	}
 
 	public void setUsername(String userName) {
-		if (userName.contains("@")) {
+		if (userName != null && userName.contains("@")) {
 			this.userName = userName.substring(0, userName.indexOf('@'));
 		} else {
 			this.userName = userName;
