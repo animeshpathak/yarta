@@ -200,6 +200,9 @@ public class LibraryService extends Service implements MSEApplication,
 				communicationMgr.uninitialize();
 
 				knowledgeBase.uninitialize();
+
+				handleKBReady(null);
+
 				initialized = false;
 			} catch (Exception ex) {
 				logError("uninit ex: %s", ex.getMessage());
@@ -434,10 +437,17 @@ public class LibraryService extends Service implements MSEApplication,
 
 	@Override
 	public boolean clear() {
+		log("clear MSE");
+
 		settings.setString(Settings.USER_NAME, null);
 		settings.setString(Settings.USER_GUID, null);
 		settings.setString(Settings.USER_TOKEN, null);
 		settings.setString(Settings.USER_RANDOM_GUID, null);
+
+		client.setUsername(null);
+		client.setUserGuid(null);
+		client.setUserToken(null);
+
 		uninit(true);
 		return true;
 	}

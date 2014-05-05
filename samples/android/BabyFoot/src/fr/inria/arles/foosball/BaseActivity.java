@@ -112,6 +112,10 @@ public class BaseActivity extends SherlockActivity implements Observer {
 		application.uninitMSE();
 	}
 
+	protected void clearMSE() {
+		application.clearMSE();
+	}
+
 	protected void addObserver(Observer observer) {
 		application.addObserver(observer);
 	}
