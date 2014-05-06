@@ -5,14 +5,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class FeedbackDialog extends Dialog implements View.OnClickListener {
+public class FeedbackDialog extends BaseDialog implements View.OnClickListener {
 
 	private Handler handler;
 
@@ -21,7 +19,7 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener {
 	}
 
 	public FeedbackDialog(Context context) {
-		super(context, R.style.AppDialog);
+		super(context);
 	}
 
 	@Override
@@ -56,14 +54,6 @@ public class FeedbackDialog extends Dialog implements View.OnClickListener {
 			}
 			break;
 		}
-	}
-
-	private String getCtrlText(int resId) {
-		TextView txt = (TextView) findViewById(resId);
-		if (txt != null) {
-			return txt.getText().toString();
-		}
-		return null;
 	}
 
 	public static boolean sendFeedback(String appId, String from, String content) {

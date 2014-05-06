@@ -1,13 +1,11 @@
 package fr.inria.arles.foosball;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class MatchDialog extends Dialog implements View.OnClickListener {
+public class MatchDialog extends BaseDialog implements View.OnClickListener {
 
 	public interface Handler {
 		public void onMatchResult(int blueScore, int redScore);
@@ -18,7 +16,7 @@ public class MatchDialog extends Dialog implements View.OnClickListener {
 	private String redTeam;
 
 	public MatchDialog(Context context, Handler handler) {
-		super(context, R.style.AppDialog);
+		super(context);
 		this.handler = handler;
 	}
 
@@ -83,20 +81,5 @@ public class MatchDialog extends Dialog implements View.OnClickListener {
 			Toast.makeText(getContext().getApplicationContext(), R.string.match_score_error,
 					Toast.LENGTH_LONG).show();
 		}
-	}
-
-	protected void setCtrlText(int resId, String text) {
-		TextView txt = (TextView) findViewById(resId);
-		if (txt != null) {
-			txt.setText(text);
-		}
-	}
-
-	protected String getCtrlText(int resId) {
-		TextView txt = (TextView) findViewById(resId);
-		if (txt != null) {
-			return txt.getText().toString();
-		}
-		return null;
 	}
 }

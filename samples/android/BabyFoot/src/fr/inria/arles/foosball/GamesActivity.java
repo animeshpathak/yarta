@@ -38,6 +38,7 @@ public class GamesActivity extends BaseActivity implements
 		ListView list = (ListView) findViewById(R.id.listGames);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
+		list.setEmptyView(findViewById(R.id.listMatchesEmpty));
 
 		player = new PlayerImpl(getSAM(), new MSEResource(getIntent()
 				.getStringExtra(PlayerGUID), Player.typeURI));

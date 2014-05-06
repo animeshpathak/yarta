@@ -8,12 +8,14 @@ import fr.inria.arles.foosball.R;
 import fr.inria.arles.foosball.PlayersApp.Observer;
 import fr.inria.arles.foosball.resources.Player;
 import fr.inria.arles.foosball.resources.PlayerImpl;
+import fr.inria.arles.foosball.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 public class BuddiesActivity extends BaseActivity implements
@@ -33,8 +35,13 @@ public class BuddiesActivity extends BaseActivity implements
 		ListView list = (ListView) findViewById(R.id.listBuddies);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
+		list.setEmptyView(findViewById(R.id.listBuddiesEmpty));
 
 		addObserver(this);
+
+		// nice color filter
+		ImageView buddy = (ImageView) findViewById(R.id.buddy);
+		buddy.setColorFilter(getResources().getColor(R.color.AppTextColor));
 	}
 
 	@Override
@@ -55,29 +62,30 @@ public class BuddiesActivity extends BaseActivity implements
 		refreshPlayersList();
 	}
 
-	@Override
-	public void onContentChanged() {
-		super.onContentChanged();
-
-		ListView listPatients = (ListView) findViewById(R.id.listBuddies);
-		listPatients.setEmptyView(findViewById(R.id.listBuddiesEmpty));
-	}
-
 	private void refreshPlayersList() {
-		try {
-			players.clear();
+		execute(new Job() {
 
-			Set<Agent> agents = getSAM().getMe().getKnows();
+			@Override
+			public void doWork() {
+				try {
+					players.clear();
 
-			for (Agent agent : agents) {
-				players.add(new PlayerImpl(getSAM(), new MSEResource(agent
-						.getUniqueId(), Player.typeURI)));
+					Set<Agent> agents = getSAM().getMe().getKnows();
 
+					for (Agent agent : agents) {
+						players.add(new PlayerImpl(getSAM(), new MSEResource(
+								agent.getUniqueId(), Player.typeURI)));
+
+					}
+				} catch (Exception ex) {
+				}
 			}
-		} catch (Exception ex) {
-		}
 
-		adapter.setItems(players);
+			@Override
+			public void doUIAfter() {
+				adapter.setItems(players);
+			}
+		});
 	}
 
 	@Override

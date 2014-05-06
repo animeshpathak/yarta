@@ -5,6 +5,31 @@
     android:background="@color/AppActivityBackground"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:id="@+id/listMatchesEmpty"
+        style="@style/AppContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/games_no_games" />
+        </LinearLayout>
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/listGames"
         android:layout_width="fill_parent"

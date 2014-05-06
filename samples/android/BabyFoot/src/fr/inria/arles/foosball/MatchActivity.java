@@ -15,14 +15,11 @@ import fr.inria.arles.foosball.resources.Player;
 import fr.inria.arles.foosball.resources.PlayerImpl;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-public class MatchActivity extends BaseActivity implements
-		PositionSetDialog.Handler {
+public class MatchActivity extends BaseActivity {
 
 	public static final String MatchId = "MatchId";
 
@@ -43,9 +40,6 @@ public class MatchActivity extends BaseActivity implements
 		if (getIntent().hasExtra(MatchId)) {
 			String matchId = getIntent().getStringExtra(MatchId);
 			loadMatch(matchId);
-		} else {
-			// PositionSetDialog dlg = new PositionSetDialog(this, this);
-			// dlg.show();
 		}
 	}
 
@@ -139,7 +133,7 @@ public class MatchActivity extends BaseActivity implements
 	}
 
 	public void onBlueDefense(View view) {
-		selectPlayer(new PlayerSelector() {
+		selectPlayer(new SelectPlayerDialog.PlayerSelector() {
 
 			@Override
 			public void onPlayerSelected(Player player) {
@@ -150,7 +144,7 @@ public class MatchActivity extends BaseActivity implements
 	}
 
 	public void onBlueOffense(View view) {
-		selectPlayer(new PlayerSelector() {
+		selectPlayer(new SelectPlayerDialog.PlayerSelector() {
 
 			@Override
 			public void onPlayerSelected(Player player) {
@@ -161,7 +155,7 @@ public class MatchActivity extends BaseActivity implements
 	}
 
 	public void onRedDefense(View view) {
-		selectPlayer(new PlayerSelector() {
+		selectPlayer(new SelectPlayerDialog.PlayerSelector() {
 
 			@Override
 			public void onPlayerSelected(Player player) {
@@ -172,7 +166,7 @@ public class MatchActivity extends BaseActivity implements
 	}
 
 	public void onRedOffense(View view) {
-		selectPlayer(new PlayerSelector() {
+		selectPlayer(new SelectPlayerDialog.PlayerSelector() {
 
 			@Override
 			public void onPlayerSelected(Player player) {
@@ -182,59 +176,21 @@ public class MatchActivity extends BaseActivity implements
 		});
 	}
 
-	private interface PlayerSelector {
-		public void onPlayerSelected(Player player);
-	}
-
-	protected void selectPlayer(final PlayerSelector selector) {
+	protected void selectPlayer(final SelectPlayerDialog.PlayerSelector selector) {
 		if (!editable) {
 			return;
 		}
 		execute(new Job() {
-			String items[];
 			List<Player> buddies;
 
 			@Override
 			public void doWork() {
 				buddies = getRemaniningBuddies();
-
-				items = new String[buddies.size()];
-
-				for (int i = 0; i < items.length; i++) {
-					Player p = buddies.get(i);
-					String firstName = p.getFirstName();
-					if (firstName == null) {
-						items[i] = p.getUserId();
-					} else {
-						items[i] = p.getFirstName() + " " + p.getLastName();
-					}
-
-					// wcs
-					if (items[i] == null) {
-						items[i] = "NULL";
-					}
-				}
 			}
 
 			@Override
 			public void doUIAfter() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						MatchActivity.this);
-				builder.setTitle(R.string.match_select_player);
-				builder.setSingleChoiceItems(items, -1,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-
-								selector.onPlayerSelected(buddies.get(which));
-							}
-						});
-
-				AlertDialog dialog = builder.create();
-				dialog.show();
+				SelectPlayerDialog.show(MatchActivity.this, buddies, selector);
 			}
 		});
 	}
@@ -317,8 +273,4 @@ public class MatchActivity extends BaseActivity implements
 	private Player redD;
 	private Player blueO;
 	private Player blueD;
-
-	@Override
-	public void onSetConfiguration(int team) {
-	}
 }

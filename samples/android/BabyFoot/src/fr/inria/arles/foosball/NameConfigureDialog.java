@@ -1,22 +1,21 @@
 package fr.inria.arles.foosball;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
-public class NameConfigureDialog extends Dialog implements View.OnClickListener {
+public class NameConfigureDialog extends BaseDialog implements
+		View.OnClickListener {
+
+	private Handler handler;
+	private String nickName;
 
 	public interface Handler {
 		public void onNameSet(String nickName);
 	}
 
-	private Handler handler;
-	private String nickName;
-
 	public NameConfigureDialog(Context context, String nickName) {
-		super(context, R.style.AppDialog);
+		super(context);
 		this.nickName = nickName;
 	}
 
@@ -58,21 +57,6 @@ public class NameConfigureDialog extends Dialog implements View.OnClickListener 
 		if (nickName.length() > 0) {
 			handler.onNameSet(nickName);
 			dismiss();
-		}
-	}
-
-	private String getCtrlText(int ctrlId) {
-		TextView txt = (TextView) findViewById(ctrlId);
-		if (txt != null) {
-			return txt.getText().toString();
-		}
-		return null;
-	}
-
-	private void setCtrlText(int ctrlId, String text) {
-		TextView txt = (TextView) findViewById(ctrlId);
-		if (txt != null) {
-			txt.setText(text);
 		}
 	}
 
