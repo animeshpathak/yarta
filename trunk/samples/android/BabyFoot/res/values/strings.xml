@@ -29,7 +29,7 @@
     <string name="buddies_dialog_add">Add</string>
     <string name="buddies_qr">Show QR</string>
     <string name="buddies_add">Add</string>
-    <string name="buddies_no_buddies">You have no buddies. To add one tap the button on the title bar.</string>
+    <string name="buddies_no_buddies">You have no buddies.</string>
     <string name="buddies_no_zing">In order to use this functionality please install Barcode Scanner (ZXing).</string>
     <string name="buddies_hello_error">In order to work you need Internet on both peers.</string>
     <string name="buddies_hello_ok">Hello sent successfully.</string>
@@ -57,7 +57,8 @@
     <string name="games_title">Games</string>
     <string name="games_play_time">"Play time: "</string>
     <string name="games_final_score">"Final score: "</string>
-    <string name="name_configure_title">Configure name</string>
+    <string name="games_no_games">No games.</string>
+    <string name="name_configure_title">Set name</string>
     <string name="name_input_error">First name and last name must include something.</string>
     <string name="name_nick_name">Nickname:</string>
     <string name="feedback_title">Send feedback</string>

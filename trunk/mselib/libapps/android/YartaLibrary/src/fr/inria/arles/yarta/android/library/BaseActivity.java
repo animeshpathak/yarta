@@ -2,12 +2,14 @@ package fr.inria.arles.yarta.android.library;
 
 import android.os.Bundle;
 import android.text.Spanned;
+import android.view.View;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.android.library.util.Settings;
@@ -28,6 +30,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected JobRunner runner;
 	private YLogger log = YLoggerFactory.getLogger();
 	protected Settings settings;
+	protected WebClient client = WebClient.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +44,19 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app.addLoginObserver(this);
 	}
 
+	@Override
+	protected void onDestroy() {
+		app.removeLoginObserver(this);
+		tracker.stop();
+		super.onDestroy();
+	}
+
 	protected void log(String format, Object... args) {
 		log.d(getClass().getSimpleName(), String.format(format, args));
 	}
 
 	protected void logError(String format, Object... args) {
 		log.e(getClass().getSimpleName(), String.format(format, args));
-	}
-
-	@Override
-	protected void onDestroy() {
-		app.removeLoginObserver(this);
-		tracker.stop();
-		super.onDestroy();
 	}
 
 	@Override
@@ -99,7 +102,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected void uninitMSE() {
 		app.uninitMSE();
 	}
-	
+
 	protected void clearMSE() {
 		app.clearMSE();
 	}
@@ -130,10 +133,12 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		app.addObserver(this);
+		client.setErrorCallback(this);
 	}
 
 	@Override
 	protected void onPause() {
+		client.setErrorCallback(null);
 		app.removeObserver(this);
 		super.onPause();
 	}
@@ -175,14 +180,20 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app.sendNotify(peerId);
 	}
 
-	// from iris web client
-	// TODO: maybe move in application
 	@Override
 	public void onAuthenticationFailed() {
 	}
 
 	@Override
 	public void onNetworkFailed() {
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				findViewById(R.id.content_frame).setVisibility(View.GONE);
+				findViewById(R.id.nonet_frame).setVisibility(View.VISIBLE);
+			}
+		});
 	}
 
 	@Override

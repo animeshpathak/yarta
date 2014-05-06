@@ -241,7 +241,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -285,7 +285,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -346,7 +346,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -411,7 +411,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -477,7 +477,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -523,7 +523,7 @@ public class WebClient {
 			lastError = ex.toString();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -579,7 +579,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -629,7 +629,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -715,7 +715,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -975,7 +975,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -1086,7 +1086,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -1158,7 +1158,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 
@@ -1294,7 +1294,7 @@ public class WebClient {
 			notifyLoginObservers();
 		}
 
-		if (noInternet()) {
+		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
 		}
 

@@ -25,6 +25,7 @@
         <item name="android:background">@color/AppTitleBackground</item>
         <item name="android:icon">@drawable/icon_default</item>
         <item name="icon">@drawable/icon_default</item>
+        <item name="android:titleTextStyle">@style/AppTitle</item>
         <item name="titleTextStyle">@style/AppTitle</item>
         <item name="indeterminateProgressStyle">@style/AppProgressBar</item>
         <item name="android:indeterminateProgressStyle">@style/AppProgressBar</item>
