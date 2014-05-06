@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nonet_frame"
+    style="@style/AppContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:visibility="gone" >
+
+    <Button
+        android:id="@+id/retry"
+        style="@style/AppCarrotButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/retry_text"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/retry_text"
+        android:onClick="onClickRetry"
+        android:text="@string/main_retry" />
+
+    <TextView
+        android:id="@+id/retry_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/retry"
+        android:text="@string/main_no_internet" />
+
+</RelativeLayout>

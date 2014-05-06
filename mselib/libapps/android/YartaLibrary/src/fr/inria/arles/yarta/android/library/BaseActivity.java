@@ -150,6 +150,12 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected void refreshUI() {
 	}
 
+	public void onClickRetry(View view) {
+		findViewById(R.id.nonet_frame).setVisibility(View.GONE);
+		findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
+		refreshUI();
+	}
+
 	protected void setCtrlText(int resId, String text) {
 		TextView txt = (TextView) findViewById(resId);
 		if (txt != null) {
@@ -182,6 +188,9 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onAuthenticationFailed() {
+		// TODO: very beta code!!!
+		clearMSE();
+		initMSE();
 	}
 
 	@Override
