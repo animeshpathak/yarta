@@ -1,6 +1,8 @@
 <resources>
 
     <string name="app_name">Iris Mobile</string>
+    <string name="app_socialdata">Access social data</string>
+    <string name="app_socialdata_description">Access social data</string>
     <string name="app_website">http://yarta.gforge.inria.fr/</string>
     <string name="service_baseNamespace">http://yarta.gforge.inria.fr/ontologies/mse.rdf#</string>
     <string name="service_baseRDF">mse-1.2.rdf</string>

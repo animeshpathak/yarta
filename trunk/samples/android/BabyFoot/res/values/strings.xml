@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">Babyfoot Buddies</string>
+    <string name="app_socialdata">Access social data</string>
+    <string name="app_socialdata_description">Access social data</string>
     <string name="login_login">Sign-in using Google</string>
     <string name="login_app_title">Players</string>
     <string name="login_app_subtitle">Web 2.0</string>

@@ -110,6 +110,9 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	}
 
 	public void onFinishMatch(View view) {
+		if (latestMatch == null) {
+			return;
+		}
 		Set<Player> blue = latestMatch.getBlueD_inverse();
 		blue.addAll(latestMatch.getBlueO_inverse());
 
