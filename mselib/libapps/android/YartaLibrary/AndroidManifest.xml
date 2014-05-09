@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.inria.arles.iris"
-    android:versionCode="51"
-    android:versionName="2.2" >
+    android:versionCode="52"
+    android:versionName="2.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -9,7 +9,8 @@
 
     <permission
         android:name="fr.inria.arles.yarta.ACCESS_DATA"
-        android:label="Access Social Data"
+        android:label="@string/app_socialdata"
+        android:description="@string/app_socialdata_description"
         android:permissionGroup="android.permission-group.PERSONAL_INFO"
         android:protectionLevel="dangerous" />
 
