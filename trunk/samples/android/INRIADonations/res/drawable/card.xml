@@ -3,8 +3,6 @@
 
     <solid android:color="@color/AppContentColor" />
 
-    <corners android:radius="3dp" />
-
     <padding
         android:bottom="0dip"
         android:left="0dip"
