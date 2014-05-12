@@ -15,7 +15,6 @@
 
         <LinearLayout
             style="@style/AppContainer"
-            android:layout_marginTop="-6dp"
             android:background="@drawable/card"
             android:orientation="vertical" >
 
@@ -119,7 +118,6 @@
             <HorizontalScrollView
                 android:id="@+id/scroll_view"
                 style="@style/AppContainer"
-                android:layout_marginTop="-6dp"
                 android:background="@drawable/card" >
 
                 <LinearLayout

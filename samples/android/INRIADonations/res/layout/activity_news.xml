@@ -16,7 +16,7 @@
         android:background="@color/AppDrawerBackground"
         android:cacheColorHint="#00000000"
         android:choiceMode="singleChoice"
-        android:divider="#7e7e7e"
+        android:divider="#d8d8d8"
         android:dividerHeight="1dp"
         android:listSelector="@drawable/list_selector" />
 
