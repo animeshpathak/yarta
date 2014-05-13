@@ -71,10 +71,14 @@ public class MenuListAdapter extends BaseAdapter {
 			holder.item.setVisibility(View.VISIBLE);
 			holder.item.setText(item.getText());
 		}
-		
+
 		if (position == selectedPosition) {
-			convertView.setBackgroundColor(context.getResources().getColor(R.color.AppDrawerSelected));
+			holder.item.setTextColor(Color.WHITE);
+			convertView.setBackgroundColor(context.getResources().getColor(
+					R.color.AppDrawerSelected));
 		} else {
+			holder.item.setTextColor(context.getResources().getColor(
+					R.color.AppTextColor));
 			convertView.setBackgroundColor(Color.TRANSPARENT);
 		}
 

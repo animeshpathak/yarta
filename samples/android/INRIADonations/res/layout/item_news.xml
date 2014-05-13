@@ -4,12 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ImageView
+    <View
         android:id="@+id/top"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/dotted_vertical" />
+        android:layout_width="fill_parent"
+        android:layout_height="6dp"
+        android:layout_gravity="center_horizontal" />
 
     <RelativeLayout
         style="@style/AppContainer"
@@ -20,26 +19,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
             android:clickable="true"
-            android:src="@drawable/abs__ic_menu_moreoverflow_normal_holo_light" />
+            android:src="@drawable/icon_remove" />
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="1dp"
+            android:paddingBottom="1dp"
             android:scaleType="fitXY"
             android:src="@drawable/image_default" />
 
         <LinearLayout
             android:id="@+id/container"
             android:layout_width="fill_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:layout_toLeftOf="@+id/menu"
             android:layout_toRightOf="@+id/icon"
             android:orientation="vertical" >
@@ -48,58 +48,51 @@
                 android:id="@+id/title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/AppTextColorStrong"
-                android:textSize="18sp" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/AppTextColorStrong"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/container"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/icon" >
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/content"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:text="@string/price_free"
                 android:textColor="#96aa39"
                 android:textSize="14sp"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/separator"
-            android:layout_width="fill_parent"
-            android:layout_height="10dp"
-            android:layout_below="@+id/container"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layerType="software"
-            android:src="@drawable/dotted" />
-
-        <TextView
-            android:id="@+id/category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/separator"
-            android:layout_marginLeft="10dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/AppTextColorStrong"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/separator"
-            android:layout_marginRight="10dp"
-            android:paddingBottom="5dp"
-            android:textSize="14sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
-    <ImageView
+    <View
         android:id="@+id/bottom"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/dotted_vertical" />
+        android:layout_width="fill_parent"
+        android:layout_height="6dp"
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
