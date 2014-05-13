@@ -98,7 +98,7 @@ public class NewsListAdapter extends BaseAdapter implements
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
+		
 		if (position == 0) {
 			convertView.findViewById(R.id.top).setVisibility(View.INVISIBLE);
 		}
@@ -160,7 +160,7 @@ public class NewsListAdapter extends BaseAdapter implements
 				holder.image.setImageResource(R.drawable.image_default);
 			}
 		} else if (ad instanceof Request) {
-			holder.image.setVisibility(View.GONE);
+			holder.image.setImageResource(R.drawable.image_request);
 		}
 
 		return convertView;

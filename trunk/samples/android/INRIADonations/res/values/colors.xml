@@ -6,7 +6,7 @@
     <color name="AppTextColorStrong">#323232</color>
     <color name="AppTitleBackground">#535353</color>
     <color name="AppDrawerBackground">#e7e7e7</color>
-    <color name="AppDrawerSelected">#4fc5f1</color>
+    <color name="AppDrawerSelected">#27a3db</color>
     <color name="AppTitleTextColor">#ffffff</color>
     <color name="AppContentColor">#ffffff</color>
     <color name="ListNormal">#00000000</color>
@@ -18,6 +18,6 @@
     <color name="AppGrayBgEnd">#e1e2e3</color>
     <color name="AppGrayStroke">#99c1c1c1</color>
     <color name="ActivityTitleTextColor">#ffffff</color>
-    <color name="ActivityTitleBackground">#5bbfe3</color>
+    <color name="ActivityTitleBackground">#27a3db</color>
 
 </resources>
