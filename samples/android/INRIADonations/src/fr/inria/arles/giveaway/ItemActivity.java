@@ -41,7 +41,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class ItemActivity extends BaseActivity implements View.OnClickListener, FeedbackDialog.Handler {
+public class ItemActivity extends BaseActivity implements View.OnClickListener,
+		FeedbackDialog.Handler {
 
 	private static final int MENU_ACCEPT = 1;
 	private static final int MENU_FEEDBACK = 2;
@@ -150,11 +151,6 @@ public class ItemActivity extends BaseActivity implements View.OnClickListener, 
 
 			item.setIcon(R.drawable.icon_accept);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		} else {
-			MenuItem item = menu.add(0, MENU_FEEDBACK, 0,
-					R.string.feedback_title);
-			item.setIcon(R.drawable.icon_feedback);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -175,13 +171,13 @@ public class ItemActivity extends BaseActivity implements View.OnClickListener, 
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void onSendFeedback() {
 		FeedbackDialog dlg = new FeedbackDialog(this);
 		dlg.setHandler(this);
 		dlg.show();
 	}
-	
+
 	@Override
 	public void onSendFeedback(final String content) {
 		execute(new Job() {
