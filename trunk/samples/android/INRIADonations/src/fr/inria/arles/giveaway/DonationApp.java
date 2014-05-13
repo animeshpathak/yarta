@@ -250,18 +250,6 @@ public class DonationApp extends Application implements MSEApplication,
 		startActivity(intent);
 	}
 
-	private Runnable sendServerHello = new Runnable() {
-
-		@Override
-		public void run() {
-			try {
-				getCOMM().sendHello(Common.InriaID);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	};
-
 	private String baseOntologyFilePath = "donations.rdf";
 	private String basePolicyFilePath = "policies";
 	private String dataPath;
