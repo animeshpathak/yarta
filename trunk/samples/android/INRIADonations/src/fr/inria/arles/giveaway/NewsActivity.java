@@ -36,6 +36,9 @@ public class NewsActivity extends BaseActivity implements
 
 	private static final int SIDE_MENU_SALES = 4;
 
+	private static final int SIDE_MENU_FEEDBACK = 5;
+	private static final int SIDE_MENU_LOGOUT = 6;
+
 	private MenuItem addMenuItem;
 	private int currentView = -1;
 
@@ -56,7 +59,7 @@ public class NewsActivity extends BaseActivity implements
 	private ListView drawerList;
 	private MenuListAdapter drawerAdapter;
 
-	public void onClickLogout(View view) {
+	public void onClickLogout() {
 		clearMSE();
 		finish();
 	}
@@ -103,11 +106,6 @@ public class NewsActivity extends BaseActivity implements
 		dlg.show();
 	}
 
-	private void onConversations() {
-		startActivity(new Intent(
-				"fr.inria.arles.yarta.android.library.ConversationsActivity"));
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -116,15 +114,6 @@ public class NewsActivity extends BaseActivity implements
 			break;
 		case MENU_ADD:
 			onMenuAdd();
-			break;
-		case R.id.menu_log_out:
-			onClickLogout(null);
-			break;
-		case R.id.menu_send_feedback:
-			onSendFeedback();
-			break;
-		case R.id.menu_conversations:
-			onConversations();
 			break;
 		}
 		return false;
@@ -163,11 +152,27 @@ public class NewsActivity extends BaseActivity implements
 	}
 
 	private void onDrawerItem(int position) {
+		drawerLayout.closeDrawer(drawerList);
+
 		if (position == SIDE_MENU_EDIT_PROFILE || position == 0) {
-			drawerLayout.closeDrawer(drawerList);
-			Intent intent = new Intent(
-					"fr.inria.arles.yarta.android.library.PersonActivity");
-			startActivity(intent);
+			try {
+				String userId = getSAM().getMe().getUserId();
+				Intent intent = new Intent("Yarta.Profile");
+				intent.putExtra("UserName",
+						userId.substring(0, userId.indexOf('@')));
+				startActivity(intent);
+			} catch (Exception ex) {
+				// TODO: some logging;
+			}
+			return;
+		}
+		if (position == SIDE_MENU_FEEDBACK) {
+			onSendFeedback();
+			return;
+		}
+
+		if (position == SIDE_MENU_LOGOUT) {
+			onClickLogout();
 			return;
 		}
 
@@ -273,6 +278,11 @@ public class NewsActivity extends BaseActivity implements
 				SIDE_MENU_REQUESTS));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.news_sales),
 				SIDE_MENU_SALES));
+
+		sideMenuItems.add(new SideMenuItem(
+				getString(R.string.news_send_feedback), SIDE_MENU_FEEDBACK));
+		sideMenuItems.add(new SideMenuItem(
+				getString(R.string.news_profile_logout), SIDE_MENU_LOGOUT));
 	}
 
 	@Override

@@ -18,11 +18,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:src="@drawable/feedback_nice" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="@string/feedback_app_nice" />
     </LinearLayout>
 
@@ -38,11 +40,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:src="@drawable/feedback_slow" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="@string/feedback_app_slow" />
     </LinearLayout>
 
@@ -58,11 +62,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:src="@drawable/feedback_buggy" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="@string/feedback_app_bug" />
     </LinearLayout>
 
@@ -73,7 +79,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:gravity="top"
         android:hint="@string/feedback_content"
         android:inputType="textMultiLine"
         android:minLines="1" />

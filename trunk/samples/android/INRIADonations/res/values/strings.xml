@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Small ads</string>
-    <string name="news_edit_profile">Edit profile</string>
+    <string name="news_edit_profile">My profile</string>
     <string name="news_donations">Donations</string>
     <string name="news_requests">Requests</string>
     <string name="news_sales">Sales</string>
@@ -86,5 +86,9 @@
     <string name="feedback_app_bug">The app is buggy!</string>
     <string name="feedback_sent_ok">Thank you for the feedback!</string>
     <string name="feedback_sent_error">You need Internet to send feedback!</string>
+    <string name="wire_remove_title">Confirm delete</string>
+    <string name="wire_remove_message">Are you sure you want to remove this message?</string>
+    <string name="wire_remove_cancel">Cancel</string>
+    <string name="wire_remove_yes">Remove</string>
 
 </resources>

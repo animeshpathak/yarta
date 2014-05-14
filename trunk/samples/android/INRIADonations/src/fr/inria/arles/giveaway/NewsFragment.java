@@ -5,11 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.actionbarsherlock.internal.view.menu.MenuBuilder;
-import com.actionbarsherlock.internal.view.menu.MenuPopupHelper;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-
 import fr.inria.arles.giveaway.resources.Announcement;
 import fr.inria.arles.giveaway.resources.Donation;
 import fr.inria.arles.giveaway.resources.PersonImpl;
@@ -28,9 +23,6 @@ import android.widget.ListView;
 
 public class NewsFragment extends BaseFragment implements
 		NewsListAdapter.Handler, AdapterView.OnItemClickListener {
-
-	private static final int MENU_VIEW = 1;
-	private static final int MENU_HIDE = 2;
 
 	private Person me;
 	private NewsListAdapter adapter;
@@ -129,29 +121,18 @@ public class NewsFragment extends BaseFragment implements
 		final Announcement announcement = (Announcement) adapter
 				.getItem(position);
 
-		OnMenuItemClickListener listener = new OnMenuItemClickListener() {
+		AlertDialog.show(getSherlockActivity(),
+				getString(R.string.wire_remove_message),
+				getString(R.string.wire_remove_title),
+				getString(R.string.wire_remove_yes),
+				getString(R.string.wire_remove_cancel),
+				new AlertDialog.Handler() {
 
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				switch (item.getItemId()) {
-				case MENU_VIEW:
-					onViewItem(announcement);
-					break;
-				case MENU_HIDE:
-					onHideItem(announcement);
-					break;
-				}
-				return false;
-			}
-		};
-		MenuBuilder b = new MenuBuilder(getSherlockActivity());
-		b.add(0, MENU_VIEW, 0, R.string.news_article_view)
-				.setOnMenuItemClickListener(listener);
-		b.add(0, MENU_HIDE, 0, R.string.news_article_hide)
-				.setOnMenuItemClickListener(listener);
-		MenuPopupHelper popup = new MenuPopupHelper(getSherlockActivity(), b,
-				view);
-		popup.show();
+					@Override
+					public void onOK() {
+						onHideItem(announcement);
+					}
+				});
 	}
 
 	@Override

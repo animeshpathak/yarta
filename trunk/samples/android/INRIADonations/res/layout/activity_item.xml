@@ -159,6 +159,7 @@
             android:id="@+id/profileContainer"
             style="@style/AppContainer"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:visibility="gone" >
 
             <TextView
@@ -167,8 +168,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingBottom="7dp"
-                android:paddingTop="7dp"
                 android:text="@string/additem_added_by"
                 android:textColor="#f4842d" />
 
@@ -176,8 +175,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/contact_info"
-                android:padding="7dp"
                 android:text="@string/additem_added_by" />
         </RelativeLayout>
     </LinearLayout>
