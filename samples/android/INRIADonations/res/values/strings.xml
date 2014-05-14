@@ -90,5 +90,9 @@
     <string name="wire_remove_message">Are you sure you want to remove this message?</string>
     <string name="wire_remove_cancel">Cancel</string>
     <string name="wire_remove_yes">Remove</string>
+    <string name="main_logout_are_you_sure">You are about to disconnect from the application. Are you sure you want to do this?</string>
+    <string name="main_logout_confirm">Confirm</string>
+    <string name="main_logout_ok">Yes</string>
+    <string name="main_logout_cancel">Cancel</string>
 
 </resources>
