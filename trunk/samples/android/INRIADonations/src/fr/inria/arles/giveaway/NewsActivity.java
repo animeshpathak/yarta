@@ -60,8 +60,18 @@ public class NewsActivity extends BaseActivity implements
 	private MenuListAdapter drawerAdapter;
 
 	public void onClickLogout() {
-		clearMSE();
-		finish();
+		AlertDialog.show(this, getString(R.string.main_logout_are_you_sure),
+				getString(R.string.main_logout_confirm),
+				getString(R.string.main_logout_ok),
+				getString(R.string.main_logout_cancel),
+				new AlertDialog.Handler() {
+
+					@Override
+					public void onOK() {
+						clearMSE();
+						finish();
+					}
+				});
 	}
 
 	@Override

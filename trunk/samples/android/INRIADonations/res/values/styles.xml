@@ -10,6 +10,9 @@
         <item name="android:homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_dark</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.Sherlock.ActionButton.Overflow</item>
         <item name="actionOverflowButtonStyle">@style/Widget.Sherlock.ActionButton.Overflow</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable</item>
+        <item name="actionBarItemBackground">@drawable/selectable</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView</item>
     </style>
 
     <style name="AppThemeDrawer" parent="AppTheme">
@@ -107,7 +110,11 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/button_white</item>
-        <item name="android:textColor">#7e7e7e</item>
+        <item name="android:textColor">#5e5e5e</item>
+    </style>
+
+    <style name="DropDownListView" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable</item>
     </style>
 
 </resources>

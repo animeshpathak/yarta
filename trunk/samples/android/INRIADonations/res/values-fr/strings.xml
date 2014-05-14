@@ -76,6 +76,10 @@
     <string name="wire_remove_title">Confirmer</string>
     <string name="wire_remove_message">Confirmez-vous vouloir supprimer ce message ?</string>
     <string name="wire_remove_cancel">Annuler</string>
-    <string name="wire_remove_yes">Supprimer</string>
+    <string name="wire_remove_yes">Oui !</string>
+    <string name="main_logout_are_you_sure">Vous êtes sur le point de vous déconnecter de l\'application.\r\nContinuer ?</string>
+    <string name="main_logout_confirm">Confirmer</string>
+    <string name="main_logout_ok">Oui !</string>
+    <string name="main_logout_cancel">Annuler</string>
 
 </resources>
