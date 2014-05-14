@@ -9,8 +9,8 @@
 
     <permission
         android:name="fr.inria.arles.yarta.ACCESS_DATA"
-        android:label="@string/app_socialdata"
         android:description="@string/app_socialdata_description"
+        android:label="@string/app_socialdata"
         android:permissionGroup="android.permission-group.PERSONAL_INFO"
         android:protectionLevel="dangerous" />
 
@@ -55,7 +55,13 @@
             android:name="fr.inria.arles.yarta.android.library.ProfileActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/profile_title"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="Yarta.Profile" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="fr.inria.arles.yarta.android.library.GroupActivity"
             android:configChanges="orientation|screenSize"

@@ -18,7 +18,6 @@ import fr.inria.arles.giveaway.resources.RequestImpl;
 import fr.inria.arles.giveaway.resources.Sale;
 import fr.inria.arles.giveaway.resources.SaleImpl;
 import fr.inria.arles.giveaway.util.FastCache;
-import fr.inria.arles.giveaway.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Content;
@@ -41,11 +40,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class ItemActivity extends BaseActivity implements View.OnClickListener,
-		FeedbackDialog.Handler {
+public class ItemActivity extends BaseActivity implements View.OnClickListener {
 
 	private static final int MENU_ACCEPT = 1;
-	private static final int MENU_FEEDBACK = 2;
 
 	public static final String DonationId = "DonationId";
 	public static final String RequestId = "RequestId";
@@ -165,47 +162,8 @@ public class ItemActivity extends BaseActivity implements View.OnClickListener,
 				finish();
 			}
 			break;
-		case MENU_FEEDBACK:
-			onSendFeedback();
-			break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void onSendFeedback() {
-		FeedbackDialog dlg = new FeedbackDialog(this);
-		dlg.setHandler(this);
-		dlg.show();
-	}
-
-	@Override
-	public void onSendFeedback(final String content) {
-		execute(new Job() {
-			boolean success;
-
-			@Override
-			public void doWork() {
-				String userId = "";
-
-				try {
-					userId = getSAM().getMe().getUserId();
-				} catch (Exception ex) {
-					userId = "err";
-				}
-
-				success = FeedbackDialog.sendFeedback(
-						"fr.inria.arles.giveaway", userId, content);
-			}
-
-			@Override
-			public void doUIAfter() {
-				Toast.makeText(
-						getApplicationContext(),
-						success ? R.string.main_feedback_sent_ok
-								: R.string.main_feedback_sent_error,
-						Toast.LENGTH_LONG).show();
-			}
-		});
 	}
 
 	public boolean isEditable() {
@@ -227,11 +185,11 @@ public class ItemActivity extends BaseActivity implements View.OnClickListener,
 
 	private void onContactInfo() {
 		if (creator != null) {
-			String uniqueId = creator.getUniqueId();
-			Intent intent = new Intent(
-					"fr.inria.arles.yarta.android.library.PersonActivity");
-			intent.putExtra("PersonGUID", uniqueId);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			String userId = creator.getUserId();
+
+			Intent intent = new Intent("Yarta.Profile");
+			intent.putExtra("UserName",
+					userId.substring(0, userId.indexOf('@')));
 			startActivity(intent);
 		}
 	}

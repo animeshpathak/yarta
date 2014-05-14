@@ -73,5 +73,9 @@
     <string name="additem_donation_title">Détails de dons</string>
     <string name="additem_request_title">Détails de la demande</string>
     <string name="additem_sale_title">Détails de la vente</string>
+    <string name="wire_remove_title">Confirmer</string>
+    <string name="wire_remove_message">Confirmez-vous vouloir supprimer ce message ?</string>
+    <string name="wire_remove_cancel">Annuler</string>
+    <string name="wire_remove_yes">Supprimer</string>
 
 </resources>
