@@ -124,7 +124,7 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 
 		return 0;
 	}
-	
+
 	@Override
 	public int clear() {
 		return 0;
@@ -318,6 +318,7 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 
 		byte[] hugeData = null;
 
+		// TODO: what if the hugeData can not fit into memory?
 		synchronized (updateChunks) {
 			hugeData = updateChunks.get(updateId);
 			if (hugeData == null) {
@@ -342,8 +343,10 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 
 				for (String contentName : contentData.keySet()) {
 					byte[] data = contentData.get(contentName);
-					if (client.getData(contentName) == null) {
-						client.setData(contentName, data);
+					if (data != null) {
+						if (data.length > 0) {
+							client.setData(contentName, data);
+						}
 					}
 				}
 
@@ -438,9 +441,9 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 				Node node = res.getNode();
 
 				// check if node is dirty
-				if (!helper.isDirty(node, lastUpdate)) {
-					continue;
-				}
+				// if (!helper.isDirty(node, lastUpdate)) {
+				// 	continue;
+				// }
 
 				String typePredicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 				List<Triple> properties = knowledgeBase
@@ -484,7 +487,12 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 				if (resource instanceof Content && dirty) {
 					String longId = resource.getUniqueId();
 					String shortId = longId.substring(longId.indexOf('#') + 1);
-					contentData.put(shortId, client.getData(shortId));
+					byte[] data = client.getData(shortId);
+					if (data != null) {
+						if (data.length > 0) {
+							contentData.put(shortId, data);
+						}
+					}
 				}
 			}
 		} catch (KBException ex) {
