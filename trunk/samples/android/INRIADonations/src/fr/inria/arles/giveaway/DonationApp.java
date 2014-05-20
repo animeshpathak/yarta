@@ -235,6 +235,17 @@ public class DonationApp extends Application implements MSEApplication,
 
 			notifyAllObservers();
 			startMainActivity();
+
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						getCOMM().sendUpdateRequest(Common.InriaID);
+					} catch (Exception ex) {
+					}
+				}
+			}).start();
 		} else {
 			notifyAllLoginObservers();
 			uninitMSE();
@@ -259,12 +270,12 @@ public class DonationApp extends Application implements MSEApplication,
 		return this.getPackageName();
 	}
 
-	public void sendNotify(final String peerId) {
+	public void notifyAgent() {
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				getCOMM().sendNotify(peerId);
+				getCOMM().sendNotify(Common.InriaID);
 			}
 		}).start();
 	}

@@ -152,8 +152,8 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		return null;
 	}
 
-	protected void sendNotify(String peerId) {
-		app.sendNotify(peerId);
+	protected void notifyAgent() {
+		app.notifyAgent();
 	}
 
 	@Override

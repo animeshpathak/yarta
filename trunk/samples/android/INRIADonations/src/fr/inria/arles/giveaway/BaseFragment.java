@@ -66,9 +66,9 @@ public class BaseFragment extends SherlockFragment {
 		view.setEnabled(enable);
 	}
 
-	protected void sendNotify() {
+	protected void notifyAgent() {
 		DonationApp app = (DonationApp) getActivity().getApplication();
-		app.sendNotify(Common.InriaID);
+		app.notifyAgent();
 	}
 
 	protected int filterType;
