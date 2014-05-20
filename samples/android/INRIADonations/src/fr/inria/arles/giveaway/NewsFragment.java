@@ -159,6 +159,6 @@ public class NewsFragment extends BaseFragment implements
 		announcement.addHiddenBy(new PersonImpl(getSAM(), ((YartaResource) me)
 				.getNode()));
 		refreshUI();
-		sendNotify();
+		notifyAgent();
 	}
 }

@@ -158,7 +158,7 @@ public class ItemActivity extends BaseActivity implements View.OnClickListener {
 		case MENU_ACCEPT:
 			if (onSaveItem() != null) {
 				DonationApp app = (DonationApp) getApplication();
-				app.sendNotify(Common.InriaID);
+				app.notifyAgent();
 				finish();
 			}
 			break;
