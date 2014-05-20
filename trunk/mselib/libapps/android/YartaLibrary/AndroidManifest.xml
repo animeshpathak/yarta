@@ -16,14 +16,15 @@
 
     <uses-permission android:name="fr.inria.arles.yarta.ACCESS_DATA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- Required for ibicoop to work properly -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
 
     <application
         android:name="fr.inria.arles.yarta.android.library.YartaApp"
@@ -79,6 +80,17 @@
                 <action android:name="fr.inria.arles.yarta.android.library.LibraryService" >
                 </action>
             </intent-filter>
+        </service>
+        <service
+            android:name="fr.inria.arles.yarta.android.library.sync.SyncService"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync" />
         </service>
 
         <activity
