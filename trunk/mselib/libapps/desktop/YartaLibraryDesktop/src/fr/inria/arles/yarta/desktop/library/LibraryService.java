@@ -105,12 +105,20 @@ public class LibraryService extends UnicastRemoteObject implements Service,
 			if (refCount == 0) {
 				helper.init();
 				String importPath = Installer.FilesPath + "mse-1.2.rdf";
-				if (new File(KnowledgeBaseStorePath).exists()) {
-					importPath = KnowledgeBaseStorePath;
-				}
 				knowledgeBase.setUpdateHelper(helper);
 				knowledgeBase.initialize(importPath, namespace, policyFile,
 						settings.getString(Settings.LastUser));
+
+				if (new File(KnowledgeBaseStorePath).exists()) {
+					importPath = KnowledgeBaseStorePath;
+
+					try {
+						MSEKnowledgeBaseUtils.importDataFromRDF(importPath,
+								knowledgeBase);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
 
 				commMgr.setUpdateHelper(helper);
 				commMgr.initialize(settings.getString(Settings.LastUser),
