@@ -8,6 +8,7 @@ import fr.inria.arles.yarta.middleware.msemanagement.MSEManager;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 public class SyncAdapter extends AbstractThreadedSyncAdapter implements
 		MSEApplication {
 
+	private static final long SyncTimeout = 60 * 60;
 	public static final String InriaAgent = "inria@inria.fr";
 
 	private MSEManager manager;
@@ -40,6 +42,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements
 		} else {
 			performSync();
 		}
+	}
+	
+	public static void setAutoSync(Account account) {
+		String authority = "fr.inria.arles.yarta.android.library.YartaContentProvider";
+		ContentResolver.setIsSyncable(account, authority, 1);
+		ContentResolver.setSyncAutomatically(account, authority, true);
+		ContentResolver.addPeriodicSync(account, authority, new Bundle(),
+				SyncTimeout);
 	}
 
 	private void performSync() {

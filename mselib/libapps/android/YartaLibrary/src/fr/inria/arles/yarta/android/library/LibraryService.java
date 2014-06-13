@@ -7,6 +7,7 @@ import java.io.InputStream;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
 import fr.inria.arles.yarta.android.library.auth.FakeActivity;
+import fr.inria.arles.yarta.android.library.sync.SyncAdapter;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import fr.inria.arles.yarta.android.library.web.WebClient;
 import fr.inria.arles.yarta.knowledgebase.KBException;
@@ -21,7 +22,6 @@ import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.communication.YCommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -32,6 +32,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -485,6 +486,9 @@ public class LibraryService extends Service implements MSEApplication,
 		for (Account account : accounts) {
 			if (account.type.equals(AuthenticatorActivity.ACCOUNT_TYPE)) {
 				found = true;
+
+				// set auto sync
+				SyncAdapter.setAutoSync(account);
 			}
 		}
 
