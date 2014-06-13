@@ -129,18 +129,6 @@ public class DonationApp extends Application implements MSEApplication,
 
 	@Override
 	public boolean handleMessage(String id, Message message) {
-		switch (message.getType()) {
-		case Message.TYPE_HELLO_REPLY:
-			if (id.equals(Common.InriaID)) {
-				try {
-					// ask for updates
-					getCOMM().sendUpdateRequest(Common.InriaID);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-			break;
-		}
 		return false;
 	}
 
@@ -243,6 +231,7 @@ public class DonationApp extends Application implements MSEApplication,
 					try {
 						getCOMM().sendUpdateRequest(Common.InriaID);
 					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				}
 			}).start();

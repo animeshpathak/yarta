@@ -112,7 +112,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					dataType, requestorId));
 
 		} catch (Exception ex) {
-			logError("ILibraryService.addLiteral ex: %s", ex.getMessage());
+			logError("ILibraryService.addLiteral ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addLiteral");
 		return result;
@@ -131,7 +131,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					typeURI, requestorId));
 
 		} catch (Exception ex) {
-			logError("ILibraryService.addResource ex: %s", ex.getMessage());
+			logError("ILibraryService.addResource ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addResource");
 		return result;
@@ -148,7 +148,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			result = Conversion.toBundle(knowledgeBase.addResource(
 					Conversion.toNode(node), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.addResourceNode ex: %s", ex.getMessage());
+			logError("ILibraryService.addResourceNode ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addResourceNode");
 		return result;
@@ -165,7 +165,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			result = Conversion.toBundle(knowledgeBase.getResourceByURI(
 					nodeURI, requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getResourceByURI ex: %s", ex.getMessage());
+			logError("ILibraryService.getResourceByURI ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getResourceByURI");
 		return result;
@@ -183,7 +183,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					.getResourceByURINoPolicies(nodeURI));
 		} catch (Exception ex) {
 			logError("ILibraryService.getResourceByURINoPolicies ex: %s",
-					ex.getMessage());
+					ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getResourceByURINoPolicies");
 		return result;
@@ -200,7 +200,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					Conversion.toNode(s), Conversion.toNode(p),
 					Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.addTriple ex: %s", ex.getMessage());
+			logError("ILibraryService.addTriple ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addTriple");
 		return result;
@@ -218,7 +218,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					Conversion.toNode(s), Conversion.toNode(p),
 					Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.removeTriple ex: %s", ex.getMessage());
+			logError("ILibraryService.removeTriple ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.removeTriple");
 		return result;
@@ -235,7 +235,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					Conversion.toNode(s), Conversion.toNode(p),
 					Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getTriple ex: %s", ex.getMessage());
+			logError("ILibraryService.getTriple ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getTriple");
 		return result;
@@ -269,7 +269,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			}
 		} catch (Exception ex) {
 			logError("ILibraryService.getPropertyObjectAsTriples ex: %s",
-					ex.getMessage());
+					ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertyObjectAsTriples");
 		return lstResult;
@@ -291,7 +291,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			}
 		} catch (Exception ex) {
 			logError("ILibraryService.getPropertySubjectAsTriples ex: %s",
-					ex.getMessage());
+					ex);
 			ex.printStackTrace();
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertySubjectAsTriples");
@@ -316,7 +316,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 		} catch (Exception ex) {
 			logError("ILibraryService.getPropertyAsTriples ex: %s",
-					ex.getMessage());
+					ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertyAsTriples");
 		return lstResult;
@@ -340,7 +340,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 		} catch (Exception ex) {
 			logError("ILibraryService.getAllPropertiesAsTriples ex: %s",
-					ex.getMessage());
+					ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getAllPropertiesAsTriples");
 		return lstResult;
@@ -362,7 +362,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			}
 
 		} catch (Exception ex) {
-			logError("ILibraryService.getKBAsTriples ex: %s", ex.getMessage());
+			logError("ILibraryService.getKBAsTriples ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getKBAsTriples");
 		return lstResult;
@@ -380,7 +380,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					Conversion.toNode(s), Conversion.toNode(p), requestorId));
 		} catch (Exception ex) {
 			logError("ILibraryService.getPropertyObject ex: %s",
-					ex.getMessage());
+					ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertyObject");
 		return result;
@@ -398,7 +398,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 					Conversion.toNode(p), Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
 			logError("ILibraryService.getPropertySubject ex: %s",
-					ex.getMessage());
+					ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertySubject");
 		return result;
@@ -413,7 +413,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			result = Conversion.toBundle(knowledgeBase.addGraph(
 					Conversion.toGraph(g), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.addGraph ex: %s", ex.getMessage());
+			logError("ILibraryService.addGraph ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addGraph");
 		return result;
@@ -429,7 +429,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			result = Conversion.toBundle(knowledgeBase.getProperty(
 					Conversion.toNode(s), Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getProperty ex: %s", ex.getMessage());
+			logError("ILibraryService.getProperty ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getProperty");
 		return result;
@@ -446,7 +446,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			result = Conversion.toBundle(knowledgeBase.getAllProperties(
 					Conversion.toNode(s), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getAllProperties ex: %s", ex.getMessage());
+			logError("ILibraryService.getAllProperties ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getAllProperties");
 		return result;
@@ -466,7 +466,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			bundle = Conversion.toBundle(knowledgeBase.getKB(requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getKB ex: %s", ex.getMessage());
+			logError("ILibraryService.getKB ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getKB");
 		return bundle;
@@ -511,7 +511,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			result = communicationMgr.sendHello(partnerID);
 		} catch (KBException ex) {
-			logError("ILibraryService.sendHello ex: %s", ex.getMessage());
+			logError("ILibraryService.sendHello ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendHello");
 		return result;
@@ -525,8 +525,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			result = communicationMgr.sendUpdateRequest(partnerID);
 		} catch (KBException ex) {
-			logError("ILibraryService.sendUpdateRequest ex: %s",
-					ex.getMessage());
+			logError("ILibraryService.sendUpdateRequest ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendUpdateRequest");
 		return result;
@@ -543,7 +542,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			result = communicationMgr.sendMessage(partnerID, msg);
 		} catch (Exception ex) {
-			logError("ILibraryService.sendMessage ex: %s", ex.getMessage());
+			logError("ILibraryService.sendMessage ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendMessage");
 		return result;
@@ -558,7 +557,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			result = communicationMgr.sendResource(partnerID, resourceID);
 		} catch (Exception ex) {
-			logError("ILibraryService.sendResource ex: %s", ex.getMessage());
+			logError("ILibraryService.sendResource ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendResource");
 		return result;
@@ -572,7 +571,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			result = communicationMgr.sendNotify(peerId);
 		} catch (Exception ex) {
-			logError("ILibraryService.sendNotify ex: %s", ex.getMessage());
+			logError("ILibraryService.sendNotify ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendNotify");
 		return result;
@@ -692,7 +691,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			try {
 				result |= application.handleQuery(query);
 			} catch (Exception ex) {
-				log("handleQuery ex: %s", ex.getMessage());
+				log("handleQuery ex: %s", ex);
 			}
 		}
 		appCallbacks.finishBroadcast();
@@ -717,7 +716,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			try {
 				application.handleNotification(query);
 			} catch (Exception ex) {
-				log("handleNotification ex: %s", ex.getMessage());
+				log("handleNotification ex: %s", ex);
 			}
 		}
 		appCallbacks.finishBroadcast();
@@ -738,7 +737,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 				log("handleKBReady: %s", application.getAppId());
 				application.handleKBReady(userId);
 			} catch (Exception ex) {
-				log("handleKBReady ex: %s", ex.getMessage());
+				log("handleKBReady ex: %s", ex);
 			}
 		}
 		appCallbacks.finishBroadcast();

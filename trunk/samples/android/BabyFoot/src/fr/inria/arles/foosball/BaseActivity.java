@@ -140,6 +140,10 @@ public class BaseActivity extends SherlockActivity implements Observer,
 		return application.getMSE();
 	}
 
+	protected void sendNotify() {
+		application.sendNotify();
+	}
+
 	protected void setCtrlText(int ctrlId, String text) {
 		TextView txt = (TextView) findViewById(ctrlId);
 		if (txt != null) {

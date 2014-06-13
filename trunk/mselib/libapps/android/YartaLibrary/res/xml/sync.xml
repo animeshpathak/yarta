@@ -4,5 +4,6 @@
     android:allowParallelSyncs="false"
     android:contentAuthority="fr.inria.arles.yarta.android.library.YartaContentProvider"
     android:isAlwaysSyncable="true"
-    android:supportsUploading="false"
+    android:supportsUploading="true"
+    android:syncable="true"
     android:userVisible="true" />

@@ -262,6 +262,8 @@ public class MatchActivity extends BaseActivity {
 			}
 
 			currentMatch.setTime(System.currentTimeMillis());
+
+			sendNotify();
 			finish();
 		} else {
 			Toast.makeText(this, R.string.match_not_enogh_players,

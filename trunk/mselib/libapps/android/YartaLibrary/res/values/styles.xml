@@ -124,7 +124,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/button_gray</item>
-        <item name="android:textColor">@color/AppTextColor</item>
+        <item name="android:textColor">#333333</item>
     </style>
 
     <style name="AppCarrotButton">
@@ -132,7 +132,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/button_carrot</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/AppTextColor</item>
+        <item name="android:textColor">@color/AppTitleTextColor</item>
     </style>
 
     <style name="AppAuthor">

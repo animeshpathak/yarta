@@ -201,6 +201,7 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			@Override
 			public void doUIAfter() {
 				refreshUI();
+				sendNotify();
 			}
 		});
 	}
@@ -218,6 +219,8 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			}
 			me.setNickName(nickName);
 			setCtrlText(R.id.name, me.getNickName());
+
+			sendNotify();
 		} catch (KBException ex) {
 			ex.printStackTrace();
 		}

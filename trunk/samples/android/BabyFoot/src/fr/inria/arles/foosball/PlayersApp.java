@@ -211,10 +211,39 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 			notifyAllObservers();
 
 			startMainActivity();
+			sendUpdate();
 		} else {
 			notifyAllLoginObservers();
 			uninitMSE();
 		}
+	}
+
+	public void sendUpdate() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					getCOMM().sendUpdateRequest(InriaID);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
+	public void sendNotify() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					getCOMM().sendNotify(InriaID);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	/**
