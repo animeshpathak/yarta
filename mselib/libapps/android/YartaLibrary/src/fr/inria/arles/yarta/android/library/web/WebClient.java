@@ -188,13 +188,170 @@ public class WebClient {
 			lastError = ex.toString();
 		}
 
-		log("%s: result<%d>, lastError<%s>", "addFriend", result, lastError);
+		log("%s: result<%d>, lastError<%s>", "addFriend", result,
+				lastError);
 
 		if (result == RESULT_AUTH_FAILED) {
 			notifyLoginObservers();
 		}
 
 		return result;
+	}
+
+	public int ignoreRequest(RequestItem request) {
+		String urlParams = null;
+
+		if (request.getGroup() != null) {
+			urlParams = "method=user.remove_join_request&username="
+					+ request.getUser().getUsername() + "&group_guid="
+					+ request.getGroup().getGuid();
+		} else {
+			urlParams = "method=user.remove_friend_request&username="
+					+ request.getUser().getUsername();
+		}
+		int result = -1;
+
+		try {
+			String xml = doAuthenticatedGet(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			result = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("message").item(0);
+			if (n != null) {
+				lastError = n.getTextContent();
+			}
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		log("%s: result<%d>, lastError<%s>", "ignoreRequest", result,
+				lastError);
+
+		if (result == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+
+		return result;
+	}
+
+	public int acceptRequest(RequestItem request) {
+		String urlParams = null;
+
+		if (request.getGroup() != null) {
+			urlParams = "method=user.accept_join_request&username="
+					+ request.getUser().getUsername() + "&group_guid="
+					+ request.getGroup().getGuid();
+		} else {
+			urlParams = "method=user.accept_friend_request&username="
+					+ request.getUser().getUsername();
+		}
+		int result = -1;
+
+		try {
+			String xml = doAuthenticatedGet(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			result = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("message").item(0);
+			if (n != null) {
+				lastError = n.getTextContent();
+			}
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		log("%s: result<%d>, lastError<%s>", "acceptRequest", result,
+				lastError);
+
+		if (result == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+
+		return result;
+	}
+
+	public List<RequestItem> getUserRequests() {
+		List<RequestItem> relations = new ArrayList<RequestItem>();
+
+		int result = -1;
+
+		String urlParams = "method=user.get_user_requests&username=" + userName;
+
+		try {
+			String xml = doAuthenticatedGet(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			result = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("friend").item(0);
+			if (n != null) {
+				Element requests = (Element) n;
+				NodeList nl = requests.getElementsByTagName("array_item");
+
+				for (int i = 0; i < nl.getLength(); i++) {
+					Element el = (Element) nl.item(i);
+
+					String name = el.getElementsByTagName("name").item(0)
+							.getTextContent();
+					String username = el.getElementsByTagName("username")
+							.item(0).getTextContent();
+					String avatarURL = el.getElementsByTagName("avatar_url")
+							.item(0).getTextContent();
+
+					relations.add(new RequestItem(new UserItem(name, username,
+							avatarURL)));
+				}
+			}
+
+			n = doc.getElementsByTagName("join").item(0);
+			if (n != null) {
+				Element requests = (Element) n;
+				NodeList nl = requests.getElementsByTagName("array_item");
+
+				for (int i = 0; i < nl.getLength(); i++) {
+					Element el = (Element) nl.item(i);
+
+					String name = el.getElementsByTagName("name").item(0)
+							.getTextContent();
+					String username = el.getElementsByTagName("username")
+							.item(0).getTextContent();
+					String avatarURL = el.getElementsByTagName("avatar_url")
+							.item(0).getTextContent();
+
+					String group_guid = el.getElementsByTagName("group_guid")
+							.item(0).getTextContent();
+					String group_name = el.getElementsByTagName("group_name")
+							.item(0).getTextContent();
+
+					relations.add(new RequestItem(new UserItem(name, username,
+							avatarURL), new GroupItem(group_guid, group_name,
+							null, 0)));
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		if (result == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+
+		if (noInternet() && callback != null) {
+			callback.onNetworkFailed();
+		}
+
+		return relations;
 	}
 
 	public List<UserItem> getFriends(String username) {
@@ -329,8 +486,9 @@ public class WebClient {
 							.getTextContent();
 				}
 
-				if (type.equals("user") || type.equals("group")
-						|| type.equals("blog")) {
+				if (type.equals(ObjectItem.User)
+						|| type.equals(ObjectItem.Group)
+						|| type.equals(ObjectItem.Blog)) {
 					String avatarURL = el.getElementsByTagName("avatar_url")
 							.item(0).getTextContent();
 					items.add(new ObjectItem(guid, title, avatarURL, type));
@@ -484,9 +642,278 @@ public class WebClient {
 		return posts;
 	}
 
+	public int addTopicReply(String topicGuid, String content) {
+		String urlParams = "method=group.forum.save_reply&postid=" + topicGuid
+				+ "&text=" + encode(content);
+
+		int result = -1;
+
+		try {
+			String xml = doAuthenticatedPost(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			result = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("message").item(0);
+			if (n != null) {
+				lastError = n.getTextContent();
+			}
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		log("%s: result<%d>, lastError<%s>", "addTopicReply", result,
+				lastError);
+
+		if (result == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+		return result;
+	}
+
+	public List<PostItem> getTopicReplies(String topicGuid) {
+		lastError = null;
+		String urlParams = "method=group.forum.get_replies&guid=" + topicGuid;
+		List<PostItem> replies = new ArrayList<PostItem>();
+
+		int result = -1;
+		try {
+			String xml = doAuthenticatedGet(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			result = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("message").item(0);
+			if (n != null) {
+				lastError = n.getTextContent();
+			}
+
+			NodeList nl = doc.getElementsByTagName("array_item");
+
+			for (int i = 0; i < nl.getLength(); i++) {
+				Element el = (Element) nl.item(i);
+
+				String guid = el.getElementsByTagName("entity_guid").item(0)
+						.getTextContent();
+				String title = el.getElementsByTagName("value").item(0)
+						.getTextContent();
+				long time = Integer.parseInt(el
+						.getElementsByTagName("time_created").item(0)
+						.getTextContent()) * 1000;
+
+				Element elOwner = (Element) el.getElementsByTagName("owner")
+						.item(0);
+				String name = elOwner.getElementsByTagName("name").item(0)
+						.getTextContent();
+				String username = elOwner.getElementsByTagName("username")
+						.item(0).getTextContent();
+				String avatarURL = elOwner.getElementsByTagName("avatar_url")
+						.item(0).getTextContent();
+
+				UserItem owner = new UserItem(name, username, avatarURL);
+
+				replies.add(new PostItem(guid, title, time, owner));
+			}
+
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		log("%s: result<%d>, lastError<%s>", "getTopicReplies", result,
+				lastError);
+
+		if (result == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+
+		if (noInternet() && callback != null) {
+			callback.onNetworkFailed();
+		}
+
+		return replies;
+	}
+
+	public String getFileContent(String guid) {
+		lastError = null;
+		String urlParams = "method=file.get_file&guid=" + guid + "&username="
+				+ userName;
+		String result = null;
+
+		int error = -1;
+
+		try {
+			String xml = doAuthenticatedPost(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			error = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("message").item(0);
+			if (n != null) {
+				lastError = n.getTextContent();
+			}
+
+			result = doc.getElementsByTagName("content").item(0)
+					.getTextContent();
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		if (noInternet() && callback != null) {
+			callback.onNetworkFailed();
+		}
+
+		if (error == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+
+		log("%s: lastError<%s>", "getFileInfo", lastError);
+
+		return result;
+	}
+
+	public FileItem getFileInfo(String guid) {
+		lastError = null;
+		String urlParams = "method=file.get_info&guid=" + guid + "&username="
+				+ userName;
+
+		int result = -1;
+
+		String title = null;
+		String description = null;
+		long time = 0;
+		UserItem owner = null;
+		String fname = null;
+		long size = 0;
+
+		try {
+			String xml = doAuthenticatedPost(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			result = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("message").item(0);
+			if (n != null) {
+				lastError = n.getTextContent();
+			}
+
+			fname = doc.getElementsByTagName("name").item(0).getTextContent();
+			fname = fname.substring(fname.indexOf('/') + 1);
+
+			size = Long.parseLong(doc.getElementsByTagName("size").item(0)
+					.getTextContent());
+
+			title = doc.getElementsByTagName("title").item(0).getTextContent();
+
+			description = doc.getElementsByTagName("description").item(0)
+					.getTextContent();
+
+			Element eOwner = (Element) doc.getElementsByTagName("owner")
+					.item(0);
+			String name = eOwner.getElementsByTagName("name").item(0)
+					.getTextContent();
+			String username = eOwner.getElementsByTagName("username").item(0)
+					.getTextContent();
+			String avatarURL = eOwner.getElementsByTagName("avatar_url")
+					.item(0).getTextContent();
+
+			owner = new UserItem(name, username, avatarURL);
+
+			time = Long.parseLong(doc.getElementsByTagName("time_created")
+					.item(0).getTextContent());
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		if (noInternet() && callback != null) {
+			callback.onNetworkFailed();
+		}
+
+		if (result == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+
+		log("%s: result<%d>, lastError<%s>", "getFileInfo", result,
+				lastError);
+
+		return new FileItem(guid, title, description, fname, size, time, owner);
+	}
+
+	public PostItem getTopic(String guid) {
+		lastError = null;
+		String urlParams = "method=group.forum.get_post&guid=" + guid
+				+ "&username=" + userName;
+
+		int result = -1;
+
+		String title = null;
+		String description = null;
+		long time = 0;
+		UserItem owner = null;
+
+		try {
+			String xml = doAuthenticatedGet(ElggBase, urlParams);
+			Document doc = loadXMLFromString(xml);
+
+			String rs = doc.getElementsByTagName("status").item(0)
+					.getTextContent();
+
+			result = Integer.parseInt(rs);
+
+			Node n = doc.getElementsByTagName("message").item(0);
+			if (n != null) {
+				lastError = n.getTextContent();
+			}
+
+			title = doc.getElementsByTagName("title").item(0).getTextContent();
+			description = doc.getElementsByTagName("description").item(0)
+					.getTextContent();
+
+			Element eOwner = (Element) doc.getElementsByTagName("owner")
+					.item(0);
+			String name = eOwner.getElementsByTagName("name").item(0)
+					.getTextContent();
+			String username = eOwner.getElementsByTagName("username").item(0)
+					.getTextContent();
+			String avatarURL = eOwner.getElementsByTagName("avatar_url")
+					.item(0).getTextContent();
+
+			owner = new UserItem(name, username, avatarURL);
+
+			time = Long.parseLong(doc.getElementsByTagName("time_created")
+					.item(0).getTextContent());
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		if (result == RESULT_AUTH_FAILED) {
+			notifyLoginObservers();
+		}
+
+		if (noInternet() && callback != null) {
+			callback.onNetworkFailed();
+		}
+
+		log("%s: result<%d>, lastError<%s>", "getTopic", result,
+				lastError);
+
+		return new PostItem(guid, title, description, time, owner);
+	}
+
 	public PostItem getPost(String guid) {
 		lastError = null;
-		String urlParams = "method=blog.get_post&guid=" + guid + "&username="
+		String urlParams = "method=object.get_post&guid=" + guid + "&username="
 				+ userName;
 
 		int result = -1;

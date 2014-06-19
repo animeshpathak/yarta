@@ -2,6 +2,15 @@ package fr.inria.arles.yarta.android.library.web;
 
 public class ObjectItem {
 
+	public static final String User = "user";
+	public static final String Group = "group";
+	public static final String Blog = "blog";
+	public static final String Page = "page";
+	public static final String PageTop = "page_top";
+	public static final String Feedback = "feedback";
+	public static final String Topic = "groupforumtopic";
+	public static final String File = "file";
+
 	private String guid;
 	private String name;
 	private String description;

@@ -10,7 +10,8 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.FeedbackDialog;
-
+import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.android.library.web.RequestItem;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -20,9 +21,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener {
+		AdapterView.OnItemClickListener, RequestsFragment.Callback {
+
+	private static final int MENU_NOTIFICATIONS = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +45,36 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		refreshRequests();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSherlock().getMenuInflater().inflate(R.menu.main, menu);
+
+		MenuItem item = menu.add(0, MENU_NOTIFICATIONS, 0,
+				R.string.main_menu_notifications);
+		item.setIcon(R.drawable.shape_notification);
+		item.setActionView(R.layout.frame_notification);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		View count = item.getActionView();
+		TextView notifCount = (TextView) count.findViewById(R.id.notif_count);
+		notifCount.setText(String.valueOf(requests.size()));
+
+		count.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (inRequests) {
+					onDrawerItem(currentPosition);
+				} else {
+					onNotificationsClick();
+				}
+			}
+		});
 		return true;
 	}
 
@@ -144,7 +176,7 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (currentPosition != 0) {
+		if (currentPosition != 0 || inRequests) {
 			onDrawerItem(0);
 		} else {
 			finish();
@@ -188,6 +220,7 @@ public class MainActivity extends BaseActivity implements
 		// setTitle(sideMenuItems.get(position).getText());
 		drawerAdapter.setSelected(position);
 		drawerLayout.closeDrawer(drawerList);
+		inRequests = false;
 	}
 
 	private void initSideMenu() {
@@ -220,6 +253,52 @@ public class MainActivity extends BaseActivity implements
 			}
 		}
 	}
+
+	private void onNotificationsClick() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+		requestsFragment.setRunner(runner);
+		requestsFragment.setCallback(this);
+
+		setTitle(getString(R.string.main_menu_notifications));
+
+		if (!requestsFragment.isAdded()) {
+			ft.replace(R.id.content_frame, requestsFragment);
+		} else {
+			requestsFragment.refreshUI();
+		}
+		ft.commit();
+		inRequests = true;
+	}
+
+	private void refreshNotificationsMenu() {
+		supportInvalidateOptionsMenu();
+	}
+
+	private void refreshRequests() {
+		execute(new Job() {
+
+			@Override
+			public void doWork() {
+				requests = requestsFragment.getRequests();
+			}
+
+			@Override
+			public void doUIAfter() {
+				refreshNotificationsMenu();
+			}
+		});
+	}
+
+	@Override
+	public void onRefresh(List<RequestItem> requests) {
+		this.requests = requests;
+		refreshNotificationsMenu();
+	}
+
+	private boolean inRequests;
+	private RequestsFragment requestsFragment = new RequestsFragment();
+	private List<RequestItem> requests = new ArrayList<RequestItem>();
 
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;

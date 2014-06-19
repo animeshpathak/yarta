@@ -107,13 +107,13 @@ public class SearchResultsFragment extends BaseFragment implements
 
 		ObjectItem item = (ObjectItem) adapter.getItem(position);
 		Intent intent = null;
-		if (type.equals("user")) {
+		if (type.equals(ObjectItem.User)) {
 			intent = new Intent(getSherlockActivity(), ProfileActivity.class);
 			intent.putExtra(ProfileActivity.UserGuid, item.getGuid());
-		} else if (type.equals("group")) {
+		} else if (type.equals(ObjectItem.Group)) {
 			intent = new Intent(getSherlockActivity(), GroupActivity.class);
 			intent.putExtra(GroupActivity.GroupGuid, item.getGuid());
-		} else if (type.equals("blog")) {
+		} else if (type.equals(ObjectItem.Blog)) {
 			intent = new Intent(getSherlockActivity(), PostActivity.class);
 			intent.putExtra(PostActivity.PostGuid, item.getGuid());
 		}

@@ -150,30 +150,45 @@ public class RiverFragment extends BaseFragment implements
 
 	@Override
 	public void onObjectClick(ObjectItem object) {
-		if (object.getType().equals("user")) {
+		String type = object.getType();
+
+		if (type.equals(ObjectItem.User)) {
 			Intent intent = new Intent(getSherlockActivity(),
 					ProfileActivity.class);
 			intent.putExtra(ProfileActivity.UserGuid, object.getGuid().trim());
 			startActivity(intent);
-		} else if (object.getType().equals("group")) {
+		} else if (type.equals(ObjectItem.Group)) {
 			Intent intent = new Intent(getSherlockActivity(),
 					GroupActivity.class);
 			intent.putExtra(GroupActivity.GroupGuid, object.getGuid().trim());
 			startActivity(intent);
-		} else if (object.getType().equals("blog")) {
+		} else if (type.equals(ObjectItem.Blog) || type.equals(ObjectItem.Page)
+				|| type.equals(ObjectItem.PageTop)
+				|| type.equals(ObjectItem.Feedback)) {
 			Intent intent = new Intent(getSherlockActivity(),
 					PostActivity.class);
 			intent.putExtra(PostActivity.PostGuid, object.getGuid().trim());
 			startActivity(intent);
+		} else if (type.equals(ObjectItem.Topic)) {
+			Intent intent = new Intent(getSherlockActivity(),
+					TopicActivity.class);
+			intent.putExtra(TopicActivity.TopicGuid, object.getGuid().trim());
+			startActivity(intent);
+		} else if (type.equals(ObjectItem.File)) {
+			Intent intent = new Intent(getSherlockActivity(),
+					FileActivity.class);
+			intent.putExtra(FileActivity.FileGuid, object.getGuid().trim());
+			startActivity(intent);
 		} else {
-			String description = object.getDescription();
-			if (description == null) {
-				description = "-";
-			}
-			String format = getString(R.string.main_river_cant_display_object);
-			String message = String.format(format, object.getName(),
-					object.getType(), description);
-			PopupDialog.show(getSherlockActivity(), message);
+			// String description = object.getDescription();
+			// if (description == null) {
+			// description = "-";
+			// }
+			// String format =
+			// getString(R.string.main_river_cant_display_object);
+			// String message = String.format(format, object.getName(), type,
+			// description);
+			// PopupDialog.show(getSherlockActivity(), message);
 		}
 	}
 
