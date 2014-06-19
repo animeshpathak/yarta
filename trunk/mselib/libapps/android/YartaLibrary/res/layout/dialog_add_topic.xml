@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="match_parent"
+    android:minWidth="250dp"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+        <Spinner
+            android:id="@+id/access"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit"
+        android:gravity="top"
+        android:hint="@string/wire_content"
+        android:inputType="textMultiLine"
+        android:maxLength="140"
+        android:minLines="3"
+        android:padding="7dp"
+        android:textColor="@color/AppTextColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/AppGrayButton"
+            android:layout_width="0sp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:text="@string/wire_cancel" />
+
+        <Button
+            android:id="@+id/set"
+            style="@style/AppCarrotButton"
+            android:layout_width="0sp"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:text="@string/wire_post" />
+    </LinearLayout>
+
+</LinearLayout>

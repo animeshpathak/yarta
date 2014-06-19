@@ -133,8 +133,6 @@ public class RiverListAdapter extends BaseAdapter implements
 			} else {
 				holder.extra.setVisibility(View.GONE);
 			}
-		} else {
-			holder.object.setVisibility(View.GONE);
 		}
 
 		holder.time.setText(sdf.format(new Date(item.getTime())));

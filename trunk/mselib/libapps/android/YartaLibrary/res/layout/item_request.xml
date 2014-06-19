@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/container"
+        style="@style/AppContainer"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/icon"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/author"
+                style="@style/AppAuthor"
+                android:clickable="true" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        style="@style/AppContainer"
+        android:layout_marginBottom="5dp"
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/accept"
+            style="@style/AppCarrotButton"
+            android:layout_height="32dp"
+            android:padding="5dp"
+            android:text="@string/notification_accept" />
+
+        <Button
+            android:id="@+id/ignore"
+            style="@style/AppGrayButton"
+            android:layout_height="32dp"
+            android:layout_marginLeft="7dp"
+            android:padding="5dp"
+            android:text="@string/notification_ignore" />
+    </LinearLayout>
+
+</LinearLayout>

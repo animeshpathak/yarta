@@ -40,17 +40,17 @@ public class SearchFragment extends BaseFragment implements
 
 		SearchResultsFragment fragmentResults = new SearchResultsFragment();
 		fragmentResults.setRunner(runner);
-		fragmentResults.setType("user");
+		fragmentResults.setType(ObjectItem.User);
 		adapter.addFragment(fragmentResults, R.string.search_users);
 
 		fragmentResults = new SearchResultsFragment();
 		fragmentResults.setRunner(runner);
-		fragmentResults.setType("group");
+		fragmentResults.setType(ObjectItem.Group);
 		adapter.addFragment(fragmentResults, R.string.search_groups);
 
 		fragmentResults = new SearchResultsFragment();
 		fragmentResults.setRunner(runner);
-		fragmentResults.setType("blog");
+		fragmentResults.setType(ObjectItem.Blog);
 		adapter.addFragment(fragmentResults, R.string.search_blogs);
 
 		tabHost = (TabHost) root.findViewById(android.R.id.tabhost);

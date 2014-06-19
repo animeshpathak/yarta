@@ -215,5 +215,24 @@
     <string name="wire_remove_yes">Remove</string>
     <string name="main_message_from">From:</string>
     <string name="main_message_subject">Subject:</string>
+    <string name="topic_title">Discussion topic</string>
+    <string name="topic_information">Discussion information</string>
+    <string name="topic_no_comment">No replies. To add one press \'+\'.</string>
+    <string name="topic_comments">Replies</string>
+    <string name="topic_add_comment">Add reply</string>
+    <string name="file_title">File</string>
+    <string name="file_information">File information</string>
+    <string name="file_download">Download</string>
+    <string name="file_time">"Time: "</string>
+    <string name="file_size_fmt">Size: %.2f MB</string>
+    <string name="file_name">"Filename: "</string>
+    <string name="file_downloading">Downloading…</string>
+    <string name="file_downloaded">File downloaded in the downloads directory.</string>
+    <string name="main_menu_notifications">Notifications</string>
+    <string name="notifications_wants_to_be_friend">would like to become your contact.</string>
+    <string name="notifications_wants_to_join_group">would like to join %s group.</string>
+    <string name="notification_ignore">Ignore</string>
+    <string name="notification_accept">Accept</string>
+    <string name="topic_time">""Time: "</string>
 
 </resources>
