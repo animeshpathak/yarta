@@ -21,10 +21,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.PostItem;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.PostItem;
+import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class TopicActivity extends BaseActivity implements

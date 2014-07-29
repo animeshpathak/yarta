@@ -3,15 +3,13 @@ package fr.inria.arles.yarta.android.library;
 import java.util.List;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.ObjectItem;
+import fr.inria.arles.iris.web.RiverItem;
+import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.util.PopupDialog;
-import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.ObjectItem;
-import fr.inria.arles.yarta.android.library.web.RiverItem;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;

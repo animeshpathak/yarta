@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.Locale;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-import fr.inria.arles.yarta.android.library.web.WebClient;
-import fr.inria.arles.yarta.android.library.web.WireItem;
-
+import fr.inria.arles.iris.web.ElggClient;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.iris.web.WireItem;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
@@ -98,7 +97,7 @@ public class WireListAdapter extends BaseAdapter implements
 		holder.author.setOnClickListener(this);
 
 		holder.remove.setVisibility(item.getAuthor().getUsername()
-				.equals(WebClient.getInstance().getUserGuid()) ? View.VISIBLE
+				.equals(ElggClient.getInstance().getUserGuid()) ? View.VISIBLE
 				: View.GONE);
 		holder.remove.setTag(position);
 		holder.remove.setOnClickListener(this);

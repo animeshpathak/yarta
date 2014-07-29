@@ -6,9 +6,10 @@ import java.net.URL;
 import java.util.UUID;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.ElggClient;
+import fr.inria.arles.iris.web.HttpClient;
 import fr.inria.arles.yarta.android.library.util.ProgressDialog;
 import fr.inria.arles.yarta.android.library.util.Settings;
-import fr.inria.arles.yarta.android.library.web.WebClient;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
@@ -28,7 +29,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 	private Settings settings;
 	private AccountManager accountManager;
-	private WebClient client = WebClient.getInstance();
+	private ElggClient client = ElggClient.getInstance();
 
 	public static final String ARG_ACCOUNT_TYPE = "AccountType";
 	public static final String ARG_AUTH_TYPE = "AuthType";
@@ -71,7 +72,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				@Override
 				protected Intent doInBackground(Void... params) {
 					try {
-						String url = WebClient.ElggCAS + "read&guid=" + guid;
+						String url = HttpClient.BaseCAS + "read&guid=" + guid;
 						String tokenAndUser = readURL(url).trim();
 
 						if (tokenAndUser.length() > 3) {
@@ -80,7 +81,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 							String username = tokenAndUser
 									.substring(tokenAndUser.indexOf(',') + 1);
 							client.setUsername(username);
-							client.setUserToken(token);
+							client.setToken(token);
 							client.setUserGuid(client.getUserGuid(username));
 
 							settings.setString(Settings.USER_NAME,
@@ -88,7 +89,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 							settings.setString(Settings.USER_GUID,
 									client.getUserGuid());
 							settings.setString(Settings.USER_TOKEN,
-									client.getUserToken());
+									client.getToken());
 
 							settings.setString(Settings.USER_RANDOM_GUID, "");
 
@@ -112,7 +113,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 						res.putExtra(AccountManager.KEY_ACCOUNT_TYPE,
 								ACCOUNT_TYPE);
 						res.putExtra(AccountManager.KEY_AUTHTOKEN,
-								client.getUserToken());
+								client.getToken());
 
 						finishLogin(res);
 					}
@@ -133,7 +134,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		String guid = UUID.randomUUID().toString();
 		settings.setString(Settings.USER_RANDOM_GUID, guid);
 
-		String url = WebClient.ElggCAS + "guid=" + guid;
+		String url = HttpClient.BaseCAS + "guid=" + guid;
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		startActivity(browserIntent);
 	}
@@ -167,18 +168,17 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 			@Override
 			protected void onPostExecute(Intent intent) {
 				dialog.dismiss();
-				if (result == WebClient.RESULT_OK) {
+				if (result == ElggClient.RESULT_OK) {
 					settings.setString(Settings.USER_NAME, client.getUsername());
 					settings.setString(Settings.USER_GUID, client.getUserGuid());
-					settings.setString(Settings.USER_TOKEN,
-							client.getUserToken());
+					settings.setString(Settings.USER_TOKEN, client.getToken());
 
 					final Intent res = new Intent();
 					res.putExtra(AccountManager.KEY_ACCOUNT_NAME,
 							client.getUsername());
 					res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ACCOUNT_TYPE);
 					res.putExtra(AccountManager.KEY_AUTHTOKEN,
-							client.getUserToken());
+							client.getToken());
 
 					finishLogin(res);
 				} else {
@@ -197,11 +197,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
 			accountManager.addAccountExplicitly(account, null, null);
 			accountManager.setAuthToken(account, ACCOUNT_TOKEN,
-					client.getUserToken());
+					client.getToken());
 		} else {
 			accountManager.setPassword(account, null);
 			accountManager.setAuthToken(account, ACCOUNT_TOKEN,
-					client.getUserToken());
+					client.getToken());
 		}
 		setAccountAuthenticatorResult(intent.getExtras());
 		setResult(RESULT_OK, intent);

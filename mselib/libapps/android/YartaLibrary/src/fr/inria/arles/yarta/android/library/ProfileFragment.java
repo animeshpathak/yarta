@@ -15,20 +15,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-import fr.inria.arles.yarta.android.library.web.WebClient;
+import fr.inria.arles.iris.web.ElggClient;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class ProfileFragment extends BaseFragment {
 
-	private static final int MENU_SAVE = 1;
 	private static final int MENU_COMPOSE = 2;
 	private static final int MENU_ADD = 3;
 
-	private String username = WebClient.getInstance().getUsername();
+	private String username = ElggClient.getInstance().getUsername();
 	private UserItem user;
 	private RiverFragment activityFragment;
 
@@ -52,16 +51,15 @@ public class ProfileFragment extends BaseFragment {
 	}
 
 	private boolean isEditable() {
-		return client.getUsername().equals(username);
+		if (username == null || client.getUsername() == null) {
+			return false;
+		}
+		return username.equals(client.getUsername());
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (isEditable()) {
-			MenuItem item = menu.add(0, MENU_SAVE, 0, R.string.profile_save);
-			item.setIcon(R.drawable.icon_accept);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		} else {
+		if (!isEditable()) {
 			MenuItem item = menu.add(0, MENU_ADD, 0,
 					R.string.profile_add_friend);
 			item.setIcon(R.drawable.icon_add_user);
@@ -77,9 +75,6 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_SAVE:
-			onSave();
-			break;
 		case MENU_COMPOSE:
 			if (user == null) {
 				break;
@@ -185,37 +180,6 @@ public class ProfileFragment extends BaseFragment {
 		});
 	}
 
-	private void onSave() {
-		final String name = getCtrlText(R.id.name);
-		final String website = getCtrlText(R.id.website);
-
-		runner.runBackground(new Job() {
-			int result;
-			String message;
-
-			@Override
-			public void doWork() {
-				result = client.setUser(username, new UserItem(name, website,
-						null, null, null, null));
-				message = client.getLastError();
-			}
-
-			@Override
-			public void doUIAfter() {
-				if (result != WebClient.RESULT_OK) {
-					Toast.makeText(getSherlockActivity(), message,
-							Toast.LENGTH_LONG).show();
-				} else {
-					Toast.makeText(getSherlockActivity(),
-							R.string.profile_update_successfull,
-							Toast.LENGTH_SHORT).show();
-
-					refreshUI();
-				}
-			}
-		});
-	}
-
 	private void onCompose() {
 		Intent intent = new Intent(getSherlockActivity(), MessageActivity.class);
 		intent.putExtra(MessageActivity.User, user);
@@ -236,7 +200,7 @@ public class ProfileFragment extends BaseFragment {
 			public void doUIAfter() {
 				try {
 					String message = getString(R.string.profile_add_ok);
-					if (result != WebClient.RESULT_OK) {
+					if (result != ElggClient.RESULT_OK) {
 						message = client.getLastError();
 					}
 					Toast.makeText(getSherlockActivity(), message,

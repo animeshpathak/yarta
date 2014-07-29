@@ -13,8 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.GroupItem;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
+import fr.inria.arles.iris.web.GroupItem;
+import fr.inria.arles.iris.web.ImageCache;
 
 public class GroupsListAdapter extends BaseAdapter {
 

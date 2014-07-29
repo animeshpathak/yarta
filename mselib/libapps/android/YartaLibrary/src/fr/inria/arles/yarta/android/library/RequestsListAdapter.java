@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.RequestItem;
-import fr.inria.arles.yarta.android.library.web.UserItem;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.RequestItem;
+import fr.inria.arles.iris.web.UserItem;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;

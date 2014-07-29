@@ -6,9 +6,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.web.WebClient;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -83,7 +82,7 @@ public class FeedbackDialog extends BaseDialog implements View.OnClickListener {
 
 			@Override
 			public void doWork() {
-				success = sendFeedback("fr.inria.arles.iris", WebClient
+				success = sendFeedback("fr.inria.arles.iris", ElggClient
 						.getInstance().getUsername(), content);
 			}
 

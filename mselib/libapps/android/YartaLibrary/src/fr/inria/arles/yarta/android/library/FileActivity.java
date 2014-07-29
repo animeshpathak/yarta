@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.FileItem;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.util.Base64;
+import fr.inria.arles.iris.web.FileItem;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.util.Base64;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class FileActivity extends BaseActivity {

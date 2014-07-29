@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Locale;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.ObjectItem;
-import fr.inria.arles.yarta.android.library.web.RiverItem;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.ObjectItem;
+import fr.inria.arles.iris.web.RiverItem;
+import fr.inria.arles.iris.web.UserItem;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;

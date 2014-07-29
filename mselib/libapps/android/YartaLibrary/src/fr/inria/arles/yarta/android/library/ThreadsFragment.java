@@ -7,8 +7,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,32 +14,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.MessageItem;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-import fr.inria.arles.yarta.android.library.web.WebClient;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.MessageItem;
+import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 
-public class MessagesFragment extends BaseFragment implements
-		MessageListAdapter.Callback, PullToRefreshListView.OnRefreshListener {
+public class ThreadsFragment extends BaseFragment implements
+		PullToRefreshListView.OnRefreshListener {
 
 	private static final int MENU_COMPOSE = 1;
 
-	private MessageListAdapter adapter;
+	private ThreadsListAdapter adapter;
 	private PullToRefreshListView list;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_messages, container,
+		View root = inflater.inflate(R.layout.fragment_threads, container,
 				false);
 
-		adapter = new MessageListAdapter(getSherlockActivity());
-		adapter.setCallback(this);
+		adapter = new ThreadsListAdapter(getSherlockActivity());
 
 		list = (PullToRefreshListView) root.findViewById(R.id.listInbox);
 		list.setAdapter(adapter);
@@ -52,8 +46,8 @@ public class MessagesFragment extends BaseFragment implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Intent intent = new Intent(getSherlockActivity(),
-						MessageActivity.class);
-				intent.putExtra(MessageActivity.Message,
+						MessagesActivity.class);
+				intent.putExtra(MessagesActivity.Thread,
 						(Serializable) adapter.getItem(position));
 				startActivity(intent);
 			}
@@ -94,7 +88,7 @@ public class MessagesFragment extends BaseFragment implements
 		refreshUI();
 	}
 
-	private List<MessageItem> items;
+	private List<List<MessageItem>> items;
 
 	@Override
 	public void refreshUI() {
@@ -102,7 +96,7 @@ public class MessagesFragment extends BaseFragment implements
 
 			@Override
 			public void doWork() {
-				items = client.getMessages();
+				items = client.getMessageThreads();
 			}
 
 			@Override
@@ -118,8 +112,10 @@ public class MessagesFragment extends BaseFragment implements
 
 		@Override
 		public void run() {
-			for (MessageItem item : items) {
-				String url = item.getFrom().getAvatarURL();
+			for (List<MessageItem> item : items) {
+				MessageItem message = item.get(0);
+
+				String url = message.getFrom().getAvatarURL();
 				if (ImageCache.getDrawable(url) == null) {
 					try {
 						ImageCache.setDrawable(url,
@@ -141,58 +137,6 @@ public class MessagesFragment extends BaseFragment implements
 			adapter.notifyDataSetChanged();
 		}
 	};
-	
-	@Override
-	public void onProfileClick(UserItem item) {
-		Intent intent = new Intent(getSherlockActivity(), ProfileActivity.class);
-		intent.putExtra(ProfileActivity.UserName, item.getUsername());
-		startActivity(intent);
-	}
-
-	@Override
-	public void onRemove(final MessageItem item) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				getSherlockActivity());
-		builder.setMessage(R.string.message_remove_message)
-				.setPositiveButton(R.string.message_remove_yes,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								removeMessage(item);
-								dialog.cancel();
-							}
-						})
-				.setNegativeButton(R.string.message_remove_cancel,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.setTitle(R.string.message_remove_title);
-		alert.show();
-	}
-
-	private void removeMessage(final MessageItem item) {
-		runner.runBackground(new Job() {
-
-			int result = -1;
-
-			@Override
-			public void doWork() {
-				result = client.removeMessage(item);
-			}
-
-			@Override
-			public void doUIAfter() {
-				if (result == WebClient.RESULT_OK) {
-					refreshUI();
-				} else {
-					Toast.makeText(getSherlockActivity(),
-							client.getLastError(), Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-	}
 
 	private void onCompose() {
 		Intent intent = new Intent(getSherlockActivity(), MessageActivity.class);

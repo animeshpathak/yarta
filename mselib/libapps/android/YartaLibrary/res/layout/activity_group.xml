@@ -7,8 +7,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        
-        <include layout="@layout/frame_nonet"/>
+
+        <include layout="@layout/frame_nonet" />
 
         <LinearLayout
             android:id="@+id/content_frame"
@@ -22,14 +22,6 @@
                 android:background="@drawable/card"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/titlecard"
-                    android:padding="5dp"
-                    android:text="@string/group_information"
-                    android:textColor="#33334b" />
-
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -40,22 +32,22 @@
 
                     <ImageView
                         android:id="@+id/icon"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_centerVertical="true" />
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentRight="true" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/icon"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@+id/icon"
                         android:orientation="vertical" >
 
                         <TextView
                             android:id="@+id/name"
                             android:layout_width="fill_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/members"

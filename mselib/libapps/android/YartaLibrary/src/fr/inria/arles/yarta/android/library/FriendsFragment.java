@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.UserItem;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
-import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class FriendsFragment extends BaseFragment implements
@@ -53,7 +53,7 @@ public class FriendsFragment extends BaseFragment implements
 
 			@Override
 			public void doWork() {
-				items = client.getFriends(client.getUsername());
+				items = client.getFriends(client.getUsername(), 0);
 			}
 
 			@Override

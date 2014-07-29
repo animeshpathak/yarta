@@ -6,12 +6,12 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-import fr.inria.arles.yarta.android.library.web.WebClient;
+import fr.inria.arles.iris.web.ElggClient;
 
 public abstract class BaseFragment extends SherlockFragment {
 
 	protected JobRunner runner;
-	protected WebClient client = WebClient.getInstance();
+	protected ElggClient client = ElggClient.getInstance();
 
 	public void setRunner(JobRunner runner) {
 		this.runner = runner;

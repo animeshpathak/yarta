@@ -12,9 +12,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.GroupItem;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.WebClient;
+import fr.inria.arles.iris.web.GroupItem;
+import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.yarta.android.library.util.GenericPageAdapter;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
@@ -26,8 +25,6 @@ public class GroupActivity extends BaseActivity {
 
 	private GenericPageAdapter adapter;
 	private TabHost tabHost;
-	
-	private WebClient client = WebClient.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

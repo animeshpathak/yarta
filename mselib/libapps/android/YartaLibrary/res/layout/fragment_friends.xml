@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AppContentColor"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -19,13 +20,13 @@
             android:textColor="@color/AppTextColorLow" />
     </RelativeLayout>
 
-    <fr.inria.arles.yarta.android.library.util.PullToRefreshListView
+    <fr.inria.arles.util.PullToRefreshListView
         android:id="@+id/listFriends"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="#00000000"
-        android:dividerHeight="0sp"
+        android:divider="@color/AppContentStroke"
+        android:dividerHeight="1sp"
         android:listSelector="@drawable/list_selector" />
 
 </LinearLayout>

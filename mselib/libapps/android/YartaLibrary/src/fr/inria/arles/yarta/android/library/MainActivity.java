@@ -7,17 +7,19 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.RequestItem;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.FeedbackDialog;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.web.RequestItem;
+import fr.inria.arles.yarta.android.library.util.Settings;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -34,7 +36,6 @@ public class MainActivity extends BaseActivity implements
 		setContentView(R.layout.activity_main);
 
 		initDrawer();
-
 		refreshUI();
 	}
 
@@ -52,6 +53,8 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+
 		getSherlock().getMenuInflater().inflate(R.menu.main, menu);
 
 		MenuItem item = menu.add(0, MENU_NOTIFICATIONS, 0,
@@ -63,6 +66,8 @@ public class MainActivity extends BaseActivity implements
 		View count = item.getActionView();
 		TextView notifCount = (TextView) count.findViewById(R.id.notif_count);
 		notifCount.setText(String.valueOf(requests.size()));
+		notifCount.setVisibility(requests.size() == 0 ? View.GONE
+				: View.VISIBLE);
 
 		count.setOnClickListener(new View.OnClickListener() {
 
@@ -76,6 +81,19 @@ public class MainActivity extends BaseActivity implements
 			}
 		});
 		return true;
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			if (drawerLayout.isDrawerOpen(drawerList)) {
+				drawerLayout.closeDrawer(drawerList);
+			} else {
+				drawerLayout.openDrawer(drawerList);
+			}
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -108,6 +126,7 @@ public class MainActivity extends BaseActivity implements
 
 					@Override
 					public void onOK() {
+						settings.setString(Settings.USER_TOKEN, null);
 						clearMSE();
 						finish();
 					}
@@ -186,28 +205,26 @@ public class MainActivity extends BaseActivity implements
 	private int currentPosition = 0;
 
 	private void onDrawerItem(int position) {
+		drawerList.setItemChecked(currentPosition, true);
 
-		// TODO: do this better
 		if (position == sideMenuItems.size() - 1) {
-			trackUI("Logout");
 			drawerLayout.closeDrawer(drawerList);
 			onLogoutClicked();
 			return;
 		} else if (position == sideMenuItems.size() - 2) {
-			trackUI("Feedback");
 			drawerLayout.closeDrawer(drawerList);
 			onFeedbackClicked();
 			return;
+		} else {
+			currentPosition = position;
+			drawerList.setItemChecked(currentPosition, true);
 		}
-
-		currentPosition = position;
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
 		BaseFragment fragment = sideMenuItems.get(position).getFragment();
 		setTitle(sideMenuItems.get(position).getText());
 
-		trackUI(sideMenuItems.get(position).getText());
 		if (!fragment.isAdded()) {
 			ft.replace(R.id.content_frame, fragment);
 		} else {
@@ -215,35 +232,30 @@ public class MainActivity extends BaseActivity implements
 		}
 		ft.commit();
 
-		drawerList.setItemChecked(position, true);
-
 		// setTitle(sideMenuItems.get(position).getText());
-		drawerAdapter.setSelected(position);
 		drawerLayout.closeDrawer(drawerList);
 		inRequests = false;
 	}
 
 	private void initSideMenu() {
-		// TODO: add the fragments
-
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_river),
-				new RiverFragment()));
+				R.drawable.drawer_river, new RiverFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_wire),
-				new WireFragment()));
+				R.drawable.drawer_wire, new WireFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_profile),
-				new ProfileFragment()));
+				R.drawable.drawer_profile, new ProfileFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_friends),
-				new FriendsFragment()));
+				R.drawable.drawer_contacts, new FriendsFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_groups),
-				new GroupsFragment()));
+				R.drawable.drawer_groups, new GroupsFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_message),
-				new MessagesFragment()));
+				R.drawable.drawer_messages, new ThreadsFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_search),
-				new SearchFragment()));
+				R.drawable.drawer_search, new SearchFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.feedback_title),
-				null));
+				R.drawable.drawer_feedback, null));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_logout),
-				null));
+				R.drawable.drawer_disconnect, null));
 
 		for (SideMenuItem item : sideMenuItems) {
 			BaseFragment fragment = item.getFragment();

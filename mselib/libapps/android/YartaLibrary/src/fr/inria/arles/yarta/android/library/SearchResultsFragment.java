@@ -11,10 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.ObjectItem;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.ObjectItem;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 
 public class SearchResultsFragment extends BaseFragment implements
