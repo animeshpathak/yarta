@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.inria.arles.iris"
-    android:versionCode="57"
-    android:versionName="2.6.2" >
+    android:versionCode="59"
+    android:versionName="2.6.4" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -51,6 +51,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="fr.inria.arles.yarta.android.library.MessageActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/message_title" />
+        <activity
+            android:name="fr.inria.arles.yarta.android.library.MessagesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/message_title" />
         <activity

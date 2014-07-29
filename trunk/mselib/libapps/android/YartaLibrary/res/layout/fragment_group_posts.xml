@@ -23,7 +23,7 @@
             android:textColor="@color/AppTextColorLow" />
     </RelativeLayout>
 
-    <fr.inria.arles.yarta.android.library.util.PullToRefreshListView
+    <fr.inria.arles.util.PullToRefreshListView
         android:id="@+id/listPosts"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

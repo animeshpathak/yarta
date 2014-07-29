@@ -1,7 +1,7 @@
 package fr.inria.arles.yarta.android.library;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.WebClient;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.util.BaseDialog;
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 import android.content.Context;
@@ -20,6 +20,7 @@ public class CommentAddDialog extends BaseDialog implements
 	private JobRunner runner;
 
 	private String postGuid;
+	private ElggClient client = ElggClient.getInstance();
 
 	public CommentAddDialog(Context context, String postGuid) {
 		super(context);
@@ -72,15 +73,15 @@ public class CommentAddDialog extends BaseDialog implements
 
 				@Override
 				public void doWork() {
-					result = WebClient.getInstance().addComment(postGuid, text);
+					result = client.addComment(postGuid, text);
 				}
 
 				@Override
 				public void doUIAfter() {
 					if (result == -1) {
 						Toast.makeText(getContext().getApplicationContext(),
-								WebClient.getInstance().getLastError(),
-								Toast.LENGTH_LONG).show();
+								client.getLastError(), Toast.LENGTH_LONG)
+								.show();
 					} else {
 						dismiss();
 						callback.onCommentAdded();

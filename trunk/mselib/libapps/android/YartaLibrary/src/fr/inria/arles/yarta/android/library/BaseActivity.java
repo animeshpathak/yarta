@@ -3,6 +3,7 @@ package fr.inria.arles.yarta.android.library;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -10,10 +11,10 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.android.library.util.Settings;
-import fr.inria.arles.yarta.android.library.web.WebClient;
 import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
@@ -24,13 +25,13 @@ import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
  * Base activity containing common functionality.
  */
 public class BaseActivity extends SherlockFragmentActivity implements
-		YartaApp.Observer, YartaApp.LoginObserver, WebClient.WebErrorCallback {
+		YartaApp.Observer, YartaApp.LoginObserver, ElggClient.WebCallback {
 
 	private YartaApp app;
 	protected JobRunner runner;
 	private YLogger log = YLoggerFactory.getLogger();
 	protected Settings settings;
-	protected WebClient client = WebClient.getInstance();
+	protected ElggClient client = ElggClient.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,12 +134,12 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		app.addObserver(this);
-		client.setErrorCallback(this);
+		client.setCallback(this);
 	}
 
 	@Override
 	protected void onPause() {
-		client.setErrorCallback(null);
+		client.setCallback(null);
 		app.removeObserver(this);
 		super.onPause();
 	}
@@ -174,6 +175,14 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		TextView txt = (TextView) findViewById(resId);
 		if (txt != null) {
 			return txt.getText().toString();
+		}
+		return null;
+	}
+
+	protected Spanned getCtrlHtml(int txtId) {
+		EditText txt = (EditText) findViewById(txtId);
+		if (txt != null) {
+			return txt.getText();
 		}
 		return null;
 	}

@@ -3,7 +3,7 @@ package fr.inria.arles.yarta.android.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.arles.yarta.android.library.web.IrisBridge;
+import fr.inria.arles.iris.web.IrisBridge;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
@@ -14,7 +14,6 @@ import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
-
 import android.os.Bundle;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -106,13 +105,14 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.addLiteral[knowledgeBase = %s]", knowledgeBase);
+			log("AidlService.addLiteral[knowledgeBase = %s]", knowledgeBase);
 
 			result = Conversion.toBundle(knowledgeBase.addLiteral(value,
 					dataType, requestorId));
 
 		} catch (Exception ex) {
-			logError("ILibraryService.addLiteral ex: %s", ex);
+			logError("AidlService.addLiteral exception: %s", ex);
+			ex.printStackTrace();
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addLiteral");
 		return result;
@@ -124,14 +124,13 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.addResource[knowledgeBase = %s]",
-					knowledgeBase);
+			log("AidlService.addResource[knowledgeBase = %s]", knowledgeBase);
 
 			result = Conversion.toBundle(knowledgeBase.addResource(nodeURI,
 					typeURI, requestorId));
 
 		} catch (Exception ex) {
-			logError("ILibraryService.addResource ex: %s", ex);
+			logError("AidlService.addResource ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addResource");
 		return result;
@@ -143,12 +142,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.addResourceNode[knowledgeBase = %s]",
+			log("AidlService.addResourceNode[knowledgeBase = %s]",
 					knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase.addResource(
 					Conversion.toNode(node), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.addResourceNode ex: %s", ex);
+			logError("AidlService.addResourceNode ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addResourceNode");
 		return result;
@@ -160,12 +159,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			// log("ILibraryService.getResourceByURI[knowledgeBase = %s]",
+			// log("AidlService.getResourceByURI[knowledgeBase = %s]",
 			// knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase.getResourceByURI(
 					nodeURI, requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getResourceByURI ex: %s", ex);
+			logError("AidlService.getResourceByURI ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getResourceByURI");
 		return result;
@@ -177,13 +176,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			// log("ILibraryService.getResourceByURINoPolicies[knowledgeBase = %s]",
+			// log("AidlService.getResourceByURINoPolicies[knowledgeBase = %s]",
 			// knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase
 					.getResourceByURINoPolicies(nodeURI));
 		} catch (Exception ex) {
-			logError("ILibraryService.getResourceByURINoPolicies ex: %s",
-					ex);
+			logError("AidlService.getResourceByURINoPolicies ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getResourceByURINoPolicies");
 		return result;
@@ -195,12 +193,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.addTriple[knowledgeBase = %s]", knowledgeBase);
+			log("AidlService.addTriple[knowledgeBase = %s]", knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase.addTriple(
 					Conversion.toNode(s), Conversion.toNode(p),
 					Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.addTriple ex: %s", ex);
+			logError("AidlService.addTriple ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addTriple");
 		return result;
@@ -212,13 +210,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.removeTriple[knowledgeBase = %s]",
-					knowledgeBase);
+			log("AidlService.removeTriple[knowledgeBase = %s]", knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase.removeTriple(
 					Conversion.toNode(s), Conversion.toNode(p),
 					Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.removeTriple ex: %s", ex);
+			logError("AidlService.removeTriple ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.removeTriple");
 		return result;
@@ -230,12 +227,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.getTriple[knowledgeBase = %s]", knowledgeBase);
+			log("AidlService.getTriple[knowledgeBase = %s]", knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase.getTriple(
 					Conversion.toNode(s), Conversion.toNode(p),
 					Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getTriple ex: %s", ex);
+			logError("AidlService.getTriple ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getTriple");
 		return result;
@@ -253,7 +250,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		List<Bundle> lstResult = new ArrayList<Bundle>();
 		tracker.beforeAPIUsage();
 		try {
-			// log("ILibraryService.getPropertyObjectAsTriples[knowledgeBase = %s]",
+			// log("AidlService.getPropertyObjectAsTriples[knowledgeBase = %s]",
 			// knowledgeBase);
 
 			Node subject = Conversion.toNode(s);
@@ -268,8 +265,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 				lstResult.add(Conversion.toBundle(triple));
 			}
 		} catch (Exception ex) {
-			logError("ILibraryService.getPropertyObjectAsTriples ex: %s",
-					ex);
+			logError("AidlService.getPropertyObjectAsTriples ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertyObjectAsTriples");
 		return lstResult;
@@ -281,7 +277,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		List<Bundle> lstResult = new ArrayList<Bundle>();
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.getPropertySubjectAsTriples[knowledgeBase = %s]",
+			log("AidlService.getPropertySubjectAsTriples[knowledgeBase = %s]",
 					knowledgeBase);
 			List<Triple> triples = knowledgeBase.getPropertySubjectAsTriples(
 					Conversion.toNode(p), Conversion.toNode(o), requestorId);
@@ -290,8 +286,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 				lstResult.add(Conversion.toBundle(triple));
 			}
 		} catch (Exception ex) {
-			logError("ILibraryService.getPropertySubjectAsTriples ex: %s",
-					ex);
+			logError("AidlService.getPropertySubjectAsTriples ex: %s", ex);
 			ex.printStackTrace();
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertySubjectAsTriples");
@@ -304,7 +299,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		List<Bundle> lstResult = new ArrayList<Bundle>();
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.getPropertyAsTriples[knowledgeBase = %s]",
+			log("AidlService.getPropertyAsTriples[knowledgeBase = %s]",
 					knowledgeBase);
 
 			List<Triple> triples = knowledgeBase.getPropertyAsTriples(
@@ -315,8 +310,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			}
 
 		} catch (Exception ex) {
-			logError("ILibraryService.getPropertyAsTriples ex: %s",
-					ex);
+			logError("AidlService.getPropertyAsTriples ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertyAsTriples");
 		return lstResult;
@@ -328,7 +322,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		List<Bundle> lstResult = new ArrayList<Bundle>();
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.getAllPropertiesAsTriples[knowledgeBase = %s]",
+			log("AidlService.getAllPropertiesAsTriples[knowledgeBase = %s]",
 					knowledgeBase);
 
 			List<Triple> triples = knowledgeBase.getAllPropertiesAsTriples(
@@ -339,8 +333,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			}
 
 		} catch (Exception ex) {
-			logError("ILibraryService.getAllPropertiesAsTriples ex: %s",
-					ex);
+			logError("AidlService.getAllPropertiesAsTriples ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getAllPropertiesAsTriples");
 		return lstResult;
@@ -352,8 +345,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		List<Bundle> lstResult = new ArrayList<Bundle>();
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.getKBAsTriples[knowledgeBase = %s]",
-					knowledgeBase);
+			log("AidlService.getKBAsTriples[knowledgeBase = %s]", knowledgeBase);
 
 			List<Triple> triples = knowledgeBase.getKBAsTriples(requestorId);
 
@@ -362,7 +354,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			}
 
 		} catch (Exception ex) {
-			logError("ILibraryService.getKBAsTriples ex: %s", ex);
+			logError("AidlService.getKBAsTriples ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getKBAsTriples");
 		return lstResult;
@@ -374,13 +366,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.getPropertyObject[knowledgeBase = %s]",
+			log("AidlService.getPropertyObject[knowledgeBase = %s]",
 					knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase.getPropertyObject(
 					Conversion.toNode(s), Conversion.toNode(p), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getPropertyObject ex: %s",
-					ex);
+			logError("AidlService.getPropertyObject ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertyObject");
 		return result;
@@ -392,13 +383,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		Bundle result = null;
 		tracker.beforeAPIUsage();
 		try {
-			log("ILibraryService.getPropertySubject[knowledgeBase = %s]",
+			log("AidlService.getPropertySubject[knowledgeBase = %s]",
 					knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase.getPropertySubject(
 					Conversion.toNode(p), Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getPropertySubject ex: %s",
-					ex);
+			logError("AidlService.getPropertySubject ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getPropertySubject");
 		return result;
@@ -408,12 +398,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public Bundle addGraph(Bundle g, String requestorId) throws RemoteException {
 		Bundle result = null;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.addGraph[knowledgeBase = %s]", knowledgeBase);
+		log("AidlService.addGraph[knowledgeBase = %s]", knowledgeBase);
 		try {
 			result = Conversion.toBundle(knowledgeBase.addGraph(
 					Conversion.toGraph(g), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.addGraph ex: %s", ex);
+			logError("AidlService.addGraph ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.addGraph");
 		return result;
@@ -424,12 +414,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			throws RemoteException {
 		Bundle result = null;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.getProperty[knowledgeBase = %s]", knowledgeBase);
+		log("AidlService.getProperty[knowledgeBase = %s]", knowledgeBase);
 		try {
 			result = Conversion.toBundle(knowledgeBase.getProperty(
 					Conversion.toNode(s), Conversion.toNode(o), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getProperty ex: %s", ex);
+			logError("AidlService.getProperty ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getProperty");
 		return result;
@@ -440,13 +430,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			throws RemoteException {
 		Bundle result = null;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.getAllProperties[knowledgeBase = %s]",
-				knowledgeBase);
+		log("AidlService.getAllProperties[knowledgeBase = %s]", knowledgeBase);
 		try {
 			result = Conversion.toBundle(knowledgeBase.getAllProperties(
 					Conversion.toNode(s), requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getAllProperties ex: %s", ex);
+			logError("AidlService.getAllProperties ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getAllProperties");
 		return result;
@@ -462,11 +451,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public Bundle getKB(String requestorId) throws RemoteException {
 		Bundle bundle = null;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.getKB[knowledgeBase = %s]", knowledgeBase);
+		log("AidlService.getKB[knowledgeBase = %s]", knowledgeBase);
 		try {
 			bundle = Conversion.toBundle(knowledgeBase.getKB(requestorId));
 		} catch (Exception ex) {
-			logError("ILibraryService.getKB ex: %s", ex);
+			logError("AidlService.getKB ex: %s", ex);
 		}
 		tracker.sendAPIUsage("KnowledgeBase.getKB");
 		return bundle;
@@ -507,11 +496,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public int sendHello(String partnerID) throws RemoteException {
 		int result = -1;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.sendHello(%s)", partnerID);
+		log("AidlService.sendHello(%s)", partnerID);
 		try {
 			result = communicationMgr.sendHello(partnerID);
 		} catch (KBException ex) {
-			logError("ILibraryService.sendHello ex: %s", ex);
+			logError("AidlService.sendHello ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendHello");
 		return result;
@@ -521,11 +510,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public int sendUpdateRequest(String partnerID) throws RemoteException {
 		int result = -1;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.sendUpdateRequest(%s)", partnerID);
+		log("AidlService.sendUpdateRequest(%s)", partnerID);
 		try {
 			result = communicationMgr.sendUpdateRequest(partnerID);
 		} catch (KBException ex) {
-			logError("ILibraryService.sendUpdateRequest ex: %s", ex);
+			logError("AidlService.sendUpdateRequest ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendUpdateRequest");
 		return result;
@@ -537,12 +526,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		int result = -1;
 		tracker.beforeAPIUsage();
 		Message msg = Conversion.toMessage(message);
-		log("ILibraryService.sendMessage(%s, %d, %s)", partnerID,
-				msg.getType(), msg.getAppId());
+		log("AidlService.sendMessage(%s, %d, %s)", partnerID, msg.getType(),
+				msg.getAppId());
 		try {
 			result = communicationMgr.sendMessage(partnerID, msg);
 		} catch (Exception ex) {
-			logError("ILibraryService.sendMessage ex: %s", ex);
+			logError("AidlService.sendMessage ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendMessage");
 		return result;
@@ -553,11 +542,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			throws RemoteException {
 		int result = -1;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.sendResource(%s, %s)", partnerID, resourceID);
+		log("AidlService.sendResource(%s, %s)", partnerID, resourceID);
 		try {
 			result = communicationMgr.sendResource(partnerID, resourceID);
 		} catch (Exception ex) {
-			logError("ILibraryService.sendResource ex: %s", ex);
+			logError("AidlService.sendResource ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendResource");
 		return result;
@@ -567,11 +556,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public int sendNotify(String peerId) throws RemoteException {
 		int result = -1;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.sendNotify(%s)", peerId);
+		log("AidlService.sendNotify(%s)", peerId);
 		try {
 			result = communicationMgr.sendNotify(peerId);
 		} catch (Exception ex) {
-			logError("ILibraryService.sendNotify ex: %s", ex);
+			logError("AidlService.sendNotify ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendNotify");
 		return result;
@@ -581,7 +570,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public boolean registerReceiver(IReceiver receiver) throws RemoteException {
 		boolean result = false;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.registerReceiver(%s)", receiver);
+		log("AidlService.registerReceiver(%s)", receiver);
 		if (receiver != null) {
 			result = messageCallbacks.register(receiver);
 		}
@@ -594,7 +583,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			throws RemoteException {
 		boolean result = false;
 		tracker.beforeAPIUsage();
-		log("ILibraryService.unregisterReceiver(%s)", receiver);
+		log("AidlService.unregisterReceiver(%s)", receiver);
 		if (receiver != null) {
 			result = messageCallbacks.unregister(receiver);
 		}
@@ -606,7 +595,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public boolean registerCallback(IMSEApplication callback)
 			throws RemoteException {
 		boolean result = false;
-		log("ILibraryService.registerCallback(%s)", callback.getAppId());
+		log("AidlService.registerCallback(%s)", callback.getAppId());
 		if (callback != null) {
 			result = appCallbacks.register(callback);
 		}
@@ -617,7 +606,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	public boolean unregisterCallback(IMSEApplication callback)
 			throws RemoteException {
 		boolean result = false;
-		log("ILibraryService.unregisterCallback(%s)", callback.getAppId());
+		log("AidlService.unregisterCallback(%s)", callback.getAppId());
 		if (callback != null) {
 			result = appCallbacks.unregister(callback);
 		}

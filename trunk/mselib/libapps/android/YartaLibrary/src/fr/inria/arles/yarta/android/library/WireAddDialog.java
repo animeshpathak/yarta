@@ -1,7 +1,7 @@
 package fr.inria.arles.yarta.android.library;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.WebClient;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.util.BaseDialog;
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 import android.content.Context;
@@ -107,17 +107,17 @@ public class WireAddDialog extends BaseDialog implements View.OnClickListener {
 
 				@Override
 				public void doWork() {
-					result = WebClient.getInstance().addWire(
+					result = ElggClient.getInstance().addWire(
 							text,
-							access == 0 ? WebClient.ACCESS_LOGGED_USERS
-									: WebClient.ACCESS_PUBLIC);
+							access == 0 ? ElggClient.ACCESS_LOGGED_USERS
+									: ElggClient.ACCESS_PUBLIC);
 				}
 
 				@Override
 				public void doUIAfter() {
 					if (result == -1) {
 						Toast.makeText(getContext().getApplicationContext(),
-								WebClient.getInstance().getLastError(),
+								ElggClient.getInstance().getLastError(),
 								Toast.LENGTH_LONG).show();
 					} else {
 						dismiss();

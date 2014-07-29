@@ -6,20 +6,25 @@
     android:clickable="true"
     android:padding="7dp" >
 
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_notifications" />
+
     <TextView
         android:id="@+id/notif_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/icon"
+        android:layout_marginRight="0sp"
         android:background="@drawable/shape_notification"
-        android:gravity="center"
-        android:minHeight="32dp"
-        android:minWidth="32dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:singleLine="true"
         android:text="0"
-        android:textColor="@color/AppTitleBackground"
-        android:textSize="18sp"
+        android:textColor="@color/AppTitleTextColor"
+        android:textSize="12sp"
         android:textStyle="bold" >
     </TextView>
 

@@ -14,13 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-import fr.inria.arles.yarta.android.library.web.WireItem;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.iris.web.WireItem;
+import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 
 public class WireFragment extends BaseFragment implements
 		WireListAdapter.Callback, PullToRefreshListView.OnRefreshListener,

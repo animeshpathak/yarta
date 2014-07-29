@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.web.WebClient;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -42,7 +41,7 @@ public class ProfileActivity extends BaseActivity {
 
 				@Override
 				public void doWork() {
-					username = WebClient.getInstance().getUsername(userGuid);
+					username = client.getUsername(userGuid);
 				}
 
 				@Override

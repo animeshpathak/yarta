@@ -12,10 +12,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.UserItem;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.UserItem;
 
 public class FriendsListAdapter extends BaseAdapter {
 

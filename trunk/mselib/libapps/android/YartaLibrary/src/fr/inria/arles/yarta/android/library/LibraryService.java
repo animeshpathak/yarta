@@ -5,11 +5,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
 import fr.inria.arles.yarta.android.library.auth.FakeActivity;
 import fr.inria.arles.yarta.android.library.sync.SyncAdapter;
 import fr.inria.arles.yarta.android.library.util.Settings;
-import fr.inria.arles.yarta.android.library.web.WebClient;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBaseUtils;
@@ -32,7 +32,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -241,7 +240,7 @@ public class LibraryService extends Service implements MSEApplication,
 
 		client.setUsername(settings.getString(Settings.USER_NAME));
 		client.setUserGuid(settings.getString(Settings.USER_GUID));
-		client.setUserToken(settings.getString(Settings.USER_TOKEN));
+		client.setToken(settings.getString(Settings.USER_TOKEN));
 
 		initStrings();
 
@@ -453,7 +452,7 @@ public class LibraryService extends Service implements MSEApplication,
 
 	// the settings object
 	private Settings settings;
-	private WebClient client = WebClient.getInstance();
+	private ElggClient client = ElggClient.getInstance();
 
 	@Override
 	public boolean clear() {
@@ -466,7 +465,7 @@ public class LibraryService extends Service implements MSEApplication,
 
 		client.setUsername(null);
 		client.setUserGuid(null);
-		client.setUserToken(null);
+		client.setToken(null);
 
 		Account[] accounts = accountMgr
 				.getAccountsByType(AuthenticatorActivity.ACCOUNT_TYPE);

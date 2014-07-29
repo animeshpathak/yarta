@@ -234,5 +234,6 @@
     <string name="notification_ignore">Ignore</string>
     <string name="notification_accept">Accept</string>
     <string name="topic_time">""Time: "</string>
+    <string name="main_no_requests">No notifications.</string>
 
 </resources>

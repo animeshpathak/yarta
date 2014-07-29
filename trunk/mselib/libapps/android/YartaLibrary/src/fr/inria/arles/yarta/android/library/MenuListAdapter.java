@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MenuListAdapter extends BaseAdapter {
 
 	class ViewHolder {
 		TextView item;
+		ImageView icon;
 	}
 
 	private List<SideMenuItem> items = new ArrayList<SideMenuItem>();
@@ -51,6 +53,7 @@ public class MenuListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 			holder.item = (TextView) convertView.findViewById(R.id.menuTitle);
+			holder.icon = (ImageView) convertView.findViewById(R.id.menuIcon);
 
 			convertView.setTag(holder);
 		} else {
@@ -60,17 +63,16 @@ public class MenuListAdapter extends BaseAdapter {
 		SideMenuItem item = items.get(position);
 
 		holder.item.setText(item.getText());
-
+		holder.icon.setImageResource(item.getIconResId());
+		
+		convertView.setBackgroundResource(R.drawable.list_selector);
+		
 		if (position == selectedPosition) {
 			holder.item.setTextColor(context.getResources().getColor(
 					R.color.AppDrawerTextSelected));
-			convertView.setBackgroundColor(context.getResources().getColor(
-					R.color.AppDrawerSelected));
 		} else {
 			holder.item.setTextColor(context.getResources().getColor(
 					R.color.AppDrawerText));
-			convertView.setBackgroundColor(context.getResources().getColor(
-					R.color.AppDrawerBackground));
 		}
 
 		return convertView;

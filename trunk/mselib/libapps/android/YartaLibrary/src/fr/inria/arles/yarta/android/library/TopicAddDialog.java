@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.WebClient;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.util.BaseDialog;
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 
@@ -70,14 +70,15 @@ public class TopicAddDialog extends BaseDialog implements View.OnClickListener {
 
 				@Override
 				public void doWork() {
-					result = WebClient.getInstance().addTopicReply(topicGuid, text);
+					result = ElggClient.getInstance().addTopicReply(topicGuid,
+							text);
 				}
 
 				@Override
 				public void doUIAfter() {
 					if (result == -1) {
 						Toast.makeText(getContext().getApplicationContext(),
-								WebClient.getInstance().getLastError(),
+								ElggClient.getInstance().getLastError(),
 								Toast.LENGTH_LONG).show();
 					} else {
 						dismiss();

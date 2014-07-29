@@ -17,11 +17,10 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ImageCache;
-import fr.inria.arles.yarta.android.library.web.PostItem;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-import fr.inria.arles.yarta.android.library.web.WebClient;
-import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.PostItem;
+import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class PostActivity extends BaseActivity implements
@@ -36,8 +35,6 @@ public class PostActivity extends BaseActivity implements
 
 	private PostsListAdapter adapter;
 	private PullToRefreshListView list;
-
-	private WebClient client = WebClient.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +174,7 @@ public class PostActivity extends BaseActivity implements
 
 			@Override
 			public void doWork() {
-				item = client.getPost(postGuid);
+				item = client.getTopic(postGuid);
 
 				if (item != null) {
 					if (item.getOwner() != null) {

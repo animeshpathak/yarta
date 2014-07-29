@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.ObjectItem;
+import fr.inria.arles.iris.web.ObjectItem;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.GenericPageAdapter;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;

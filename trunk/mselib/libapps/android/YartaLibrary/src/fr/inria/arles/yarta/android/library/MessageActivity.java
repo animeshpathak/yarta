@@ -16,10 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.web.MessageItem;
-import fr.inria.arles.yarta.android.library.web.UserItem;
-import fr.inria.arles.yarta.android.library.web.WebClient;
-
+import fr.inria.arles.iris.web.MessageItem;
+import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class MessageActivity extends BaseActivity {
@@ -36,15 +35,11 @@ public class MessageActivity extends BaseActivity {
 
 	private List<UserItem> friends;
 
-	private WebClient client = WebClient.getInstance();
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_message);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		trackUI("MessageView");
 	}
 
 	@Override
@@ -67,7 +62,7 @@ public class MessageActivity extends BaseActivity {
 
 				@Override
 				public void doWork() {
-					friends = client.getFriends(client.getUsername());
+					friends = client.getFriends(client.getUsername(), 0);
 
 					if (getIntent().hasExtra(Reply)) {
 						reply = (MessageItem) getIntent().getSerializableExtra(
@@ -93,7 +88,7 @@ public class MessageActivity extends BaseActivity {
 					spinner.setAdapter(adapter);
 
 					if (reply != null) {
-						setCtrlText(R.id.subject, "RE: " + reply.getSubject());
+						setCtrlText(R.id.subject, reply.getSubject());
 						setSelectedUser(reply.getFrom());
 					} else if (item != null) {
 						setSelectedUser(item);
@@ -116,7 +111,7 @@ public class MessageActivity extends BaseActivity {
 		findViewById(R.id.read).setVisibility(View.VISIBLE);
 		findViewById(R.id.compose).setVisibility(View.GONE);
 
-		setCtrlText(R.id.subject, message.getSubject());
+		setCtrlText(R.id.subject, Html.fromHtml(message.getSubject()));
 		setCtrlText(R.id.content, Html.fromHtml(message.getDescription()));
 
 		setFocusable(R.id.subject, false);
@@ -171,8 +166,8 @@ public class MessageActivity extends BaseActivity {
 			return;
 		}
 		final UserItem item = friends.get(spinner.getSelectedItemPosition());
-		final String subject = getCtrlText(R.id.subject);
-		final String body = getCtrlText(R.id.content);
+		final String subject = Html.toHtml(getCtrlHtml(R.id.subject));
+		final String body = Html.toHtml(getCtrlHtml(R.id.content));
 		final String replyTo = reply == null ? "0" : reply.getGuid();
 
 		if (body.length() == 0 || replyTo.length() == 0) {
@@ -193,7 +188,7 @@ public class MessageActivity extends BaseActivity {
 
 			@Override
 			public void doUIAfter() {
-				if (result != WebClient.RESULT_OK) {
+				if (result != ElggClient.RESULT_OK) {
 					Toast.makeText(getApplicationContext(),
 							client.getLastError(), Toast.LENGTH_SHORT).show();
 				} else {
