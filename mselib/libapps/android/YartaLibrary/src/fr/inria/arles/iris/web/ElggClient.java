@@ -117,15 +117,15 @@ public class ElggClient {
 
 			switch (callType) {
 			case GET:
-				json = client.doAuthenticatedGet(HttpClient.BaseService,
+				json = client.doAuthenticatedGet(Strings.BaseService,
 						urlParameters);
 				break;
 			case POST:
-				json = client.doAuthenticatedPost(HttpClient.BaseService,
+				json = client.doAuthenticatedPost(Strings.BaseService,
 						urlParameters);
 				break;
 			case POST_NOAUTH:
-				json = client.doPost(HttpClient.BaseService, urlParameters);
+				json = client.doPost(Strings.BaseService, urlParameters);
 				break;
 			}
 

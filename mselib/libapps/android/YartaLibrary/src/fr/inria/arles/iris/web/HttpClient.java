@@ -18,21 +18,6 @@ import fr.inria.arles.util.Base64;
 
 public class HttpClient {
 
-	private static final String PublicKey = "8db4eb33c014379e40c6d7d28b4b6b290e6359e7";
-	private static final String PrivateKey = "acc41359feefd470d87410bdfbd80828e852993f";
-	public static final String BaseCAS = "https://reseau-iris.inria.fr/cas_auth_ws?";
-	public static final String BaseService = "https://reseau-iris.inria.fr/services/api/rest/json/?";
-
-	// work;
-	// private static final String PublicKey =
-	// "5b68ca6a34bfeb566d16630eb8a59b8d60570463";
-	// private static final String PrivateKey =
-	// "7b3c034ff8216b4ae475668fc83596040c10ab4e";
-	// public static final String BaseService =
-	// "http://192.168.56.1/elgg/services/api/rest/json/?";
-	// public static final String BaseCAS =
-	// "http://192.168.56.1/elgg/cas_auth_ws?";
-
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
 	private String lastError = null;
@@ -123,15 +108,14 @@ public class HttpClient {
 
 		String nonce = "randomstring";
 
-		connection.setRequestProperty("X-Elgg-apikey", PublicKey);
+		connection.setRequestProperty("X-Elgg-apikey", Strings.PublicKey);
 		connection.setRequestProperty("X-Elgg-time", microtime);
 		connection.setRequestProperty("X-Elgg-nonce", nonce);
 		connection.setRequestProperty("X-Elgg-hmac-algo", "sha1");
-		connection
-				.setRequestProperty(
-						"X-Elgg-hmac",
-						calcHMAC(microtime, nonce, PublicKey, PrivateKey, "",
-								postHash));
+		connection.setRequestProperty(
+				"X-Elgg-hmac",
+				calcHMAC(microtime, nonce, Strings.PublicKey,
+						Strings.PrivateKey, "", postHash));
 
 		connection.setRequestProperty("X-Elgg-posthash", postHash);
 		connection.setRequestProperty("X-Elgg-posthash-algo", "md5");
@@ -186,10 +170,10 @@ public class HttpClient {
 		String microtime = String.format(Locale.US, "%.4f", ftime);
 
 		String nonce = "randomstring";
-		String hmac = calcHMAC(microtime, nonce, PublicKey, PrivateKey,
-				urlParameters, "");
+		String hmac = calcHMAC(microtime, nonce, Strings.PublicKey,
+				Strings.PrivateKey, urlParameters, "");
 
-		connection.setRequestProperty("X-Elgg-apikey", PublicKey);
+		connection.setRequestProperty("X-Elgg-apikey", Strings.PublicKey);
 		connection.setRequestProperty("X-Elgg-time", microtime);
 		connection.setRequestProperty("X-Elgg-nonce", nonce);
 		connection.setRequestProperty("X-Elgg-hmac-algo", "sha1");

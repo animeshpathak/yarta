@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
-import fr.inria.arles.iris.web.HttpClient;
+import fr.inria.arles.iris.web.Strings;
 import fr.inria.arles.yarta.android.library.util.ProgressDialog;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import android.accounts.Account;
@@ -72,7 +72,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				@Override
 				protected Intent doInBackground(Void... params) {
 					try {
-						String url = HttpClient.BaseCAS + "read&guid=" + guid;
+						String url = Strings.BaseCAS + "read&guid=" + guid;
 						String tokenAndUser = readURL(url).trim();
 
 						if (tokenAndUser.length() > 3) {
@@ -134,7 +134,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		String guid = UUID.randomUUID().toString();
 		settings.setString(Settings.USER_RANDOM_GUID, guid);
 
-		String url = HttpClient.BaseCAS + "guid=" + guid;
+		String url = Strings.BaseCAS + "guid=" + guid;
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		startActivity(browserIntent);
 	}
