@@ -76,7 +76,6 @@
             android:name="fr.inria.arles.yarta.android.library.PostActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/post_title" />
-        <activity android:name="fr.inria.arles.yarta.android.library.NotifActivityHandler" />
 
         <service
             android:name="fr.inria.arles.yarta.android.library.LibraryService"
