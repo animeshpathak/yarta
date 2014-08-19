@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <issue id="SetJavaScriptEnabled">
-        <ignore path="src\fr\inria\arles\yarta\android\library\LoginActivity.java" />
+        <ignore path="src/fr/inria/arles/yarta/android/library/LoginActivity.java" />
     </issue>
+    <issue id="UnusedResources" severity="fatal" />
 </lint>
