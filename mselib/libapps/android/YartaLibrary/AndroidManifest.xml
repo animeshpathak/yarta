@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.inria.arles.iris"
-    android:versionCode="58"
-    android:versionName="2.6.5" >
+    android:versionCode="59"
+    android:versionName="2.6.7" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -26,6 +26,18 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Creates a custom permission so only this app can receive its messages. -->
+    <permission
+        android:name="fr.inria.arles.iris.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="fr.inria.arles.iris.permission.C2D_MESSAGE" />
+    <!-- This app has permission to register and receive data message. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
         android:name="fr.inria.arles.yarta.android.library.YartaApp"
@@ -157,6 +169,24 @@
             android:exported="true"
             android:permission="fr.inria.arles.yarta.ACCESS_DATA" >
         </provider>
+
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+
+                <!-- Receives the actual messages. -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- Receives the registration id. -->
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="fr.inria.arles.yarta.middleware.communication.GCMReceiver" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="fr.inria.arles.iris.GCMIntentService"
+            android:enabled="true" />
     </application>
 
 </manifest>

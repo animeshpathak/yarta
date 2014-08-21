@@ -91,12 +91,12 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 		accessManager.setKnowledgeBase(knowledgeBase);
 
 		if (context != null) {
-			connection = new fr.inria.arles.yarta.middleware.communication.AndroidConnection(
+			connection = new fr.inria.arles.yarta.middleware.communication.CommPushConnection(
 					selfId);
 			client = new fr.inria.arles.yarta.android.library.ContentClientAndroid(
 					context);
 		} else {
-			connection = new Connection(selfId);
+			connection = new CommPollConnection(selfId);
 			client = new fr.inria.arles.yarta.desktop.library.ContentClientDesktop();
 		}
 
@@ -331,9 +331,8 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 			System.arraycopy(chunk.getData(), 0, hugeData, chunk.getCurrent(),
 					chunk.getData().length);
 
-			log.d(LOGTAG,
-					updateId + "[" + chunk.getCurrent() + ", "
-							+ chunk.getTotal() + "]");
+			log.d(LOGTAG, "chunk: " + updateId + "[" + chunk.getCurrent()
+					+ ", " + chunk.getTotal() + "]");
 
 			if (chunk.getData().length + chunk.getCurrent() >= hugeData.length) {
 				UpdateResponseFullMessage update = (UpdateResponseFullMessage) YCommunicationManagerUtils
@@ -442,7 +441,7 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 
 				// check if node is dirty
 				// if (!helper.isDirty(node, lastUpdate)) {
-				// 	continue;
+				// continue;
 				// }
 
 				String typePredicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
