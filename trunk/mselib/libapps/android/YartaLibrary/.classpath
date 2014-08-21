@@ -7,7 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/icu4j-3.4.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/iri-0.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/slf4j.android_1.5.8.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/IbicoopCoreAndroid.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/libGoogleAnalyticsV2.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/MSE-Middleware"/>

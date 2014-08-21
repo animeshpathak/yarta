@@ -28,8 +28,7 @@ public class Installer {
 			+ "/.yarta/";
 	public static final String FilesPath = InstallPath + "res/";
 
-	private static final String[] files = { "ibicoop.properties",
-			"ibicoopcacert.crt", "mse-1.2.rdf", "policies" };
+	private static final String[] files = { "mse-1.2.rdf", "policies" };
 
 	private String currentJarPath;
 	private String installedJarPath;
