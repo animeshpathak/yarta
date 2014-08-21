@@ -512,7 +512,8 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 		byte[] fullResponseBinary = YCommunicationManagerUtils
 				.toBytes(fullResponse);
 
-		int chunkSize = 102400;
+		// 1 megabytes
+		int chunkSize = 1000000;
 
 		for (int i = 0; i < fullResponseBinary.length; i += chunkSize) {
 			byte chunk[] = new byte[Math.min(chunkSize,
