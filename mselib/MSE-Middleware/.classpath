@@ -6,7 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="../../external/desktop/android.jar"/>
 	<classpathentry kind="lib" path="../../external/desktop/arq-2.8.1.jar"/>
-	<classpathentry kind="lib" path="../../external/desktop/IbicoopSE.jar"/>
 	<classpathentry kind="lib" path="../../external/desktop/icu4j-3.4.4.jar"/>
 	<classpathentry kind="lib" path="../../external/desktop/iri-0.7.jar"/>
 	<classpathentry kind="lib" path="../../external/desktop/jena-2.6.2.jar"/>
