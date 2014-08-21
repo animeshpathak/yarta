@@ -21,7 +21,7 @@ public class YCommManagerTest {
 		String URI = "ibiurl://J2SE:animesh@inria.fr/yarta/CommunicationService/";
 		String UID = "animesh@inria.fr";
 
-		assertEquals("GetUIDFromURI Fails!", UID, Connection.getUIDFromURI(URI));
+		assertEquals("GetUIDFromURI Fails!", UID, IbicoopConnection.getUIDFromURI(URI));
 	}
 
 }

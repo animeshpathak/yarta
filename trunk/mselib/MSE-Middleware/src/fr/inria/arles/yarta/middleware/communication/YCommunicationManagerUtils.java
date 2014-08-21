@@ -1,5 +1,11 @@
 package fr.inria.arles.yarta.middleware.communication;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 
@@ -21,12 +27,12 @@ public class YCommunicationManagerUtils {
 	 * @return the associated byte array.
 	 */
 	public static final byte[] toBytes(Object object) {
-		java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(
-					baos);
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(object);
-		} catch (java.io.IOException ioe) {
+			oos.close();
+		} catch (IOException ioe) {
 			ylogger.e(COMM_MGR_UTILS_LOGTAG, "IOException in toBytes", ioe);
 		}
 		return baos.toByteArray();
@@ -44,11 +50,11 @@ public class YCommunicationManagerUtils {
 	public static final Object toObject(byte[] bytes) {
 		Object object = null;
 		try {
-			object = new java.io.ObjectInputStream(
-					new java.io.ByteArrayInputStream(bytes)).readObject();
-		} catch (java.io.IOException ioe) {
+			object = new ObjectInputStream(new ByteArrayInputStream(bytes))
+					.readObject();
+		} catch (IOException ioe) {
 			ylogger.e(COMM_MGR_UTILS_LOGTAG, "IOException in toObject", ioe);
-		} catch (java.lang.ClassNotFoundException cnfe) {
+		} catch (ClassNotFoundException cnfe) {
 			ylogger.e(COMM_MGR_UTILS_LOGTAG,
 					"ClassNotFoundException in toObject", cnfe);
 		}

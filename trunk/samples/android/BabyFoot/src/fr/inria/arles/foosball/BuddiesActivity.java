@@ -91,7 +91,7 @@ public class BuddiesActivity extends BaseActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Player selected = players.get(position);
+		Player selected = (Player) adapter.getItem(position);
 		Intent intent = new Intent(this, PlayerActivity.class);
 		intent.putExtra(PlayerActivity.PlayerGUID, selected.getUniqueId());
 		startActivity(intent);
