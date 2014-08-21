@@ -14,11 +14,15 @@ public class Main {
 	public static void main(String args[]) {
 		boolean quit = false;
 		do {
-
 			try {
 				ServerApplication app = new ServerApplication();
 				mse = new MSEManagerEx();
 				mse.setOwnerUID("inria@inria.fr");
+				
+				// make sure we understand babyfoot as well
+				mse.initialize("res/foosball.rdf", "res/policies", app, null);
+				mse.shutDown();
+				
 				mse.initialize("res/donations.rdf", "res/policies", app, null);
 				mse.getCommunicationManager().setMessageReceiver(app);
 

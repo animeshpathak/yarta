@@ -43,12 +43,6 @@ public class CommClient {
 		callbacks.remove(callback);
 	}
 
-	private static void notifiyAllObservers(String from, Message message) {
-		for (Receiver callback : callbacks) {
-			callback.handleMessage(from, message);
-		}
-	}
-
 	public static boolean init(String userId, String regId) {
 		CommClient.userId = userId;
 		String urlParams = String
@@ -141,8 +135,14 @@ public class CommClient {
 		}
 		return message;
 	}
+	
+	private static void notifiyAllObservers(String from, Message message) {
+		for (Receiver callback : callbacks) {
+			callback.handleMessage(from, message);
+		}
+	}
 
-	public static String doPost(String urlParameters) throws Exception {
+	private static String doPost(String urlParameters) throws Exception {
 		HttpURLConnection connection = (HttpURLConnection) new URL(ServerURL)
 				.openConnection();
 		connection.setDoOutput(true);
