@@ -2,7 +2,6 @@ package fr.inria.arles.yarta.middleware.communication;
 
 import com.google.android.gcm.GCMRegistrar;
 
-import fr.inria.arles.iris.GCMIntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +33,8 @@ public class CommPushConnection implements Connection {
 	@Override
 	public void uninit() {
 		context.unregisterReceiver(networkStateReceiver);
+		CommClient.removeCallback(receiver);
+		GCMRegistrar.unregister(context);
 	}
 
 	@Override
@@ -60,6 +61,7 @@ public class CommPushConnection implements Connection {
 
 			if (GCMRegistrar.isRegisteredOnServer(context)) {
 				// already registered;
+				System.out.println("already registered.");
 			}
 			GCMRegistrar.register(context, GCMIntentService.SENDER_ID);
 

@@ -26,7 +26,6 @@ public class IrisBridge {
 			final Node subject, Node predicate) {
 		String s = subject.getName();
 		String p = predicate.getName();
-		log("fetchPropertyObject (%s, %s)", s, p);
 
 		if (s.contains("Person") && p.equals(Agent.PROPERTY_KNOWS_URI)) {
 			runAndWait(new Runnable() {

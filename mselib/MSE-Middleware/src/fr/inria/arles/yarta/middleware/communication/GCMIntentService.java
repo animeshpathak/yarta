@@ -1,4 +1,4 @@
-package fr.inria.arles.iris;
+package fr.inria.arles.yarta.middleware.communication;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,8 +6,6 @@ import android.content.Intent;
 import com.google.android.gcm.GCMBaseIntentService;
 
 import fr.inria.arles.yarta.logging.YLoggerFactory;
-import fr.inria.arles.yarta.middleware.communication.Message;
-import fr.inria.arles.yarta.middleware.communication.CommClient;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
@@ -19,6 +17,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onError(Context context, String intent) {
+		log("OnError: %s", intent);
 	}
 
 	@Override
