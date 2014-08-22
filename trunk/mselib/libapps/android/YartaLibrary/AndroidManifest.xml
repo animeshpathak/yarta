@@ -171,7 +171,7 @@
         </provider>
 
         <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:name="fr.inria.arles.yarta.middleware.communication.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
 
@@ -180,12 +180,12 @@
                 <!-- Receives the registration id. -->
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="fr.inria.arles.yarta.middleware.communication.GCMReceiver" />
+                <category android:name="fr.inria.arles.yarta.middleware.communication" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name="fr.inria.arles.iris.GCMIntentService"
+            android:name="fr.inria.arles.yarta.middleware.communication.GCMIntentService"
             android:enabled="true" />
     </application>
 
