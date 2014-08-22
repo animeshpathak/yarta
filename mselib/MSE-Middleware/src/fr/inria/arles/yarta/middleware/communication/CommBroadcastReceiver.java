@@ -4,7 +4,7 @@ import com.google.android.gcm.GCMBroadcastReceiver;
 
 import android.content.Context;
 
-public class GcmBroadcastReceiver extends GCMBroadcastReceiver {
+public class CommBroadcastReceiver extends GCMBroadcastReceiver {
 	
 	@Override
 	protected String getGCMIntentServiceClassName(Context context) {
