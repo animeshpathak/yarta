@@ -580,7 +580,7 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 						}
 
 					} catch (KBException ex) {
-						log.d(LOGTAG, "addTriple ex: " + ex.getMessage());
+						log.d(LOGTAG, "addTriple ex: " + ex.toString());
 					}
 				}
 				updateResponse = true;
@@ -606,7 +606,7 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 			application.handleNotification("Something went wrong "
 					+ "in receiving information from user " + id);
 			log.e(LOGTAG, "handleUpdateReplyMessage: Something "
-					+ "went wrong performing graph update from user" + id);
+					+ "went wrong performing graph update from user " + id);
 		}
 	}
 
