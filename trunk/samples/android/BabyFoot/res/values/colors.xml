@@ -4,7 +4,6 @@
     <!-- App Color -->
     <color name="AppTextColor">#4c4c4c</color>
     <color name="AppTitleBackground">#6a943f</color>
-    <color name="AppBackground">#ffffff</color>
     <color name="AppActivityBackground">#ECF0F1</color>
     <color name="AppBlueColor">#3498db</color>
     <color name="AppRedColor">#e74c3c</color>
@@ -19,5 +18,4 @@
     <color name="AppContentColor">#ffffff</color>
     <color name="ListNormal">#00000000</color>
     <color name="ListSelected">#336a943f</color>
-    <color name="AppSelectedBackground">#eff0f2</color>
 </resources>
