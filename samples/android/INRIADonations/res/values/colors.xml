@@ -7,7 +7,6 @@
     <color name="AppTitleBackground">#535353</color>
     <color name="AppDrawerBackground">#e7e7e7</color>
     <color name="AppDrawerSelected">#27a3db</color>
-    <color name="AppTitleTextColor">#ffffff</color>
     <color name="AppContentColor">#ffffff</color>
     <color name="ListNormal">#00000000</color>
     <color name="ListSelected">#27a3db</color>
