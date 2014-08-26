@@ -25,6 +25,8 @@ public class CommPushConnection implements Connection {
 
 	@Override
 	public void init(Object context) {
+		CommClient.addCallback(receiver);
+
 		this.context = (Context) context;
 		this.context.registerReceiver(networkStateReceiver, new IntentFilter(
 				ConnectivityManager.CONNECTIVITY_ACTION));
@@ -33,8 +35,11 @@ public class CommPushConnection implements Connection {
 	@Override
 	public void uninit() {
 		context.unregisterReceiver(networkStateReceiver);
-		CommClient.removeCallback(receiver);
 		GCMRegistrar.unregister(context);
+
+		// TODO: android client never unregisters
+		// from the server;
+		CommClient.removeCallback(receiver);
 	}
 
 	@Override
@@ -64,11 +69,6 @@ public class CommPushConnection implements Connection {
 				System.out.println("already registered.");
 			}
 			GCMRegistrar.register(context, GCMIntentService.SENDER_ID);
-
-			CommClient.addCallback(receiver);
-		} else {
-			CommClient.removeCallback(receiver);
-			GCMRegistrar.unregister(context);
 		}
 	}
 
