@@ -103,6 +103,8 @@
     <string name="file_title">Ficher</string>
     <string name="file_information">Informations sur les fichiers</string>
     <string name="file_download">Télécharger</string>
+    <string name="file_open">Ouvrir</string>
+    <string name="file_cant_open">Ne peut pas ouvrir le fichier.</string>
     <string name="file_time">"Temps: "</string>
     <string name="file_size_fmt">Taille: %.2f MB</string>
     <string name="file_name">"Nom du fichier: "</string>

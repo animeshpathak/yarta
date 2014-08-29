@@ -147,10 +147,14 @@ public class ElggClient {
 	private int checkErrors(JSONObject json) {
 		int result = -1;
 		try {
-			result = json.getInt("status");
+			if (json != null) {
+				if (json.has("status")) {
+					result = json.getInt("status");
+				}
 
-			if (json.has("message")) {
-				lastError = json.getString("message");
+				if (json.has("message")) {
+					lastError = json.getString("message");
+				}
 			}
 		} catch (Exception ex) {
 			lastError = ex.toString();

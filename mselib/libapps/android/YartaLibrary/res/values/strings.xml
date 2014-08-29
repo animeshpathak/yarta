@@ -117,6 +117,8 @@
     <string name="file_title">File</string>
     <string name="file_information">File information</string>
     <string name="file_download">Download</string>
+    <string name="file_open">Open</string>
+    <string name="file_cant_open">Can not open file.</string>
     <string name="file_time">"Time: "</string>
     <string name="file_size_fmt">Size: %.2f MB</string>
     <string name="file_name">"Filename: "</string>

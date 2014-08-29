@@ -6,11 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
@@ -25,6 +28,7 @@ public class FileActivity extends BaseActivity {
 
 	private String fileGuid;
 	private FileItem item;
+	private String fileName;
 	private SimpleDateFormat sdf = new SimpleDateFormat("DD/MM, HH:mm",
 			Locale.getDefault());
 
@@ -85,11 +89,76 @@ public class FileActivity extends BaseActivity {
 				setCtrlText(R.id.size, String.format(
 						getString(R.string.file_size_fmt),
 						(float) item.getSize() / 1048576.0));
+
+				refreshActionButton();
 			}
 		});
 	}
 
+	private String getFilename(FileItem item) {
+		File downloads = Environment
+				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		try {
+			downloads.mkdirs();
+		} catch (Exception ex) {
+			// just to make sure folder exists
+		}
+
+		fileName = downloads.getAbsolutePath() + "/" + item.getName();
+		return fileName;
+	}
+
+	private void refreshActionButton() {
+		// if file exists download = open
+		fileName = getFilename(item);
+
+		if (fileName != null && new File(fileName).exists()) {
+			setCtrlText(R.id.download, getString(R.string.file_open));
+		}
+	}
+
+	private String fileExt(String url) {
+		if (url.indexOf("?") > -1) {
+			url = url.substring(0, url.indexOf("?"));
+		}
+		if (url.lastIndexOf(".") == -1) {
+			return null;
+		} else {
+			String ext = url.substring(url.lastIndexOf("."));
+			if (ext.indexOf("%") > -1) {
+				ext = ext.substring(0, ext.indexOf("%"));
+			}
+			if (ext.indexOf("/") > -1) {
+				ext = ext.substring(0, ext.indexOf("/"));
+			}
+			return ext.toLowerCase();
+		}
+	}
+
+	private void openFile(String fileName) {
+		MimeTypeMap myMime = MimeTypeMap.getSingleton();
+
+		Intent newIntent = new Intent(android.content.Intent.ACTION_VIEW);
+
+		// Intent newIntent = new Intent(Intent.ACTION_VIEW);
+		String mimeType = myMime.getMimeTypeFromExtension(fileExt(fileName)
+				.substring(1));
+		newIntent.setDataAndType(Uri.fromFile(new File(fileName)), mimeType);
+		newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		try {
+			startActivity(newIntent);
+		} catch (android.content.ActivityNotFoundException e) {
+			Toast.makeText(this, R.string.file_cant_open, Toast.LENGTH_LONG)
+					.show();
+		}
+	}
+
 	public void onClickDownload(View view) {
+		// in case it was downloaded, just open it
+		if (fileName != null && new File(fileName).exists()) {
+			openFile(fileName);
+			return;
+		}
 		executeWithMessage(R.string.file_downloading, new Job() {
 
 			String fileName;
@@ -121,6 +190,7 @@ public class FileActivity extends BaseActivity {
 								+ Environment
 										.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
 						Toast.LENGTH_LONG).show();
+				refreshActionButton();
 			}
 		});
 	}
