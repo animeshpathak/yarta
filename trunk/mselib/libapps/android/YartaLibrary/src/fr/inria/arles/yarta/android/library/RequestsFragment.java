@@ -43,6 +43,7 @@ public class RequestsFragment extends BaseFragment implements
 		list = (PullToRefreshListView) root.findViewById(R.id.listRequests);
 		list.setAdapter(adapter);
 		list.setOnRefreshListener(this);
+		list.setEmptyView(root.findViewById(R.id.listEmpty));
 		return root;
 	}
 
