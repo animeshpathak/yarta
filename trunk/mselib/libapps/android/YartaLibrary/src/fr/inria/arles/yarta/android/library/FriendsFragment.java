@@ -1,20 +1,23 @@
 package fr.inria.arles.yarta.android.library;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.util.PullToRefreshListView;
+import fr.inria.arles.yarta.android.library.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.KBException;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.resources.Agent;
 
 public class FriendsFragment extends BaseFragment implements
 		PullToRefreshListView.OnRefreshListener,
@@ -22,7 +25,7 @@ public class FriendsFragment extends BaseFragment implements
 
 	private FriendsListAdapter adapter;
 	private PullToRefreshListView list;
-	private List<UserItem> items;
+	private List<Person> items;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,45 +56,25 @@ public class FriendsFragment extends BaseFragment implements
 
 			@Override
 			public void doWork() {
-				items = client.getFriends(client.getUsername(), 0);
+				try {
+					items = new ArrayList<Person>();
+					Person me = sam.getMe();
+					for (Agent agent : me.getKnows_inverse()) {
+						items.add(new PersonImpl(sam, new MSEResource(agent
+								.getUniqueId(), Person.typeURI)));
+					}
+				} catch (KBException ex) {
+					ex.printStackTrace();
+				}
 			}
 
 			@Override
 			public void doUIAfter() {
 				adapter.setItems(items);
 				list.onRefreshComplete();
-				new Thread(lazyImageLoader).start();
 			}
 		});
 	}
-
-	private Handler handler = new Handler();
-	private Runnable refreshListAdapter = new Runnable() {
-
-		@Override
-		public void run() {
-			adapter.notifyDataSetChanged();
-		}
-	};
-
-	private Runnable lazyImageLoader = new Runnable() {
-
-		@Override
-		public void run() {
-			for (UserItem item : items) {
-				String url = item.getAvatarURL();
-				if (ImageCache.getDrawable(url) == null) {
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-						handler.post(refreshListAdapter);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		}
-	};
 
 	@Override
 	public void onRefresh() {
@@ -101,9 +84,9 @@ public class FriendsFragment extends BaseFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		UserItem item = items.get(position);
+		Person item = items.get(position);
 		Intent intent = new Intent(getSherlockActivity(), ProfileActivity.class);
-		intent.putExtra(ProfileActivity.UserName, item.getUsername());
+		intent.putExtra(ProfileActivity.UserName, item.getUserId());
 		startActivity(intent);
 	}
 }

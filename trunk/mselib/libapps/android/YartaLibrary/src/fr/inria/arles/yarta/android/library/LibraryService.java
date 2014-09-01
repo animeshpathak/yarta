@@ -196,7 +196,7 @@ public class LibraryService extends Service implements MSEApplication,
 				.getAccountsByType(AuthenticatorActivity.ACCOUNT_TYPE);
 		if (accounts.length > 0) {
 			Account account = accounts[0];
-			return account.name + "@" + account.type;
+			return account.name;
 		}
 		return null;
 	}
@@ -249,7 +249,7 @@ public class LibraryService extends Service implements MSEApplication,
 		registerReceiver(helloReceiver, new IntentFilter(HelloReceiver.Action));
 
 		service = new AidlService(this, tracker, knowledgeBase,
-				communicationMgr);
+				communicationMgr, new ContentClientPictures(this));
 
 		if (getUserId() != null) {
 			init(getUserId());

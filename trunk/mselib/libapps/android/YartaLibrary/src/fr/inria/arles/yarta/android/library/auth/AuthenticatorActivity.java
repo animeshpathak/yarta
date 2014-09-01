@@ -47,7 +47,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		settings = new Settings(this);
 		String username = settings.getString(Settings.USER_NAME);
 
-		setCtrlText(R.id.username, username.replace("@inria.fr", ""));
+		setCtrlText(R.id.username, username);
 
 		EditText textPassword = (EditText) findViewById(R.id.password);
 		textPassword.setOnEditorActionListener(this);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +13,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.yarta.android.library.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.Picture;
 
 public class FriendsListAdapter extends BaseAdapter {
 
-	private List<UserItem> items = new ArrayList<UserItem>();
+	private List<Person> items = new ArrayList<Person>();
 
 	private class ViewHolder {
 		ImageView icon;
@@ -27,9 +27,11 @@ public class FriendsListAdapter extends BaseAdapter {
 	}
 
 	private LayoutInflater inflater;
+	private ContentClientPictures content;
 
 	public FriendsListAdapter(Context context) {
 		inflater = LayoutInflater.from(context);
+		content = new ContentClientPictures(context);
 	}
 
 	@Override
@@ -65,18 +67,26 @@ public class FriendsListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		UserItem item = items.get(position);
+		Person item = items.get(position);
 
-		holder.title.setText(Html.fromHtml(item.getName()));
+		String name = item.getName();
+		if (name != null) {
+			holder.title.setText(Html.fromHtml(name));
+		}
 		holder.info.setText(item.getLocation());
 
-		Drawable drawable = ImageCache.getDrawable(item.getAvatarURL());
-		holder.icon.setImageDrawable(drawable);
+		Bitmap bitmap = null;
+		for (Picture picture : item.getPicture()) {
+			bitmap = content.getBitmap(picture);
+		}
+		if (bitmap != null) {
+			holder.icon.setImageBitmap(bitmap);
+		}
 
 		return convertView;
 	}
 
-	public void setItems(List<UserItem> items) {
+	public void setItems(List<Person> items) {
 		this.items.clear();
 		this.items.addAll(items);
 		notifyDataSetChanged();

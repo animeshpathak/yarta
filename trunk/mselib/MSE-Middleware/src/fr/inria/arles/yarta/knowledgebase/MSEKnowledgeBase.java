@@ -191,8 +191,6 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 	@Override
 	public Node addResource(String node_url, String type_url, String requestorId)
 			throws KBException {
-		// wrap in an if(PERFORM_CHECKS) -- also, s,p,o are never used out of
-		// this
 		if (PERFORM_CHECKS) {
 			Node s = new MSEResource(node_url, type_url);
 			Node p = new MSEResource(PROPERTY_TYPE_URI,
@@ -202,7 +200,6 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 			Triple data = new MSETriple(s, p, o);
 
 			// 1.Check if type is actually a concept in the base MSE ontology
-
 			synchronized (model) {
 				if (!model.containsResource(model.createResource(type_url))) {
 					logger.e("MSEKnowledgeBase.addResource", "Type " + type_url
@@ -212,10 +209,10 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 			}
 
 			// 2. Check policies
-
 			synchronized (model) {
-				if (!(policyManager.isAllowed("add", requestorId,
-						inferredModel, data))) {
+				if (!requestorId.equals(userId)
+						&& !(policyManager.isAllowed("add", requestorId,
+								inferredModel, data))) {
 					AccessControlException e = new AccessControlException(
 							"Access control failed: Requestor " + requestorId
 									+ " was not allowed to add the triple: "
@@ -312,19 +309,11 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 	@Override
 	public Node addLiteral(String value, String dataType, String requestorId)
 			throws KBException {
-
-		MSELiteral l = new MSELiteral(value, dataType); // this could raise
-														// exception
-
+		MSELiteral l = new MSELiteral(value, dataType);
 		synchronized (model) {
 			model.createTypedLiteral(value, dataType);
 		}
-		// We do not actually add any knowledge to the KB here, so I do not call
-		// the policy manager
-		// Animesh says : This is an unauthorized write, and can lead to
-		// performance issues if unauthorized users are allowed to write a
-		// lot of stuff in our KB
-
+		// TODO: should pass through policy manager
 		return l;
 
 	}
@@ -646,7 +635,7 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 					throw (e);
 				}
 			}
-			
+
 			inferredModel.removeAll(sub, prop, obj);
 
 			// 8. Adding the triple to the actual KB

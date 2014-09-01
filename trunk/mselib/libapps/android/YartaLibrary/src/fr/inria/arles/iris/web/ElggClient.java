@@ -268,6 +268,7 @@ public class ElggClient {
 
 			user = new UserItem(name, website, avatar_url, location, room,
 					phone);
+			user.setUsername(username);
 		} catch (Exception ex) {
 			lastError = ex.toString();
 		}

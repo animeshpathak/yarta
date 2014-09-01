@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY elgg "http://yarta.gforge.inria.fr/ontologies/elgg.rdf#">
+  <!ENTITY mse "http://yarta.gforge.inria.fr/ontologies/mse.rdf#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF
+	xml:base="&elgg;"
+	xmlns:elgg="&elgg;"
+	xmlns:mse="&mse;"
+	xmlns:owl="&owl;"
+	xmlns:rdf="&rdf;"
+	xmlns:rdfs="&rdfs;"
+>
+	<!-- Ontology Information -->
+	<owl:Ontology rdf:about="">
+		<owl:imports>
+			<owl:Ontology rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#"/>
+		</owl:imports>
+	</owl:Ontology>
+
+	<!-- Classes -->
+	<owl:Class rdf:about="#Picture">
+		<rdfs:subClassOf rdf:resource="&mse;Content" />
+	</owl:Class>
+
+	<!-- Data type properties -->
+	<owl:DatatypeProperty rdf:about="#location">
+		<rdfs:domain rdf:resource="&mse;Person" />
+		<rdfs:range rdf:resource="&xsd;string"/>
+	</owl:DatatypeProperty>
+	<owl:DatatypeProperty rdf:about="#room">
+		<rdfs:domain rdf:resource="&mse;Person" />
+		<rdfs:range rdf:resource="&xsd;string"/>
+	</owl:DatatypeProperty>
+	<owl:DatatypeProperty rdf:about="#phone">
+		<rdfs:domain rdf:resource="&mse;Person" />
+		<rdfs:range rdf:resource="&xsd;string"/>
+	</owl:DatatypeProperty>
+
+	<!-- Object type properties -->
+	<owl:ObjectProperty rdf:about="#picture"
+		rdfs:label="picture">
+		<rdfs:domain rdf:resource="&mse;Person"/>
+		<rdfs:range rdf:resource="#Picture"/>
+	</owl:ObjectProperty>
+
+	<!-- Predefined groups e.g. wire, activity log -->
+</rdf:RDF>

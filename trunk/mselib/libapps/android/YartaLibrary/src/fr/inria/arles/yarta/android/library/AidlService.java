@@ -47,6 +47,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	 */
 	private KnowledgeBase knowledgeBase;
 	private CommunicationManager communicationMgr;
+	
+	/**
+	 * The bridge between Iris & Yarta
+	 */
+	private IrisBridge bridge;
 
 	/**
 	 * Receiver and MSEApplication callbacks
@@ -75,11 +80,12 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	}
 
 	public AidlService(MSEService init, AnalyticsTracker tracker,
-			KnowledgeBase knowledgeBase, CommunicationManager communicationMgr) {
+			KnowledgeBase knowledgeBase, CommunicationManager communicationMgr, ContentClientPictures contentClient) {
 		this.service = init;
 		this.tracker = tracker;
 		this.knowledgeBase = knowledgeBase;
 		this.communicationMgr = communicationMgr;
+		this.bridge = new IrisBridge(this, knowledgeBase, contentClient);
 	}
 
 	@Override
@@ -256,7 +262,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			Node subject = Conversion.toNode(s);
 			Node predicate = Conversion.toNode(p);
 
-			IrisBridge.fetchPropertyObject(knowledgeBase, subject, predicate);
+			// TODO: fetch friends
 
 			List<Triple> triples = knowledgeBase.getPropertyObjectAsTriples(
 					subject, predicate, requestorId);
@@ -279,12 +285,17 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			log("AidlService.getPropertySubjectAsTriples[knowledgeBase = %s]",
 					knowledgeBase);
+			
+			Node predicate = Conversion.toNode(p);
+			Node object = Conversion.toNode(o);
 			List<Triple> triples = knowledgeBase.getPropertySubjectAsTriples(
 					Conversion.toNode(p), Conversion.toNode(o), requestorId);
 
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
 			}
+			
+			bridge.ensureSubjectInformation(predicate, object);
 		} catch (Exception ex) {
 			logError("AidlService.getPropertySubjectAsTriples ex: %s", ex);
 			ex.printStackTrace();

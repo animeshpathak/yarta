@@ -64,8 +64,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements
 			if (manager != null) {
 				CommunicationManager comm = manager.getCommunicationManager();
 				try {
-					comm.sendNotify(InriaAgent);
-					comm.sendUpdateRequest(InriaAgent);
+					// comm.sendNotify(InriaAgent);
+					// comm.sendUpdateRequest(InriaAgent);
 				} catch (Exception ex) {
 					logError("performSync ex: %s", ex.toString());
 				}

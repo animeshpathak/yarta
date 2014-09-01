@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		initDrawer();
 		refreshUI();
 	}
@@ -262,6 +262,8 @@ public class MainActivity extends BaseActivity implements
 
 			if (fragment != null) {
 				fragment.setRunner(runner);
+				fragment.setSAM(getSAM());
+				fragment.setContentClient(contentClient);
 			}
 		}
 	}
