@@ -39,11 +39,13 @@ public class IrisBridge {
 	 * @param object
 	 */
 	public void ensureSubjectInformation(final Node predicate, final Node object) {
+		final String p = predicate.getName();
+
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				if (predicate.getName().equals(Person.PROPERTY_USERID_URI)) {
+				if (p.equals(Person.PROPERTY_USERID_URI)) {
 					UserItem user = client.getUser(object.getName());
 
 					if (user != null) {
@@ -52,22 +54,39 @@ public class IrisBridge {
 									+ user.getUsername());
 						}
 					}
-				} else if (predicate.getName()
-						.equals(Person.PROPERTY_KNOWS_URI)) {
-					String userId = object.getName();
-					userId = userId.substring(userId.indexOf('_') + 1);
+				} else if (p.equals(Person.PROPERTY_KNOWS_URI)) {
+					ensureFriends(object);
+				}
+			}
+		}).start();
+	}
 
-					List<UserItem> users = client.getFriends(userId, 0);
+	private void ensureFriends(Node node) {
+		String userId = node.getName();
+		userId = userId.substring(userId.indexOf('_') + 1);
 
-					boolean update = false;
-					for (UserItem user : users) {
-						update |= createPerson(user);
-						update |= addKnows(user);
-					}
+		List<UserItem> users = client.getFriends(userId, 0);
 
-					if (update) {
-						app.handleNotification("friend list updated");
-					}
+		boolean update = false;
+		for (UserItem user : users) {
+			update |= createPerson(user);
+			update |= addKnows(user);
+		}
+
+		if (update) {
+			app.handleNotification("friend list updated");
+		}
+	}
+
+	public void ensureObjectInformation(final Node subject,
+			final Node predicate) {
+		final String p = predicate.getName();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				if (p.equals(Person.PROPERTY_KNOWS_URI)) {
+					ensureFriends(subject);
 				}
 			}
 		}).start();

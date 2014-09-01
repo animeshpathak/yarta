@@ -262,14 +262,14 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			Node subject = Conversion.toNode(s);
 			Node predicate = Conversion.toNode(p);
 
-			// TODO: fetch friends
-
 			List<Triple> triples = knowledgeBase.getPropertyObjectAsTriples(
 					subject, predicate, requestorId);
 
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
 			}
+			
+			bridge.ensureObjectInformation(subject, predicate);
 		} catch (Exception ex) {
 			logError("AidlService.getPropertyObjectAsTriples ex: %s", ex);
 		}
