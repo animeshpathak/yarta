@@ -1,12 +1,18 @@
 package fr.inria.arles.iris.web;
 
 import java.util.List;
+import java.util.UUID;
 
+import fr.inria.arles.yarta.android.library.ContentClientPictures;
+import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
+import fr.inria.arles.yarta.android.library.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.Picture;
+import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
+import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
-import fr.inria.arles.yarta.resources.Agent;
-import fr.inria.arles.yarta.resources.Person;
+import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 
 /**
  * This class contains useful methods to fetch data into KB using the Iris web
@@ -14,71 +20,86 @@ import fr.inria.arles.yarta.resources.Person;
  */
 public class IrisBridge {
 
-	/**
-	 * Queries specified information from Iris web services into the
-	 * knowledgeBase;
-	 * 
-	 * @param kb
-	 * @param subject
-	 * @param predicate
-	 */
-	public static void fetchPropertyObject(final KnowledgeBase kb,
-			final Node subject, Node predicate) {
-		String s = subject.getName();
-		String p = predicate.getName();
+	private static ElggClient client = ElggClient.getInstance();
+	private MSEApplication app;
+	private KnowledgeBase kb;
+	private ContentClientPictures content;
 
-		if (s.contains("Person") && p.equals(Agent.PROPERTY_KNOWS_URI)) {
-			runAndWait(new Runnable() {
-
-				@Override
-				public void run() {
-					fetchFriends(kb, subject);
-				}
-			});
-		}
+	public IrisBridge(MSEApplication app, KnowledgeBase kb,
+			ContentClientPictures content) {
+		this.app = app;
+		this.kb = kb;
+		this.content = content;
 	}
 
 	/**
-	 * runAndWait
+	 * Ensures a given p, o triple will exist.
 	 * 
-	 * @param runnable
+	 * @param predicate
+	 * @param object
 	 */
-	private static void runAndWait(Runnable runnable) {
-		Thread thread = new Thread(runnable);
-		thread.start();
+	public void ensureSubjectInformation(final Node predicate, final Node object) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				if (predicate.getName().equals(Person.PROPERTY_USERID_URI)) {
+					UserItem user = client.getUser(object.getName());
+
+					if (user != null) {
+						if (createPerson(user)) {
+							app.handleNotification("person updated "
+									+ user.getUsername());
+						}
+					}
+				} else if (predicate.getName()
+						.equals(Person.PROPERTY_KNOWS_URI)) {
+					String userId = object.getName();
+					userId = userId.substring(userId.indexOf('_') + 1);
+
+					List<UserItem> users = client.getFriends(userId, 0);
+
+					boolean update = false;
+					for (UserItem user : users) {
+						update |= createPerson(user);
+						update |= addKnows(user);
+					}
+
+					if (update) {
+						app.handleNotification("friend list updated");
+					}
+				}
+			}
+		}).start();
+	}
+
+	private boolean addKnows(UserItem item) {
+		boolean update = false;
+
+		String reqId = client.getUsername();
+
+		String ownerId = Person.typeURI + "_" + client.getUsername();
+		Node owner = kb.getResourceByURINoPolicies(ownerId);
+
+		String userId = Person.typeURI + "_" + item.getUsername();
+		Node user = kb.getResourceByURINoPolicies(userId);
+
+		Node p = kb.getResourceByURINoPolicies(Person.PROPERTY_KNOWS_URI);
+
 		try {
-			thread.join();
-		} catch (Exception ex) {
+			if (kb.getTriple(owner, p, user, reqId) == null) {
+				kb.addTriple(owner, p, user, client.getUsername());
+				update = true;
+			}
+			if (kb.getTriple(user, p, owner, reqId) == null) {
+				kb.addTriple(user, p, owner, client.getUsername());
+				update = true;
+			}
+		} catch (KBException ex) {
 			ex.printStackTrace();
 		}
-	}
 
-	/**
-	 * Fetches the friends of a user into the KB.
-	 * 
-	 * @param kb
-	 * @param user
-	 */
-	private static void fetchFriends(KnowledgeBase kb, Node userNode) {
-		String uid = userNode.getName();
-		String username = uid.substring(uid.indexOf('_') + 1, uid.indexOf('@'));
-		log("fetchFriends(%s)", username);
-
-		List<UserItem> users = client.getFriends(username, 0);
-		Node knowsNode = kb
-				.getResourceByURINoPolicies(Agent.PROPERTY_KNOWS_URI);
-
-		for (UserItem user : users) {
-			Node person = createPerson(kb, user);
-			try {
-				kb.addTriple(userNode, knowsNode, person, client.getUsername()
-						+ "@inria.fr");
-				kb.addTriple(person, knowsNode, userNode, client.getUsername()
-						+ "@inria.fr");
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
+		return update;
 	}
 
 	/**
@@ -86,24 +107,93 @@ public class IrisBridge {
 	 * 
 	 * @param kb
 	 * @param item
-	 * @return
+	 * @return true if the person was updated
 	 */
-	private static Node createPerson(KnowledgeBase kb, UserItem item) {
-		String username = item.getUsername() + "@inria.fr";
-		String owner = client.getUsername() + "@inria.fr";
-
-		Node result = null;
+	private boolean createPerson(UserItem item) {
+		boolean update = false;
 		try {
-			result = kb.addResource(Person.typeURI + "_" + username,
-					Person.typeURI, owner);
-			kb.addTriple(result,
-					kb.getResourceByURINoPolicies(Person.PROPERTY_USERID_URI),
-					kb.addLiteral(username, TYPE_STRING_URI, owner), owner);
+			String userUniqueId = Person.typeURI + "_" + item.getUsername();
+			Node s = kb.getResourceByURINoPolicies(userUniqueId);
+			if (s == null) {
+				update = true;
+				s = kb.addResource(userUniqueId, Person.typeURI,
+						client.getUsername());
+			}
+
+			update |= ensureSimpleTriple(s, Person.PROPERTY_USERID_URI,
+					item.getUsername());
+			update |= ensureSimpleTriple(s, Person.PROPERTY_NAME_URI,
+					item.getName());
+			update |= ensureSimpleTriple(s, Person.PROPERTY_ROOM_URI,
+					item.getRoom());
+			update |= ensureSimpleTriple(s, Person.PROPERTY_PHONE_URI,
+					item.getPhone());
+			update |= ensureSimpleTriple(s, Person.PROPERTY_LOCATION_URI,
+					item.getLocation());
+
+			String pictureId = getSimpleLiteral(s, Person.PROPERTY_PICTURE_URI);
+			if (pictureId == null) {
+				pictureId = UUID.randomUUID().toString();
+				Node p = kb.addResource(MSEManagerEx.baseMSEURI + '#'
+						+ pictureId, Picture.typeURI, client.getUsername());
+				kb.addTriple(
+						s,
+						kb.getResourceByURINoPolicies(Person.PROPERTY_PICTURE_URI),
+						p, client.getUsername());
+				update = true;
+			} else {
+				pictureId = pictureId.substring(pictureId.indexOf('#') + 1);
+			}
+
+			content.setBitmap(pictureId, item.getAvatarURL());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
-		return result;
+		return update;
+	}
+
+	/**
+	 * Makes sure the triple s p o exists in the KB.
+	 * 
+	 * Returns true if UI needs updates, false otherwise.
+	 * 
+	 * @throws KBException
+	 */
+	private boolean ensureSimpleTriple(Node s, String predicate, String object)
+			throws KBException {
+		if (object != null) {
+			String value = getSimpleLiteral(s, predicate);
+
+			if (!object.equals(value)) {
+				addSimpleTriple(s, predicate, object);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String getSimpleLiteral(Node s, String predicateURI) {
+		String value = null;
+		try {
+			List<Triple> triples = kb.getPropertyObjectAsTriples(s,
+					kb.getResourceByURINoPolicies(predicateURI),
+					client.getUsername());
+			for (Triple t : triples) {
+				value = t.getObject().getName();
+			}
+
+		} catch (KBException ex) {
+			ex.printStackTrace();
+		}
+		return value;
+	}
+
+	private Triple addSimpleTriple(Node s, String predicateURI, String literal)
+			throws KBException {
+		return kb.addTriple(s, kb.getResourceByURINoPolicies(predicateURI),
+				kb.addLiteral(literal, TYPE_STRING_URI, literal),
+				client.getUsername());
 	}
 
 	private static void log(String format, Object... args) {
@@ -111,5 +201,4 @@ public class IrisBridge {
 	}
 
 	private static final String TYPE_STRING_URI = "http://www.w3.org/2001/XMLSchema#string";
-	private static ElggClient client = ElggClient.getInstance();
 }

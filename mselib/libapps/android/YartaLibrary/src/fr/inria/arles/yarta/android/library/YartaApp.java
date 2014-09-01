@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.inria.arles.iris.R;
+import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
+import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
-import fr.inria.arles.yarta.middleware.msemanagement.MSEManager;
-import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import android.content.res.AssetManager;
  */
 public class YartaApp extends Application implements MSEApplication {
 
+	private static final String BaseRDF = "elgg.rdf";
 	/**
 	 * This is the UI Observer interface which should be implemented by those
 	 * who want real time updates over UI data.
@@ -36,9 +37,9 @@ public class YartaApp extends Application implements MSEApplication {
 		public void onLogout();
 	}
 
-	private MSEManager mse;
+	private MSEManagerEx mse;
+	private StorageAccessManagerEx sam;
 	private CommunicationManager comm;
-	private StorageAccessManager sam;
 
 	private List<Observer> observers = new ArrayList<Observer>();
 	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
@@ -49,7 +50,7 @@ public class YartaApp extends Application implements MSEApplication {
 	 */
 	private void ensureBaseFiles(Context context) {
 		String dataPath = getFilesDir().getAbsolutePath();
-		String baseOntologyFilePath = getString(R.string.service_baseRDF);
+		String baseOntologyFilePath = BaseRDF;
 		String basePolicyFilePath = getString(R.string.service_basePolicy);
 
 		dumpAsset(context, dataPath, baseOntologyFilePath);
@@ -88,11 +89,11 @@ public class YartaApp extends Application implements MSEApplication {
 		ensureBaseFiles(this);
 
 		String dataPath = getFilesDir().getAbsolutePath();
-		String baseOntologyFilePath = getString(R.string.service_baseRDF);
+		String baseOntologyFilePath = BaseRDF;
 		String basePolicyFilePath = getString(R.string.service_basePolicy);
 
 		if (mse == null) {
-			mse = new MSEManager();
+			mse = new MSEManagerEx();
 
 			try {
 				mse.initialize(dataPath + "/" + baseOntologyFilePath, dataPath
@@ -134,7 +135,7 @@ public class YartaApp extends Application implements MSEApplication {
 	public void handleKBReady(String userId) {
 		if (userId != null && userId.length() > 0) {
 			comm = mse.getCommunicationManager();
-			sam = mse.getStorageAccessManager();
+			sam = mse.getStorageAccessManagerEx();
 
 			mse.setOwnerUID(userId);
 			sam.setOwnerID(userId);
@@ -205,11 +206,11 @@ public class YartaApp extends Application implements MSEApplication {
 		}).start();
 	}
 
-	public MSEManager getMSE() {
+	public MSEManagerEx getMSE() {
 		return mse;
 	}
 
-	public StorageAccessManager getSAM() {
+	public StorageAccessManagerEx getSAM() {
 		return sam;
 	}
 

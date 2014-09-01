@@ -5,7 +5,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
@@ -16,11 +16,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.yarta.android.library.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.KBException;
 
 public class ProfileFragment extends BaseFragment {
 
@@ -28,8 +29,8 @@ public class ProfileFragment extends BaseFragment {
 	private static final int MENU_ADD = 3;
 
 	private String username = ElggClient.getInstance().getUsername();
-	private UserItem user;
 	private RiverFragment activityFragment;
+	private Person user;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,84 +106,73 @@ public class ProfileFragment extends BaseFragment {
 
 	@Override
 	public void refreshUI() {
-		runner.runBackground(new Job() {
-
-			@Override
-			public void doWork() {
-				user = client.getUser(username);
-
-				if (user != null) {
-					user.setUsername(username);
-					String avatarURL = user.getAvatarURL();
-					if (ImageCache.getDrawable(avatarURL) == null) {
-						try {
-							ImageCache.setDrawable(avatarURL,
-									ImageCache.drawableFromUrl(avatarURL));
-						} catch (Exception ex) {
-						}
-					}
-				}
+		try {
+			user = sam.getPersonByUserId(username);
+			if (user == null) {
+				return;
 			}
+		} catch (KBException ex) {
+			ex.printStackTrace();
+			return;
+		}
 
-			@Override
-			public void doUIAfter() {
-				if (user == null) {
-					return;
-				} else if (user.getName() == null) {
-					return;
-				}
+		if (user.getName() != null) {
+			setCtrlText(R.id.name, Html.fromHtml(user.getName()));
+		}
+		if (user.getHomepage() != null) {
+			setCtrlVisibility(R.id.website, View.VISIBLE);
+			setCtrlText(R.id.website, user.getHomepage());
+		}
 
-				setCtrlText(R.id.name, Html.fromHtml(user.getName()));
+		if (user.getLocation() != null) {
+			String location = String.format(getString(R.string.profile_team),
+					user.getLocation());
+			setCtrlText(R.id.location, Html.fromHtml(location));
+		}
 
-				if (user.getWebsite() != null || isEditable()) {
-					setCtrlVisibility(R.id.website, View.VISIBLE);
-					setCtrlText(R.id.website, user.getWebsite());
-				}
+		if (user.getRoom() != null) {
+			String room = String.format(getString(R.string.profile_room),
+					user.getRoom());
+			setCtrlText(R.id.room, Html.fromHtml(room));
+		}
 
-				String location = String.format(
-						getString(R.string.profile_team), user.getLocation());
-				setCtrlText(R.id.location, Html.fromHtml(location));
+		if (user.getPhone() != null) {
+			String phone = String.format(getString(R.string.profile_phone),
+					user.getPhone());
+			setCtrlText(R.id.phone, Html.fromHtml(phone));
+		}
 
-				String room = String.format(getString(R.string.profile_room),
-						user.getRoom());
-				setCtrlText(R.id.room, Html.fromHtml(room));
+		ImageView image = (ImageView) getView().findViewById(R.id.icon);
 
-				String phone = String.format(getString(R.string.profile_phone),
-						user.getPhone());
-				setCtrlText(R.id.phone, Html.fromHtml(phone));
+		Bitmap bitmap = null;
 
-				ImageView image = (ImageView) getView().findViewById(R.id.icon);
-				Drawable drawable = ImageCache.getDrawable(user.getAvatarURL());
-				if (drawable != null) {
-					image.setImageDrawable(drawable);
-				} else {
-					image.setVisibility(View.GONE);
-				}
+		for (Picture picture : user.getPicture()) {
+			bitmap = contentClient.getBitmap(picture);
+		}
+		if (bitmap != null) {
+			image.setVisibility(View.VISIBLE);
+			image.setImageBitmap(bitmap);
+		} else {
+			image.setVisibility(View.GONE);
+		}
 
-				if (!isEditable()) {
-					setFocusable(R.id.name, false);
-					setFocusable(R.id.website, false);
-				}
-
-				// load activity fragment
-				if (activityFragment == null) {
-					FragmentTransaction ft = getSherlockActivity()
-							.getSupportFragmentManager().beginTransaction();
-					activityFragment = new RiverFragment();
-					activityFragment.setRunner(runner);
-					activityFragment.setUsername(user.getUsername());
-					ft.replace(R.id.userActivity, activityFragment);
-					ft.commit();
-				} else {
-					activityFragment.refreshUI();
-				}
-			}
-		});
+		// load activity fragment
+		if (activityFragment == null) {
+			FragmentTransaction ft = getSherlockActivity()
+					.getSupportFragmentManager().beginTransaction();
+			activityFragment = new RiverFragment();
+			activityFragment.setRunner(runner);
+			activityFragment.setUsername(username);
+			ft.replace(R.id.userActivity, activityFragment);
+			ft.commit();
+		} else {
+			activityFragment.refreshUI();
+		}
 	}
 
 	private void onCompose() {
 		Intent intent = new Intent(getSherlockActivity(), MessageActivity.class);
-		intent.putExtra(MessageActivity.User, user);
+		// intent.putExtra(MessageActivity.User, user);
 		startActivity(intent);
 	}
 
@@ -193,7 +183,7 @@ public class ProfileFragment extends BaseFragment {
 
 			@Override
 			public void doWork() {
-				result = client.addFriend(user.getUsername());
+				// result = client.addFriend(user.getUsername());
 			}
 
 			@Override

@@ -7,14 +7,27 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import fr.inria.arles.iris.web.ElggClient;
+import fr.inria.arles.yarta.android.library.ContentClientPictures;
+import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 
 public abstract class BaseFragment extends SherlockFragment {
 
 	protected JobRunner runner;
+	protected StorageAccessManagerEx sam;
+	protected ContentClientPictures contentClient;
+
 	protected ElggClient client = ElggClient.getInstance();
 
 	public void setRunner(JobRunner runner) {
 		this.runner = runner;
+	}
+
+	public void setSAM(StorageAccessManagerEx sam) {
+		this.sam = sam;
+	}
+
+	public void setContentClient(ContentClientPictures contentClient) {
+		this.contentClient = contentClient;
 	}
 
 	public abstract void refreshUI();

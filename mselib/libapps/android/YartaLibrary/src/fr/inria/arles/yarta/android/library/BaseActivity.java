@@ -12,6 +12,7 @@ import com.actionbarsherlock.view.Window;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
+import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.android.library.util.Settings;
@@ -19,7 +20,6 @@ import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEManager;
-import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
 
 /**
  * Base activity containing common functionality.
@@ -29,6 +29,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	private YartaApp app;
 	protected JobRunner runner;
+	protected ContentClientPictures contentClient;
 	private YLogger log = YLoggerFactory.getLogger();
 	protected Settings settings;
 	protected ElggClient client = ElggClient.getInstance();
@@ -37,16 +38,19 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		contentClient = new ContentClientPictures(this);
 
 		settings = new Settings(this);
 		app = (YartaApp) getApplication();
 		runner = new JobRunner(this);
 		tracker.start(this);
 		app.addLoginObserver(this);
+		app.addObserver(this);
 	}
 
 	@Override
 	protected void onDestroy() {
+		app.removeObserver(this);
 		app.removeLoginObserver(this);
 		tracker.stop();
 		super.onDestroy();
@@ -112,7 +116,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		return app.getMSE();
 	}
 
-	protected StorageAccessManager getSAM() {
+	protected StorageAccessManagerEx getSAM() {
 		return app.getSAM();
 	}
 
@@ -122,9 +126,10 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void updateInfo() {
-		execute(new Job() {
+		runOnUiThread(new Runnable() {
+
 			@Override
-			public void doUIAfter() {
+			public void run() {
 				refreshUI();
 			}
 		});

@@ -10,7 +10,6 @@
     <color name="AppTextColorLow">#666666</color>
     <color name="AppBackground">#e0d9e0</color>
     <color name="AppDrawerBackground">#dbd6db</color>
-    <color name="AppDrawerSelected">#85a5e0</color>
     <color name="AppDrawerTextSelected">#272727</color>
     <color name="AppDrawerText">#272727</color>
     <color name="AppDrawerDivider">#b7b7b7</color>

@@ -11,7 +11,6 @@ public class ProfileActivity extends BaseActivity {
 	public static final String UserName = "UserName";
 
 	private ProfileFragment fragment;
-
 	private String username;
 
 	@Override
@@ -60,6 +59,8 @@ public class ProfileActivity extends BaseActivity {
 		if (fragment == null) {
 			fragment = new ProfileFragment();
 			fragment.setRunner(runner);
+			fragment.setSAM(getSAM());
+			fragment.setContentClient(contentClient);
 			fragment.setUsername(username);
 
 			ft.replace(R.id.content_frame, fragment);
