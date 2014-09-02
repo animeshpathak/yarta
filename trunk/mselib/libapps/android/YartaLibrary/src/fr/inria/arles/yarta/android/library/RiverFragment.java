@@ -8,6 +8,7 @@ import fr.inria.arles.iris.web.ObjectItem;
 import fr.inria.arles.iris.web.RiverItem;
 import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.util.PullToRefreshListView;
+import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import android.content.Intent;
@@ -158,7 +159,8 @@ public class RiverFragment extends BaseFragment implements
 		} else if (type.equals(ObjectItem.Group)) {
 			Intent intent = new Intent(getSherlockActivity(),
 					GroupActivity.class);
-			intent.putExtra(GroupActivity.GroupGuid, object.getGuid().trim());
+			String groupId = Group.typeURI + "_" + object.getGuid().trim();
+			intent.putExtra(GroupActivity.GroupGuid, groupId);
 			startActivity(intent);
 		} else if (type.equals(ObjectItem.Blog) || type.equals(ObjectItem.Page)
 				|| type.equals(ObjectItem.PageTop)

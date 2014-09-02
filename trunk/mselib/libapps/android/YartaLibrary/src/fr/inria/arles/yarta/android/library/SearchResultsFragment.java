@@ -14,6 +14,7 @@ import android.widget.ListView;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.ObjectItem;
+import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 
 public class SearchResultsFragment extends BaseFragment implements
@@ -111,7 +112,8 @@ public class SearchResultsFragment extends BaseFragment implements
 			intent.putExtra(ProfileActivity.UserGuid, item.getGuid());
 		} else if (type.equals(ObjectItem.Group)) {
 			intent = new Intent(getSherlockActivity(), GroupActivity.class);
-			intent.putExtra(GroupActivity.GroupGuid, item.getGuid());
+			String groupId = Group.typeURI + "_" + item.getGuid();
+			intent.putExtra(GroupActivity.GroupGuid, groupId);
 		} else if (type.equals(ObjectItem.Blog)) {
 			intent = new Intent(getSherlockActivity(), PostActivity.class);
 			intent.putExtra(PostActivity.PostGuid, item.getGuid());
