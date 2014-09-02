@@ -200,10 +200,11 @@ public class YartaProperty {
 	 */
 	public String getDomainU() {
 		String domain = getDomain();
-		if (domain.contains(Parser.YartaResourcePackage)) {
-			domain = domain.replace(Parser.YartaResourcePackage, "");
+		if (!domain.contains(Parser.YartaResourcePackage)) {
+			domain = Character.toUpperCase(domain.charAt(0))
+					+ domain.substring(1);
 		}
-		return Character.toUpperCase(domain.charAt(0)) + domain.substring(1);
+		return domain;
 	}
 
 	/**

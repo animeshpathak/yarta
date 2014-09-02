@@ -45,10 +45,13 @@ public class MSETriple implements Triple {
 	 * @return the triple in the form (subject, predicate, object)
 	 */
 	public String toString() {
-		String s = "(" + this.subject.toString() + " , "
-				+ this.property.toString() + " , " + this.object.toString()
-				+ ")\n";
-		return s;
+		String s = subject.toString();
+		s = s.substring(s.indexOf('#') + 1);
+		String p = property.toString();
+		p = p.substring(p.indexOf('#') + 1);
+		String o = object.toString();
+		o = o.substring(o.indexOf('#') + 1);
 
+		return String.format("(%s, %s, %s)", s, p, o);
 	}
 }

@@ -26,6 +26,10 @@ public class GroupItem {
 	public String getGuid() {
 		return guid;
 	}
+	
+	public void setGuid(String guid) {
+		this.guid = guid;
+	}
 
 	public String getAvatarURL() {
 		return avatarURL;

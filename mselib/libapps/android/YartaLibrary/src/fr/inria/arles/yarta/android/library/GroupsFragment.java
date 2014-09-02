@@ -1,20 +1,23 @@
 package fr.inria.arles.yarta.android.library;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.GroupItem;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.util.PullToRefreshListView;
+import fr.inria.arles.yarta.android.library.resources.Group;
+import fr.inria.arles.yarta.android.library.resources.GroupImpl;
+import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.KBException;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
 public class GroupsFragment extends BaseFragment implements
 		PullToRefreshListView.OnRefreshListener,
@@ -22,7 +25,7 @@ public class GroupsFragment extends BaseFragment implements
 
 	private GroupsListAdapter adapter;
 	private PullToRefreshListView list;
-	private List<GroupItem> items;
+	private List<Group> items;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,57 +56,28 @@ public class GroupsFragment extends BaseFragment implements
 
 			@Override
 			public void doWork() {
-				items = client.getGroups(client.getUsername());
+				items = new ArrayList<Group>();
+
+				try {
+					Person person = sam.getMe();
+
+					for (fr.inria.arles.yarta.resources.Group group : person
+							.getIsMemberOf()) {
+						items.add(new GroupImpl(sam, new MSEResource(group
+								.getUniqueId(), Group.typeURI)));
+					}
+				} catch (KBException ex) {
+					ex.printStackTrace();
+				}
 			}
 
 			@Override
 			public void doUIAfter() {
 				adapter.setItems(items);
 				list.onRefreshComplete();
-				new Thread(lazyImageLoader).start();
 			}
 		});
 	}
-
-	private Handler handler = new Handler();
-	private Runnable refreshListAdapter = new Runnable() {
-
-		@Override
-		public void run() {
-			adapter.notifyDataSetChanged();
-		}
-	};
-
-	private Runnable lazyImageLoader = new Runnable() {
-
-		@Override
-		public void run() {
-			for (GroupItem item : items) {
-				String url = item.getAvatarURL();
-				if (ImageCache.getDrawable(url) == null) {
-					boolean error = false;
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-						handler.post(refreshListAdapter);
-					} catch (Exception ex) {
-						error = true;
-					}
-
-					if (error) {
-						try {
-							ImageCache.setDrawable(
-									url,
-									getActivity().getResources().getDrawable(
-											R.drawable.group_default));
-							handler.post(refreshListAdapter);
-						} catch (Exception ex) {
-						}
-					}
-				}
-			}
-		}
-	};
 
 	@Override
 	public void onRefresh() {
@@ -113,9 +87,9 @@ public class GroupsFragment extends BaseFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		GroupItem item = items.get(position);
+		Group item = items.get(position);
 		Intent intent = new Intent(getSherlockActivity(), GroupActivity.class);
-		intent.putExtra(GroupActivity.GroupGuid, item.getGuid());
+		intent.putExtra(GroupActivity.GroupGuid, item.getUniqueId());
 		startActivity(intent);
 	}
 }

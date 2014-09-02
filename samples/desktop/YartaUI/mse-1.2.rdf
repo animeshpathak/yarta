@@ -82,6 +82,17 @@
              rdfs:label="topic">
     <rdfs:comment xml:lang="en">This class represents any topic that might be, for example, subject of interest for a person or object of description in a document (content) or many others. It was inspired by users tagging activities. As such, it might be mapped onto keywords, folksonomies or more structured taxonomies.</rdfs:comment>
   </owl:Class>
+  
+  <owl:Class rdf:about="#Message"
+             rdfs:label="message">
+    <rdfs:comment xml:lang="en">This class represents a message.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Content"/>
+  </owl:Class>
+  
+  <owl:Class rdf:about="#Conversation"
+             rdfs:label="conversation">
+    <rdfs:comment xml:lang="en">This class represents a container for contents of type message</rdfs:comment>
+  </owl:Class>
 
 <!-- Annotation Properties -->
   <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
@@ -210,9 +221,24 @@
     <rdfs:domain rdf:resource="#Person"/>
     <rdfs:range rdf:resource="&xsd;string"/>
   </owl:DatatypeProperty>
+  
+  <owl:DatatypeProperty rdf:about="#time"
+                        rdfs:label="creation time">
+    <rdfs:comment>This represents a UNIX timestamp which refers to the creation time of a message.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Message"/>
+    <rdfs:range rdf:resource="&xsd;long"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#content"
+                        rdfs:label="content">
+    <rdfs:comment>This represents content of a message.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Message"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
 
 <!-- Object Properties -->
   <owl:ObjectProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+  <owl:ObjectProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#li"/>
   <owl:ObjectProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
 
   <owl:ObjectProperty rdf:about="#creator"
@@ -273,7 +299,7 @@
     <rdfs:comment xml:lang="en">The basic relationship (first-class) between a Person and an Event is the "participation". This comes from the definition of Person and Event: Event is a 4D occurrence ( = exists in space and time), Person is a 3D occurrence ( = exists in space and might change over time).</rdfs:comment>
     <rdfs:comment xml:lang="en">The participation relation will be subclassed as needed by the application.</rdfs:comment>
     <rdfs:domain rdf:resource="#Agent"/>
-    <rdfs:label xml:lang="en">participates to</rdfs:label>
+    <rdfs:label xml:lang="en">is attending</rdfs:label>
     <rdfs:range rdf:resource="#Event"/>
   </owl:ObjectProperty>
   
@@ -282,4 +308,17 @@
     <rdfs:range rdf:resource="#Group"/>
   </owl:ObjectProperty>
 
+  <owl:ObjectProperty rdf:about="#contains">
+    <rdfs:comment xml:lang="en">This shows the messages contained in a particular conversation.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Conversation"/>
+    <rdfs:label xml:lang="en">participates to</rdfs:label>
+    <rdfs:range rdf:resource="#Message"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#participatesTo">
+    <rdfs:comment xml:lang="en">This shows the participation of an Agent to a particular conversation.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:label xml:lang="en">participates to</rdfs:label>
+    <rdfs:range rdf:resource="#Conversation"/>
+  </owl:ObjectProperty>
 </rdf:RDF>

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +13,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.GroupItem;
-import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.yarta.android.library.resources.Group;
+import fr.inria.arles.yarta.android.library.resources.Picture;
 
 public class GroupsListAdapter extends BaseAdapter {
 
-	private List<GroupItem> items = new ArrayList<GroupItem>();
+	private List<Group> items = new ArrayList<Group>();
 	private String membersFormat;
 
 	private class ViewHolder {
@@ -28,10 +28,12 @@ public class GroupsListAdapter extends BaseAdapter {
 	}
 
 	private LayoutInflater inflater;
+	private ContentClientPictures content;
 
 	public GroupsListAdapter(Context context) {
 		inflater = LayoutInflater.from(context);
 		membersFormat = context.getString(R.string.groups_members);
+		content = new ContentClientPictures(context);
 	}
 
 	@Override
@@ -68,18 +70,25 @@ public class GroupsListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		GroupItem item = items.get(position);
+		Group item = items.get(position);
 
 		holder.title.setText(Html.fromHtml(item.getName()));
 		holder.info.setText(String.format(membersFormat, item.getMembers()));
 
-		Drawable drawable = ImageCache.getDrawable(item.getAvatarURL());
-		holder.icon.setImageDrawable(drawable);
+		Bitmap bitmap = null;
+		for (Picture picture : item.getPicture()) {
+			bitmap = content.getBitmap(picture);
+		}
+		if (bitmap != null) {
+			holder.icon.setImageBitmap(bitmap);
+		} else {
+			holder.icon.setImageResource(R.drawable.group_default);
+		}
 
 		return convertView;
 	}
 
-	public void setItems(List<GroupItem> items) {
+	public void setItems(List<Group> items) {
 		this.items.clear();
 		this.items.addAll(items);
 		notifyDataSetChanged();

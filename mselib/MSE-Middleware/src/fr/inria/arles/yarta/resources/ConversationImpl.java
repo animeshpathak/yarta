@@ -53,22 +53,17 @@ public class ConversationImpl extends YartaResource implements Conversation {
 	}
 
 	@Override
-	public boolean addMessage(Message message) {
-		return sam.setObjectProperty(kbNode, "http://www.w3.org/1999/02/22-rdf-syntax-ns#li", message);
+	public boolean addContains(Message message) {
+		return sam.setObjectProperty(kbNode, PROPERTY_CONTAINS_URI, message);
 	}
 
 	@Override
-	public boolean deleteMessage(Message message) {
-		return sam.deleteObjectProperty(kbNode, "http://www.w3.org/1999/02/22-rdf-syntax-ns#li", message);
+	public boolean deleteContains(Message message) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_CONTAINS_URI, message);
 	}
 
 	@Override
-	public List<Message> getMessages() {
-		Set<Message> ms = sam.getObjectProperty(kbNode, "http://www.w3.org/1999/02/22-rdf-syntax-ns#li");
-		List<Message> messages = new ArrayList<Message>();
-		for (Object message : ms) {
-			messages.add((Message) message);
-		}
-		return messages;
+	public Set<Message> getContains() {
+		return sam.getObjectProperty(kbNode, PROPERTY_CONTAINS_URI);
 	}
 }

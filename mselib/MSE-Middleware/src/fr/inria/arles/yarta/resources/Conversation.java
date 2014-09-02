@@ -10,7 +10,10 @@ public interface Conversation extends Resource {
 
 	/** The unique "type" URI */
 	public static final String typeURI = baseMSEURI + "#Conversation";
-	
+
+	/** the URI for the property participatesTo */
+	public static final String PROPERTY_CONTAINS_URI = baseMSEURI + "#contains";
+
 	/**
 	 * Returns the set of agents who participates to this conversation.
 	 * 
@@ -25,7 +28,7 @@ public interface Conversation extends Resource {
 	 * @param message
 	 * @return
 	 */
-	public boolean addMessage(Message message);
+	public boolean addContains(Message message);
 
 	/**
 	 * Deletes a message from this conversation.
@@ -33,12 +36,12 @@ public interface Conversation extends Resource {
 	 * @param message
 	 * @return
 	 */
-	public boolean deleteMessage(Message message);
+	public boolean deleteContains(Message message);
 
 	/**
 	 * Returns a list of messages associated with this Conversation.
 	 * 
 	 * @return
 	 */
-	public List<Message> getMessages();
+	public Set<Message> getContains();
 }

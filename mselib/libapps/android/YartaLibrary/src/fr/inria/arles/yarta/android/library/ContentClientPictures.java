@@ -25,7 +25,7 @@ public class ContentClientPictures extends ContentClientAndroid {
 		String uniqueId = resource.getUniqueId();
 		return uniqueId.substring(uniqueId.indexOf('#') + 1);
 	}
-	
+
 	public Bitmap getBitmap(Picture picture) {
 		byte[] data = getData(getShortName(picture));
 		if (data != null) {
@@ -58,7 +58,7 @@ public class ContentClientPictures extends ContentClientAndroid {
 			Bitmap bitmap = BitmapFactory.decodeStream(input);
 			setBitmap(id, bitmap);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.err.println(ex.toString());
 		}
 	}
 
