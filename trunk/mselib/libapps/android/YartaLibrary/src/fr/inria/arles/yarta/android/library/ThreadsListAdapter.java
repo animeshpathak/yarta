@@ -5,12 +5,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.MessageItem;
+import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
+import fr.inria.arles.yarta.android.library.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.PersonImpl;
+import fr.inria.arles.yarta.android.library.resources.Picture;
+import fr.inria.arles.yarta.knowledgebase.KBException;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.resources.Agent;
+import fr.inria.arles.yarta.resources.Conversation;
+import fr.inria.arles.yarta.resources.Message;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +37,23 @@ public class ThreadsListAdapter extends BaseAdapter {
 		public ImageView image;
 	}
 
-	private List<List<MessageItem>> messages = new ArrayList<List<MessageItem>>();
+	private List<Conversation> messages = new ArrayList<Conversation>();
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM, HH:mm",
 			Locale.getDefault());
 	private LayoutInflater inflater;
+	private ContentClientPictures content;
+	private StorageAccessManagerEx sam;
+	private Person owner;
 
-	public ThreadsListAdapter(Context context) {
+	public ThreadsListAdapter(Context context, StorageAccessManagerEx sam) {
 		inflater = LayoutInflater.from(context);
+		content = new ContentClientPictures(context);
+		try {
+			this.sam = sam;
+			this.owner = sam.getMe();
+		} catch (KBException ex) {
+			System.err.println(ex.toString());
+		}
 	}
 
 	@Override
@@ -57,8 +75,7 @@ public class ThreadsListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
 		if (convertView == null) {
-			convertView = inflater
-					.inflate(R.layout.item_thread, parent, false);
+			convertView = inflater.inflate(R.layout.item_thread, parent, false);
 
 			holder = new ViewHolder();
 			holder.author = (TextView) convertView.findViewById(R.id.author);
@@ -72,23 +89,45 @@ public class ThreadsListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		List<MessageItem> thread = messages.get(position);
-		MessageItem item = thread.get(thread.size() - 1);
+		Conversation thread = messages.get(position);
 
-		holder.author.setText(Html.fromHtml(item.getFrom().getName()));
-		holder.subject.setText(Html.fromHtml(item.getSubject()));
-		holder.time.setText(sdf.format(new Date(item.getTimestamp() * 1000)));
+		Person person = null;
+		for (Agent agent : thread.getParticipatesTo_inverse()) {
+			if (!agent.equals(owner)) {
+				person = new PersonImpl(sam, new MSEResource(
+						agent.getUniqueId(), Person.typeURI));
+			}
+		}
 
-		holder.container
-				.setVisibility(item.isRead() ? View.GONE : View.VISIBLE);
+		Set<Message> messages = thread.getContains();
 
-		Drawable drawable = ImageCache.getDrawable(item.getFrom()
-				.getAvatarURL());
-		holder.image.setImageDrawable(drawable);
+		if (messages.size() > 0) {
+			// TODO: get the last message
+			Message message = null;
+			for (Message m : messages) {
+				message = m;
+			}
+
+			holder.author.setText(Html.fromHtml(person.getName()));
+			holder.subject.setText(Html.fromHtml(message.getTitle()));
+			holder.time.setText(sdf.format(new Date(message.getTime())));
+
+			// TODO: see if message is read
+			holder.container.setVisibility(View.GONE);
+
+			Bitmap bitmap = null;
+			for (Picture picture : person.getPicture()) {
+				bitmap = content.getBitmap(picture);
+			}
+
+			if (bitmap != null) {
+				holder.image.setImageBitmap(bitmap);
+			}
+		}
 		return convertView;
 	}
 
-	public void setItems(List<List<MessageItem>> messages) {
+	public void setItems(Set<Conversation> messages) {
 		this.messages.clear();
 		this.messages.addAll(messages);
 		notifyDataSetChanged();

@@ -1,6 +1,6 @@
 package fr.inria.arles.yarta.android.library;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,10 +12,11 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.GroupItem;
-import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.yarta.android.library.resources.Group;
+import fr.inria.arles.yarta.android.library.resources.GroupImpl;
+import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.GenericPageAdapter;
-import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
 public class GroupActivity extends BaseActivity {
 
@@ -96,54 +97,36 @@ public class GroupActivity extends BaseActivity {
 	}
 
 	public void refreshUI() {
-		runner.runBackground(new Job() {
+		Group group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
+				Group.typeURI));
 
-			private GroupItem group;
+		if (group.getName() != null) {
+			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
+		}
 
-			@Override
-			public void doWork() {
-				group = client.getGroup(groupGuid);
+		try {
+			String members = String.format(getString(R.string.group_members),
+					group.getMembers());
+			setCtrlText(R.id.members, members);
+		} catch (NumberFormatException ex) {
+			// TODO: we should not throw!
+		}
 
-				if (group != null) {
-					String avatarURL = group.getAvatarURL();
-					if (ImageCache.getDrawable(avatarURL) == null) {
-						try {
-							ImageCache.setDrawable(avatarURL,
-									ImageCache.drawableFromUrl(avatarURL));
-						} catch (Exception ex) {
-						}
-					}
-				}
-			}
+		if (group.getOwnerName() != null) {
+			String owner = String.format(getString(R.string.group_owner),
+					group.getOwnerName());
+			setCtrlText(R.id.owner, Html.fromHtml(owner));
+		}
 
-			@Override
-			public void doUIAfter() {
-				if (group == null) {
-					return;
-				} else if (group.getName() == null) {
-					return;
-				}
-				String name = String.format(getString(R.string.group_name),
-						group.getName());
-				setCtrlText(R.id.name, Html.fromHtml(name));
-
-				String members = String.format(
-						getString(R.string.group_members), group.getMembers());
-				setCtrlText(R.id.members, members);
-
-				String owner = String.format(getString(R.string.group_owner),
-						group.getOwnerName());
-				setCtrlText(R.id.owner, Html.fromHtml(owner));
-
-				ImageView image = (ImageView) findViewById(R.id.icon);
-				Drawable drawable = ImageCache.getDrawable(group.getAvatarURL());
-				if (drawable != null) {
-					image.setImageDrawable(drawable);
-				} else {
-					image.setImageResource(R.drawable.group_default);
-				}
-			}
-		});
+		Bitmap bitmap = null;
+		for (Picture picture : group.getPicture()) {
+			bitmap = contentClient.getBitmap(picture);
+		}
+		ImageView image = (ImageView) findViewById(R.id.icon);
+		if (bitmap != null) {
+			image.setImageBitmap(bitmap);
+		} else {
+			image.setImageResource(R.drawable.group_default);
+		}
 	}
-
 }

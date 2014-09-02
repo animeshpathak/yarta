@@ -22,7 +22,7 @@ public class MessageItem implements Serializable {
 		this.read = read;
 		this.from = from;
 	}
-	
+
 	public void setSent(boolean sent) {
 		this.sent = sent;
 	}
@@ -33,6 +33,10 @@ public class MessageItem implements Serializable {
 
 	public UserItem getFrom() {
 		return from;
+	}
+
+	public void setFrom(UserItem from) {
+		this.from = from;
 	}
 
 	public String getGuid() {
@@ -50,7 +54,7 @@ public class MessageItem implements Serializable {
 	public boolean isRead() {
 		return read;
 	}
-	
+
 	public boolean isSent() {
 		return sent;
 	}

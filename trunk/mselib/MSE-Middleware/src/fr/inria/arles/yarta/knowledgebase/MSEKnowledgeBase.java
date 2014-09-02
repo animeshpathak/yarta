@@ -17,11 +17,9 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Seq;
 import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -49,7 +47,7 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 	/**
 	 * The model containing the concepts
 	 */
-	protected Model model;
+	public Model model;
 	protected Model inferredModel;
 
 	protected MSEPolicyManager policyManager;
@@ -639,10 +637,7 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 			inferredModel.removeAll(sub, prop, obj);
 
 			// 8. Adding the triple to the actual KB
-			if (p.getName().equals(ThinKnowledgeBase.RDF_NAMESPACE + "li")) {
-				Seq seq = model.getSeq(s.getName());
-				seq.add(obj);
-			} else if (model.add(sub, prop, obj) == null) {
+			if (model.add(sub, prop, obj) == null) {
 				logger.e(
 						"MSEKnowledgeBase.addTriple",
 						"Could not add the triple: " + s.toString() + ","
@@ -930,8 +925,7 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 			}
 
 			// 3. Check inclusion in the knowledge base
-			if (!model.contains(sub, prop, obj)
-					&& !p.getName().equals(RDF_NAMESPACE + "li")) {
+			if (!model.contains(sub, prop, obj)) {
 				logger.e("MSEKnowledgeBase.removeTriple",
 						"The triple: " + data.toString()
 								+ "is not contained in the knowledge base");
@@ -947,11 +941,7 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 								+ data.toString());
 			}
 
-			if (p.getName().equals(ThinKnowledgeBase.RDF_NAMESPACE + "li")) {
-				Seq seq = model.getSeq(s.getName());
-				seq.remove(seq.indexOf(obj));
-				return data;
-			} else if (model.removeAll(sub, prop, obj) == null) {
+			if (model.removeAll(sub, prop, obj) == null) {
 				logger.e(
 						"MSEKnowledgeBase.removeTriple",
 						"Could not remove the following triple: "
@@ -1086,18 +1076,6 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 			if (requestorId.equals(userId)) {
 				List<Triple> triples = new ArrayList<Triple>();
 
-				if (p.getName().equals(ThinKnowledgeBase.RDF_NAMESPACE + "li")) {
-					Seq seq = model.getSeq(s.getName());
-
-					NodeIterator it = seq.iterator();
-
-					while (it.hasNext()) {
-						RDFNode object = it.next();
-						triples.add(new MSETriple(s, p,
-								new MSEResource(((Resource) object).getURI(),
-										object.toString())));
-					}
-				}
 				StmtIterator it = model.listStatements(
 						model.getResource(s.getName()),
 						model.getProperty(p.getName()), (RDFNode) null);

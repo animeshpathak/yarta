@@ -37,8 +37,8 @@ public class Main {
 	 * 
 	 * @param info
 	 */
-	public static void printInfo(String info) {
-		print("INFO: " + info);
+	public static void printInfo(String format, Object... args) {
+		print("INFO: " + String.format(format, args));
 	}
 
 	/**

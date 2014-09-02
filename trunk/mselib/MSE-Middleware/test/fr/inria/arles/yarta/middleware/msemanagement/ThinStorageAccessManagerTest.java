@@ -692,17 +692,17 @@ public class ThinStorageAccessManagerTest {
 		me.addCreator(m);
 		m.setTime(System.currentTimeMillis());
 		m.setTitle("This is my message");
-		c.addMessage(m);
+		c.addContains(m);
 
 		m = s.createMessage();
 		me.addCreator(m);
 		m.setTime(System.currentTimeMillis());
 		m.setTitle("This is my second message");
-		c.addMessage(m);
+		c.addContains(m);
 
-		assertEquals(2, c.getMessages().size());
-		c.deleteMessage(m);
-		assertEquals(1, c.getMessages().size());
+		assertEquals(2, c.getContains().size());
+		c.deleteContains(m);
+		assertEquals(1, c.getContains().size());
 
 		Set<Conversation> conversations = s.getAllConversations();
 
@@ -711,12 +711,13 @@ public class ThinStorageAccessManagerTest {
 		for (Conversation conversation : conversations) {
 			Set<Agent> agents = conversation.getParticipatesTo_inverse();
 			if (agents.contains(me)) {
-				for (Message message : conversation.getMessages()) {
+				for (Message message : conversation.getContains()) {
 					Agent creator = null;
 					for (Agent a : message.getCreator_inverse()) {
 						creator = a;
 					}
-					System.out.println(creator.getName() + " said " + message.getTitle());
+					System.out.println(creator.getName() + " said "
+							+ message.getTitle());
 				}
 			}
 		}

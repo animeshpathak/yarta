@@ -1,17 +1,24 @@
 package fr.inria.arles.yarta.android.library;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.MessageItem;
+import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
+import fr.inria.arles.yarta.android.library.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.PersonImpl;
+import fr.inria.arles.yarta.android.library.resources.Picture;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.resources.Agent;
+import fr.inria.arles.yarta.resources.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -34,19 +41,29 @@ public class MessagesListAdapter extends BaseAdapter {
 		ImageView pictureR;
 	}
 
-	private List<MessageItem> items = new ArrayList<MessageItem>();
+	private List<Message> items = new ArrayList<Message>();
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM, HH:mm",
 			Locale.getDefault());
 	private LayoutInflater inflater;
 	private int margins;
-	private Drawable me;
-	private Drawable other;
+	private ContentClientPictures content;
 
-	public MessagesListAdapter(Context context) {
+	private StorageAccessManagerEx sam;
+	private Person me;
+
+	public MessagesListAdapter(Context context, StorageAccessManagerEx sam) {
+		content = new ContentClientPictures(context);
 		inflater = LayoutInflater.from(context);
 		Resources resources = context.getResources();
 		margins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
 				10, resources.getDisplayMetrics());
+
+		try {
+			this.sam = sam;
+			me = sam.getMe();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	@Override
@@ -88,11 +105,24 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		MessageItem message = (MessageItem) getItem(position);
+		Message message = (Message) getItem(position);
 
 		LayoutParams lp = (LayoutParams) holder.container.getLayoutParams();
 
-		if (message.isSent()) {
+		Bitmap bitmap = null;
+		boolean sent = false;
+		for (Agent agent : message.getCreator_inverse()) {
+			if (agent.equals(me)) {
+				sent = true;
+			}
+			Person person = new PersonImpl(sam, new MSEResource(
+					agent.getUniqueId(), Person.typeURI));
+			for (Picture picture : person.getPicture()) {
+				bitmap = content.getBitmap(picture);
+			}
+		}
+
+		if (sent) {
 			holder.container
 					.setBackgroundResource(R.drawable.speech_bubble_green);
 
@@ -101,9 +131,7 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.pictureL.setVisibility(View.GONE);
 			holder.pictureR.setVisibility(View.VISIBLE);
 
-			if (me != null) {
-				holder.pictureR.setImageDrawable(me);
-			}
+			holder.pictureR.setImageBitmap(bitmap);
 		} else {
 			holder.container
 					.setBackgroundResource(R.drawable.speech_bubble_orange);
@@ -113,15 +141,13 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.pictureR.setVisibility(View.GONE);
 			holder.pictureL.setVisibility(View.VISIBLE);
 
-			if (other != null) {
-				holder.pictureL.setImageDrawable(other);
-			}
+			holder.pictureL.setImageBitmap(bitmap);
 		}
 		holder.container.setLayoutParams(lp);
 
-		holder.title.setText(trim(Html.fromHtml(message.getSubject())));
-		holder.content.setText(trim(Html.fromHtml(message.getDescription())));
-		holder.time.setText(sdf.format(new Date(message.getTimestamp())));
+		holder.title.setText(trim(Html.fromHtml(message.getTitle())));
+		holder.content.setText(trim(Html.fromHtml(message.getContent())));
+		holder.time.setText(sdf.format(new Date(message.getTime())));
 
 		return convertView;
 	}
@@ -139,15 +165,9 @@ public class MessagesListAdapter extends BaseAdapter {
 		return s.subSequence(start, end);
 	}
 
-	public void setItems(List<MessageItem> items) {
+	public void setItems(Set<Message> items) {
 		this.items.clear();
 		this.items.addAll(items);
-		notifyDataSetChanged();
-	}
-
-	public void setThumbnails(Drawable me, Drawable other) {
-		this.me = me;
-		this.other = other;
 		notifyDataSetChanged();
 	}
 }

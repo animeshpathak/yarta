@@ -1,6 +1,7 @@
 package fr.inria.arles.yarta.android.library;
 
 import java.util.List;
+import java.util.Set;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -15,15 +16,22 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.MessageItem;
 import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.resources.Agent;
+import fr.inria.arles.yarta.resources.Conversation;
+import fr.inria.arles.yarta.resources.ConversationImpl;
+import fr.inria.arles.yarta.resources.Message;
 
 public class MessagesActivity extends BaseActivity implements
 		AdapterView.OnItemClickListener {
 
-	public static final String Thread = "Thread";
+	public static final String ThreadId = "ThreadId";
 	private static final int MENU_REPLY = 2;
 
 	private MessagesListAdapter adapter;
+	private Conversation conversation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,46 +39,40 @@ public class MessagesActivity extends BaseActivity implements
 		setContentView(R.layout.activity_messages);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		final List<MessageItem> messages = (List<MessageItem>) getIntent()
-				.getSerializableExtra(Thread);
-		if (messages.size() > 0) {
-			setTitle(messages.get(0).getFrom().getName());
-		}
+		String threadId = getIntent().getStringExtra(ThreadId);
+		conversation = new ConversationImpl(getSAM(), new MSEResource(threadId,
+				Conversation.typeURI));
 
-		adapter = new MessagesListAdapter(this);
-		adapter.setItems(messages);
+		adapter = new MessagesListAdapter(this, getSAM());
 
-		ListView list = (ListView) findViewById(R.id.listMessages);
+		final ListView list = (ListView) findViewById(R.id.listMessages);
 		list.setAdapter(adapter);
-		list.setSelection(messages.size() - 1);
 		list.setOnItemClickListener(this);
 
 		execute(new Job() {
-
-			private Drawable me;
-			private Drawable other;
+			Person me;
+			String title;
+			Set<Message> messages;
 
 			@Override
 			public void doWork() {
-				me = getDrawable(client.getUser(client.getUsername()));
-				other = getDrawable(messages.get(0).getFrom());
-			}
-
-			private Drawable getDrawable(UserItem user) {
-				String url = user.getAvatarURL();
-				if (ImageCache.getDrawable(url) == null) {
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-					} catch (Exception ex) {
+				try {
+					me = getSAM().getMe();
+					messages = conversation.getContains();
+					for (Agent agent : conversation.getParticipatesTo_inverse()) {
+						if (!agent.equals(me))
+							title = agent.getName();
 					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-				return ImageCache.getDrawable(url);
 			}
 
 			@Override
 			public void doUIAfter() {
-				adapter.setThumbnails(me, other);
+				setTitle(title);
+				adapter.setItems(messages);
+				list.setSelection(messages.size() - 1);
 			}
 		});
 	}

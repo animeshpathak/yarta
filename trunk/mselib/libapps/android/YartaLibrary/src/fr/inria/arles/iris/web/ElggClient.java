@@ -653,6 +653,7 @@ public class ElggClient {
 			String ownerName = getString(res, "owner_name");
 
 			group = new GroupItem(name, avatarURL, members, ownerName);
+			group.setGuid(guid);
 		} catch (Exception ex) {
 			lastError = ex.toString();
 		}
@@ -1001,7 +1002,7 @@ public class ElggClient {
 				String guid = getString(item, "guid");
 				String subject = getString(item, "subject");
 				String description = correctText(getString(item, "description"));
-				long timestamp = item.getLong("timestamp");
+				long timestamp = item.getLong("timestamp") * 1000;
 				boolean read = getString(item, "read").equals("yes");
 
 				String name = getString(item, "user/name");
@@ -1038,7 +1039,7 @@ public class ElggClient {
 				String guid = getString(item, "guid");
 				String subject = getString(item, "subject");
 				String description = correctText(getString(item, "description"));
-				long timestamp = item.getLong("timestamp");
+				long timestamp = item.getLong("timestamp") * 1000;
 				boolean read = true;
 
 				String name = getString(item, "user/name");

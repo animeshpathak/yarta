@@ -1,18 +1,24 @@
 package fr.inria.arles.iris.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
 import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
+import fr.inria.arles.yarta.android.library.resources.Agent;
+import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.knowledgebase.KBException;
+import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import fr.inria.arles.yarta.resources.Conversation;
+import fr.inria.arles.yarta.resources.Message;
 
 /**
  * This class contains useful methods to fetch data into KB using the Iris web
@@ -50,20 +56,63 @@ public class IrisBridge {
 
 					if (user != null) {
 						if (createPerson(user)) {
-							app.handleNotification("person updated "
-									+ user.getUsername());
+							app.handleNotification("person "
+									+ user.getUsername() + " updated.");
 						}
 					}
 				} else if (p.equals(Person.PROPERTY_KNOWS_URI)) {
 					ensureFriends(object);
+				} else if (p.equals(MSEKnowledgeBase.PROPERTY_TYPE_URI)) {
+					if (object.getName().equals(Conversation.typeURI)) {
+						ensureConversations();
+					}
 				}
 			}
 		}).start();
 	}
 
+	public void ensureObjectInformation(final Node subject, final Node predicate) {
+		final String s = subject.getName();
+		final String p = predicate.getName();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				if (p.equals(Person.PROPERTY_KNOWS_URI)) {
+					ensureFriends(subject);
+				} else if (p.equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
+					ensureGroups(subject);
+				} else if (s.contains(Group.typeURI)) {
+					if (getSimpleLiteral(subject, p) == null) {
+						String groupId = s.substring(s.indexOf('_') + 1);
+
+						GroupItem group = client.getGroup(groupId);
+						if (createGroup(group)) {
+							app.handleNotification("group " + groupId
+									+ " updated.");
+						}
+					}
+				}
+			}
+		}).start();
+	}
+
+	private void ensureConversations() {
+		boolean update = false;
+
+		List<List<MessageItem>> conversations = client.getMessageThreads();
+
+		for (List<MessageItem> conversation : conversations) {
+			update |= createConversation(conversation);
+		}
+
+		if (update) {
+			app.handleNotification("conversations updated.");
+		}
+	}
+
 	private void ensureFriends(Node node) {
-		String userId = node.getName();
-		userId = userId.substring(userId.indexOf('_') + 1);
+		String userId = getUserId(node);
 
 		List<UserItem> users = client.getFriends(userId, 0);
 
@@ -78,40 +127,163 @@ public class IrisBridge {
 		}
 	}
 
-	public void ensureObjectInformation(final Node subject,
-			final Node predicate) {
-		final String p = predicate.getName();
-		new Thread(new Runnable() {
+	private void ensureGroups(Node node) {
+		String userId = getUserId(node);
 
-			@Override
-			public void run() {
-				if (p.equals(Person.PROPERTY_KNOWS_URI)) {
-					ensureFriends(subject);
-				}
-			}
-		}).start();
+		List<GroupItem> groups = client.getGroups(userId);
+
+		boolean update = false;
+		for (GroupItem group : groups) {
+			update |= createGroup(group);
+			update |= addIsMemberOf(group);
+		}
+
+		if (update) {
+			app.handleNotification("group list updated");
+		}
 	}
 
+	private boolean createConversation(List<MessageItem> messages) {
+		boolean update = false;
+
+		String reqId = client.getUsername();
+		Node contains = kb
+				.getResourceByURINoPolicies(Conversation.PROPERTY_CONTAINS_URI);
+		Node participatesTo = kb
+				.getResourceByURINoPolicies(Person.PROPERTY_PARTICIPATESTO_URI);
+
+		// to be able to pass it as ref
+		Node conversation[] = new Node[1];
+		List<Node> peers = new ArrayList<Node>();
+
+		for (MessageItem item : messages) {
+			update |= createMessage(item, conversation);
+			peers.add(getNode(item.getFrom().getUsername()));
+		}
+
+		try {
+			if (conversation[0] == null) {
+				String conversationId = UUID.randomUUID().toString();
+				conversation[0] = kb.addResource(MSEManagerEx.baseMSEURI + '#'
+						+ conversationId, Conversation.typeURI, reqId);
+				update = true;
+			}
+
+			for (Node peer : peers) {
+				if (kb.getTriple(peer, participatesTo, conversation[0], reqId) == null) {
+					kb.addTriple(peer, participatesTo, conversation[0], reqId);
+					update = true;
+				}
+			}
+
+			for (MessageItem item : messages) {
+				String messageId = Message.typeURI + "_" + item.getGuid();
+				Node message = kb.getResourceByURINoPolicies(messageId);
+
+				if (kb.getTriple(conversation[0], contains, message, reqId) == null) {
+					kb.addTriple(conversation[0], contains, message, reqId);
+					update = true;
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return update;
+	}
+
+	private boolean createMessage(MessageItem item, Node conversation[]) {
+		boolean update = false;
+
+		Node contains = kb
+				.getResourceByURINoPolicies(Conversation.PROPERTY_CONTAINS_URI);
+
+		try {
+			String messageId = Message.typeURI + "_" + item.getGuid();
+			Node s = kb.getResourceByURINoPolicies(messageId);
+			if (s == null) {
+				update = true;
+				s = kb.addResource(messageId, Message.typeURI,
+						client.getUsername());
+				log("createMessage<%s>", item.getGuid());
+			}
+
+			update |= ensureSimpleTriple(s, Message.PROPERTY_TITLE_URI,
+					item.getSubject());
+			update |= ensureSimpleTriple(s, Message.PROPERTY_CONTENT_URI,
+					item.getDescription());
+			update |= ensureSimpleTriple(s, Message.PROPERTY_TIME_URI,
+					String.valueOf(item.getTimestamp()));
+			update |= createPerson(item.getFrom());
+
+			String reqId = client.getUsername();
+			
+			// set creator
+			Node u = getNode(item.isSent() ? client.getUsername() : item
+					.getFrom().getUsername());
+			Node p = kb.getResourceByURINoPolicies(Agent.PROPERTY_CREATOR_URI);
+			if (kb.getTriple(u, p, s, client.getUsername()) == null) {
+				kb.addTriple(u, p, s, reqId);
+				update = true;
+			}
+
+			List<Triple> triples = kb.getPropertySubjectAsTriples(contains, s,
+					reqId);
+			for (Triple triple : triples) {
+				conversation[0] = triple.getSubject();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return update;
+	}
+
+	/**
+	 * Gets the username from a node's URI
+	 * 
+	 * @param node
+	 */
+	private String getUserId(Node node) {
+		String userId = node.getName();
+		userId = userId.substring(userId.indexOf('_') + 1);
+		return userId;
+	}
+
+	/**
+	 * Gets the node from a userId.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private Node getNode(String userId) {
+		String ownerId = Person.typeURI + "_" + userId;
+		Node owner = kb.getResourceByURINoPolicies(ownerId);
+		return owner;
+	}
+
+	/**
+	 * Add a bi-directional knows link between owner and this user.
+	 * 
+	 * @param item
+	 * @return
+	 */
 	private boolean addKnows(UserItem item) {
 		boolean update = false;
 
 		String reqId = client.getUsername();
 
-		String ownerId = Person.typeURI + "_" + client.getUsername();
-		Node owner = kb.getResourceByURINoPolicies(ownerId);
-
-		String userId = Person.typeURI + "_" + item.getUsername();
-		Node user = kb.getResourceByURINoPolicies(userId);
+		Node owner = getNode(reqId);
+		Node user = getNode(item.getUsername());
 
 		Node p = kb.getResourceByURINoPolicies(Person.PROPERTY_KNOWS_URI);
 
 		try {
 			if (kb.getTriple(owner, p, user, reqId) == null) {
-				kb.addTriple(owner, p, user, client.getUsername());
+				kb.addTriple(owner, p, user, reqId);
 				update = true;
 			}
 			if (kb.getTriple(user, p, owner, reqId) == null) {
-				kb.addTriple(user, p, owner, client.getUsername());
+				kb.addTriple(user, p, owner, reqId);
 				update = true;
 			}
 		} catch (KBException ex) {
@@ -122,7 +294,37 @@ public class IrisBridge {
 	}
 
 	/**
-	 * Creates a person with the given details and returns the node.
+	 * Adds a IsMemberOf link from owner to this group.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	private boolean addIsMemberOf(GroupItem item) {
+		boolean update = false;
+
+		String reqId = client.getUsername();
+
+		Node owner = getNode(reqId);
+
+		String groupId = Group.typeURI + "_" + item.getGuid();
+		Node group = kb.getResourceByURINoPolicies(groupId);
+
+		Node p = kb.getResourceByURINoPolicies(Agent.PROPERTY_ISMEMBEROF_URI);
+
+		try {
+			if (kb.getTriple(owner, p, group, reqId) == null) {
+				kb.addTriple(owner, p, group, client.getUsername());
+				update = true;
+			}
+		} catch (KBException ex) {
+			ex.printStackTrace();
+		}
+
+		return update;
+	}
+
+	/**
+	 * Creates a person with the given details.
 	 * 
 	 * @param kb
 	 * @param item
@@ -137,6 +339,7 @@ public class IrisBridge {
 				update = true;
 				s = kb.addResource(userUniqueId, Person.typeURI,
 						client.getUsername());
+				log("createPerson<%s>", item.getUsername());
 			}
 
 			update |= ensureSimpleTriple(s, Person.PROPERTY_USERID_URI,
@@ -158,6 +361,55 @@ public class IrisBridge {
 				kb.addTriple(
 						s,
 						kb.getResourceByURINoPolicies(Person.PROPERTY_PICTURE_URI),
+						p, client.getUsername());
+				content.setBitmap(pictureId, item.getAvatarURL());
+				update = true;
+			} else {
+				pictureId = pictureId.substring(pictureId.indexOf('#') + 1);
+
+				if (content.getData(pictureId) == null) {
+					content.setBitmap(pictureId, item.getAvatarURL());
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return update;
+	}
+
+	/**
+	 * Creates a group with the given details.
+	 * 
+	 * @param item
+	 * @return true if the group was updated.
+	 */
+	private boolean createGroup(GroupItem item) {
+		boolean update = false;
+		try {
+			String groupId = Group.typeURI + "_" + item.getGuid();
+			Node s = kb.getResourceByURINoPolicies(groupId);
+			if (s == null) {
+				update = true;
+				s = kb.addResource(groupId, Group.typeURI, client.getUsername());
+				log("createGroup<%s>", item.getGuid());
+			}
+
+			update |= ensureSimpleTriple(s, Group.PROPERTY_NAME_URI,
+					item.getName());
+			update |= ensureSimpleTriple(s, Group.PROPERTY_OWNERNAME_URI,
+					item.getOwnerName());
+			update |= ensureSimpleTriple(s, Group.PROPERTY_MEMBERS_URI,
+					String.valueOf(item.getMembers()));
+
+			String pictureId = getSimpleLiteral(s, Group.PROPERTY_PICTURE_URI);
+			if (pictureId == null) {
+				pictureId = UUID.randomUUID().toString();
+				Node p = kb.addResource(MSEManagerEx.baseMSEURI + '#'
+						+ pictureId, Picture.typeURI, client.getUsername());
+				kb.addTriple(
+						s,
+						kb.getResourceByURINoPolicies(Group.PROPERTY_PICTURE_URI),
 						p, client.getUsername());
 				update = true;
 			} else {
@@ -192,6 +444,13 @@ public class IrisBridge {
 		return false;
 	}
 
+	/**
+	 * Returns a simple triple.
+	 * 
+	 * @param s
+	 * @param predicateURI
+	 * @return
+	 */
 	private String getSimpleLiteral(Node s, String predicateURI) {
 		String value = null;
 		try {
@@ -208,6 +467,15 @@ public class IrisBridge {
 		return value;
 	}
 
+	/**
+	 * Adds a s, p, o triple where the object is a string.
+	 * 
+	 * @param s
+	 * @param predicateURI
+	 * @param literal
+	 * @return
+	 * @throws KBException
+	 */
 	private Triple addSimpleTriple(Node s, String predicateURI, String literal)
 			throws KBException {
 		return kb.addTriple(s, kb.getResourceByURINoPolicies(predicateURI),

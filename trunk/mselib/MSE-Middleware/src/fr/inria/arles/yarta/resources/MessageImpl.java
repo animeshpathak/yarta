@@ -103,4 +103,22 @@ public class MessageImpl extends YartaResource implements Message {
 		sam.setDataProperty(kbNode, Message.PROPERTY_TIME_URI, String.class,
 				String.valueOf(timestamp));
 	}
+
+	@Override
+	public String getContent() {
+		return sam.getDataProperty(kbNode, Message.PROPERTY_CONTENT_URI,
+				String.class);
+	}
+
+	@Override
+	public void setContent(String content) {
+		sam.setDataProperty(kbNode, Message.PROPERTY_CONTENT_URI, String.class,
+				content);
+	}
+
+	@Override
+	public Set<Conversation> getContains_inverse() {
+		return sam.getObjectProperty_inverse(kbNode,
+				Conversation.PROPERTY_CONTAINS_URI);
+	}
 }

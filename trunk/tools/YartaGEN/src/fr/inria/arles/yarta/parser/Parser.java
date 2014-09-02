@@ -275,7 +275,7 @@ public class Parser implements OntDocumentManager.ReadFailureHandler {
 		for (YartaClass yartaClass : classes) {
 			boolean bHasNewObjectSpecificProps = false;
 
-			// its base class is not included in this package (it from Yarta)
+			// its base class is not included in this package (its from Yarta)
 			for (String superClass : yartaClass.getSuperClasses()) {
 				if (!containsClass(superClass)) {
 					yartaClass.addInterfaceImport(YartaResourcePackage
@@ -300,6 +300,9 @@ public class Parser implements OntDocumentManager.ReadFailureHandler {
 
 			// solve imports for domain inverse functions
 			for (YartaProperty prop : yartaClass.getInverseProperties()) {
+				Main.printInfo("%s[%s] : %s %s", yartaClass.getName(),
+						prop.getName(), prop.getDomain(), prop.getRange());
+
 				if (prop.isNew() && prop.isSpecific()) {
 					bHasNewObjectSpecificProps = true;
 
@@ -401,8 +404,10 @@ public class Parser implements OntDocumentManager.ReadFailureHandler {
 
 						while (unionDomains.hasNext()) {
 							OntClass ontUnionClass = unionDomains.next();
-							YartaClass yartaClass = new YartaClass(ontUnionClass.getLocalName());
-							yartaClass.addImplementationImport(ontUnionClass.getLocalName());
+							YartaClass yartaClass = new YartaClass(
+									ontUnionClass.getLocalName());
+							yartaClass.addImplementationImport(ontUnionClass
+									.getLocalName());
 							yartaClass.setNew(false);
 							fillUpSuperClasses(yartaClass, ontUnionClass);
 							classes.add(yartaClass);
@@ -537,7 +542,6 @@ public class Parser implements OntDocumentManager.ReadFailureHandler {
 	private void safeProcessProperty(Set<YartaProperty> lstProps,
 			String propertyName, String propertyComment, String propertyRange,
 			String propertyDomain, boolean isNewProp, boolean isSpecific) {
-
 		String domain = propertyDomain;
 		if (!isNewProp && containsClass(domain)) {
 			domain = YartaResourcePackage + domain;
@@ -549,6 +553,10 @@ public class Parser implements OntDocumentManager.ReadFailureHandler {
 
 		YartaProperty property = new YartaProperty(propertyName,
 				propertyComment, range, domain, isNewProp, isSpecific);
+
+		Main.printInfo("safeProcessPropery[%s]", propertyName);
+		Main.printInfo("[%s, %s]", range, domain);
+
 		lstProps.add(property);
 	}
 

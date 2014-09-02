@@ -41,10 +41,19 @@
 		<rdfs:range rdf:resource="&xsd;string"/>
 	</owl:DatatypeProperty>
 
+	<owl:DatatypeProperty rdf:about="#members">
+		<rdfs:domain rdf:resource="&mse;Group" />
+		<rdfs:range rdf:resource="&xsd;long"/>
+	</owl:DatatypeProperty>
+	<owl:DatatypeProperty rdf:about="#ownerName">
+		<rdfs:domain rdf:resource="&mse;Group" />
+		<rdfs:range rdf:resource="&xsd;string"/>
+	</owl:DatatypeProperty>
+
 	<!-- Object type properties -->
 	<owl:ObjectProperty rdf:about="#picture"
 		rdfs:label="picture">
-		<rdfs:domain rdf:resource="&mse;Person"/>
+		<rdfs:domain rdf:resource="&mse;Agent"/>
 		<rdfs:range rdf:resource="#Picture"/>
 	</owl:ObjectProperty>
 

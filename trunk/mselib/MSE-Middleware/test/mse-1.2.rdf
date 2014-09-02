@@ -92,7 +92,6 @@
   <owl:Class rdf:about="#Conversation"
              rdfs:label="conversation">
     <rdfs:comment xml:lang="en">This class represents a container for contents of type message</rdfs:comment>
-    <rdfs:subClassOf rdf:resource="&rdf;Seq"/>
   </owl:Class>
 
 <!-- Annotation Properties -->
@@ -230,6 +229,13 @@
     <rdfs:range rdf:resource="&xsd;long"/>
   </owl:DatatypeProperty>
 
+  <owl:DatatypeProperty rdf:about="#content"
+                        rdfs:label="content">
+    <rdfs:comment>This represents content of a message.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Message"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
 <!-- Object Properties -->
   <owl:ObjectProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
   <owl:ObjectProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#li"/>
@@ -301,7 +307,14 @@
     <rdfs:domain rdf:resource="#Agent"/>
     <rdfs:range rdf:resource="#Group"/>
   </owl:ObjectProperty>
-  
+
+  <owl:ObjectProperty rdf:about="#contains">
+    <rdfs:comment xml:lang="en">This shows the messages contained in a particular conversation.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Conversation"/>
+    <rdfs:label xml:lang="en">participates to</rdfs:label>
+    <rdfs:range rdf:resource="#Message"/>
+  </owl:ObjectProperty>
+
   <owl:ObjectProperty rdf:about="#participatesTo">
     <rdfs:comment xml:lang="en">This shows the participation of an Agent to a particular conversation.</rdfs:comment>
     <rdfs:domain rdf:resource="#Agent"/>
