@@ -7,8 +7,12 @@ import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.middleware.msemanagement.StorageAccessManager;
 import fr.inria.arles.yarta.android.library.resources.PictureImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
+import fr.inria.arles.yarta.android.library.resources.AgentImpl;
+import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.GroupImpl;
+import fr.inria.arles.yarta.resources.Group;
 
 /**
  * StorageAccessManager class extension.
@@ -22,8 +26,12 @@ public class StorageAccessManagerEx extends StorageAccessManager {
 		super();
 		bindInterfacetoImplementation(Picture.typeURI,
 				"fr.inria.arles.yarta.android.library.resources.PictureImpl");
+		bindInterfacetoImplementation(Agent.typeURI,
+				"fr.inria.arles.yarta.android.library.resources.AgentImpl");
 		bindInterfacetoImplementation(Person.typeURI,
 				"fr.inria.arles.yarta.android.library.resources.PersonImpl");
+		bindInterfacetoImplementation(Group.typeURI,
+				"fr.inria.arles.yarta.android.library.resources.GroupImpl");
 	}
 
 	public fr.inria.arles.yarta.android.library.resources.Person getMe()
@@ -66,6 +74,20 @@ public class StorageAccessManagerEx extends StorageAccessManager {
 	}
 
 	/**
+	 * Creates a new instance of Agent
+	 */
+	public Agent createAgent() {
+		return (Agent) new AgentImpl(this, createNewNode(Agent.typeURI));
+	}
+
+	/**
+	 * Returns all instances of type Agent
+	 */
+	public Set<Agent> getAllAgents() {
+		return getAllResourcesOfType(getPropertyNode(Agent.typeURI));
+	}
+
+	/**
 	 * Creates a new instance of Person
 	 */
 	public Person createPerson(String uniqueId) {
@@ -77,5 +99,19 @@ public class StorageAccessManagerEx extends StorageAccessManager {
 	 */
 	public Set<Person> getAllPersons() {
 		return getAllResourcesOfType(getPropertyNode(Person.typeURI));
+	}
+
+	/**
+	 * Creates a new instance of Group
+	 */
+	public Group createGroup() {
+		return (Group) new GroupImpl(this, createNewNode(Group.typeURI));
+	}
+
+	/**
+	 * Returns all instances of type Group
+	 */
+	public Set<Group> getAllGroups() {
+		return getAllResourcesOfType(getPropertyNode(Group.typeURI));
 	}
 }

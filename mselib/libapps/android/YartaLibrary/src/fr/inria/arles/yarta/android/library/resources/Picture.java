@@ -31,5 +31,5 @@ public interface Picture extends Resource, Content {
 	/**
 	 * inverse of {@link #getPicture()}
 	 */
-	public Set<Person> getPicture_inverse();
+	public Set<Agent> getPicture_inverse();
 }

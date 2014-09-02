@@ -1,43 +1,24 @@
 package fr.inria.arles.yarta.android.library.resources;
 
+import java.util.Set;
 import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
 
 /**
  * 
- * Person interface definition.
+ * Agent interface definition.
  *
  */
-public interface Person extends Resource, Agent, fr.inria.arles.yarta.resources.Person {
-
-	public static final String typeURI = baseMSEURI + "#Person";
-	
-	/** the URI for property lastName */
-	public static final String PROPERTY_LASTNAME_URI = baseMSEURI + "#lastName";
-
-	/** the URI for property phone */
-	public static final String PROPERTY_PHONE_URI = MSEManagerEx.baseMSEURI + "#phone";
+public interface Agent extends Resource, fr.inria.arles.yarta.resources.Agent {
 
 	/** the URI for property email */
 	public static final String PROPERTY_EMAIL_URI = baseMSEURI + "#email";
 
-	/** the URI for property location */
-	public static final String PROPERTY_LOCATION_URI = MSEManagerEx.baseMSEURI + "#location";
-
-	/** the URI for property userId */
-	public static final String PROPERTY_USERID_URI = baseMSEURI + "#userId";
-
 	/** the URI for property name */
 	public static final String PROPERTY_NAME_URI = baseMSEURI + "#name";
 
-	/** the URI for property firstName */
-	public static final String PROPERTY_FIRSTNAME_URI = baseMSEURI + "#firstName";
-
 	/** the URI for property homepage */
 	public static final String PROPERTY_HOMEPAGE_URI = baseMSEURI + "#homepage";
-
-	/** the URI for property room */
-	public static final String PROPERTY_ROOM_URI = MSEManagerEx.baseMSEURI + "#room";
 
 	/** the URI for property knows */
 	public static final String PROPERTY_KNOWS_URI = baseMSEURI + "#knows";
@@ -67,35 +48,29 @@ public interface Person extends Resource, Agent, fr.inria.arles.yarta.resources.
 	public static final String PROPERTY_CREATOR_URI = baseMSEURI + "#creator";
 
 	/**
-	 * @return the phone
+	 * Creates a "picture" edge between this agent and picture
+	 * 
+	 * @param	picture
+	 *			the Picture
+	 *
+	 * @return true if all went well, false otherwise
 	 */
-	public String getPhone();
-
+	public boolean addPicture(Picture picture);
+	
 	/**
-	 * @param	phone
-	 * 			the phone to set
+	 * deletes the "picture" link between this agent and picture
+	 * 
+	 * @param	picture
+	 * 			the Picture
+	 * @return true if success. false is something went wrong
 	 */
-	public void setPhone(String phone);
-
+	public boolean deletePicture(Picture picture);
+	
 	/**
-	 * @return the location
+	 * 
+	 * @return	The list of resources linked by a "picture" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
 	 */
-	public String getLocation();
-
-	/**
-	 * @param	location
-	 * 			the location to set
-	 */
-	public void setLocation(String location);
-
-	/**
-	 * @return the room
-	 */
-	public String getRoom();
-
-	/**
-	 * @param	room
-	 * 			the room to set
-	 */
-	public void setRoom(String room);
+	public Set<Picture> getPicture();
 }

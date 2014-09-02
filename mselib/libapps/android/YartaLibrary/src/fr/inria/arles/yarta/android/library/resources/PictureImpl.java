@@ -2,7 +2,6 @@ package fr.inria.arles.yarta.android.library.resources;
 
 import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
 import fr.inria.arles.yarta.resources.YartaResource;
-import fr.inria.arles.yarta.resources.Agent;
 import java.util.Set;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.resources.Topic;
@@ -142,23 +141,23 @@ public class PictureImpl extends YartaResource implements Picture {
 	 * inverse of {@link #getPicture()}
 	 */
 	@Override
-	public Set<Person> getPicture_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Person.PROPERTY_PICTURE_URI);
+	public Set<Agent> getPicture_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, Agent.PROPERTY_PICTURE_URI);
 	}
 
 	/**
 	 * inverse of {@link #getHasInterest()}
 	 */
 	@Override
-	public Set<Agent> getHasInterest_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Agent.PROPERTY_HASINTEREST_URI);
+	public Set<fr.inria.arles.yarta.resources.Agent> getHasInterest_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_HASINTEREST_URI);
 	}
 
 	/**
 	 * inverse of {@link #getCreator()}
 	 */
 	@Override
-	public Set<Agent> getCreator_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Agent.PROPERTY_CREATOR_URI);
+	public Set<fr.inria.arles.yarta.resources.Agent> getCreator_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_CREATOR_URI);
 	}
 }

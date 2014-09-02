@@ -13,74 +13,39 @@ import fr.inria.arles.yarta.resources.Topic;
 
 /**
  * 
- * Person class implementation.
+ * Group class implementation.
  *
  */
-public class PersonImpl extends YartaResource implements Person {
+public class GroupImpl extends YartaResource implements Group {
 
 	/**
-	 * Wraps a given node into a PersonImpl object
+	 * Wraps a given node into a GroupImpl object
 	 * 
 	 * @param	sam
 	 * 			The storage and access manager
 	 * @param	n
 	 * 			The node to wrap
 	 */
-	public PersonImpl(ThinStorageAccessManager sam, Node n) {
+	public GroupImpl(ThinStorageAccessManager sam, Node n) {
 		super(sam, n);
 	}
 
 	/**
-	 * Constructor to store a node and its unique Id. Use this normally to
-	 * create a new node
-	 * 
-	 * @param	sam
-	 *			The storage and access manager
-	 * @param	uniqueRequestorId
-	 *			application unique identifier
-	 *
-	 * @throws	KBException
+	 * @return the ownerName. Null if value is not set.
 	 */
-	public PersonImpl(ThinStorageAccessManager sam, String uniqueRequestorId) {
-		super(sam, sam.createNewNode(fr.inria.arles.yarta.resources.Person.typeURI));
-		this.setUserId(uniqueRequestorId);
-	}
-
-	/**
-	 * @return the lastName. Null if value is not set.
-	 */
-	public String getLastName() {
-		return sam.getDataProperty(kbNode, PROPERTY_LASTNAME_URI,
+	public String getOwnerName() {
+		return sam.getDataProperty(kbNode, PROPERTY_OWNERNAME_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the lastName.
+	 * Sets the ownerName.
 	 * 
 	 * @param	string
-	 *			the lastName to be set
+	 *			the ownerName to be set
 	 */
-	public void setLastName(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_LASTNAME_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the phone. Null if value is not set.
-	 */
-	public String getPhone() {
-		return sam.getDataProperty(kbNode, PROPERTY_PHONE_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the phone.
-	 * 
-	 * @param	string
-	 *			the phone to be set
-	 */
-	public void setPhone(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_PHONE_URI, String.class,
+	public void setOwnerName(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_OWNERNAME_URI, String.class,
 				string);
 	}
 
@@ -104,44 +69,6 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * @return the location. Null if value is not set.
-	 */
-	public String getLocation() {
-		return sam.getDataProperty(kbNode, PROPERTY_LOCATION_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the location.
-	 * 
-	 * @param	string
-	 *			the location to be set
-	 */
-	public void setLocation(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_LOCATION_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the userId. Null if value is not set.
-	 */
-	public String getUserId() {
-		return sam.getDataProperty(kbNode, PROPERTY_USERID_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the userId.
-	 * 
-	 * @param	string
-	 *			the userId to be set
-	 */
-	public void setUserId(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_USERID_URI, String.class,
-				string);
-	}
-
-	/**
 	 * @return the name. Null if value is not set.
 	 */
 	public String getName() {
@@ -157,25 +84,6 @@ public class PersonImpl extends YartaResource implements Person {
 	 */
 	public void setName(String string) {
 		sam.setDataProperty(kbNode, PROPERTY_NAME_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the firstName. Null if value is not set.
-	 */
-	public String getFirstName() {
-		return sam.getDataProperty(kbNode, PROPERTY_FIRSTNAME_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the firstName.
-	 * 
-	 * @param	string
-	 *			the firstName to be set
-	 */
-	public void setFirstName(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_FIRSTNAME_URI, String.class,
 				string);
 	}
 
@@ -199,26 +107,26 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * @return the room. Null if value is not set.
+	 * @return the members. Null if value is not set.
 	 */
-	public String getRoom() {
-		return sam.getDataProperty(kbNode, PROPERTY_ROOM_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the room.
-	 * 
-	 * @param	string
-	 *			the room to be set
-	 */
-	public void setRoom(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_ROOM_URI, String.class,
-				string);
+	public Long getMembers() {
+		return Long.valueOf(sam.getDataProperty(kbNode, PROPERTY_MEMBERS_URI,
+				String.class));
 	}
 
 	/**
-	 * Creates a "knows" edge between this person and agent
+	 * Sets the members.
+	 * 
+	 * @param	long
+	 *			the members to be set
+	 */
+	public void setMembers(Long members) {
+		sam.setDataProperty(kbNode, PROPERTY_MEMBERS_URI, String.class,
+				String.valueOf(members));
+	}
+
+	/**
+	 * Creates a "knows" edge between this group and agent
 	 * 
 	 * @param	agent
 	 *			the fr.inria.arles.yarta.resources.Agent
@@ -231,7 +139,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "knows" link between this person and agent
+	 * deletes the "knows" link between this group and agent
 	 * 
 	 * @param	agent
 	 * 			the fr.inria.arles.yarta.resources.Agent
@@ -254,7 +162,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "istagged" edge between this person and topic
+	 * Creates a "istagged" edge between this group and topic
 	 * 
 	 * @param	topic
 	 *			the Topic
@@ -267,7 +175,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "istagged" link between this person and topic
+	 * deletes the "istagged" link between this group and topic
 	 * 
 	 * @param	topic
 	 * 			the Topic
@@ -290,7 +198,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "picture" edge between this person and picture
+	 * Creates a "picture" edge between this group and picture
 	 * 
 	 * @param	picture
 	 *			the Picture
@@ -303,7 +211,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "picture" link between this person and picture
+	 * deletes the "picture" link between this group and picture
 	 * 
 	 * @param	picture
 	 * 			the Picture
@@ -326,7 +234,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "isattending" edge between this person and event
+	 * Creates a "isattending" edge between this group and event
 	 * 
 	 * @param	event
 	 *			the Event
@@ -339,7 +247,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "isattending" link between this person and event
+	 * deletes the "isattending" link between this group and event
 	 * 
 	 * @param	event
 	 * 			the Event
@@ -362,7 +270,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "hasinterest" edge between this person and resource
+	 * Creates a "hasinterest" edge between this group and resource
 	 * 
 	 * @param	resource
 	 *			the Resource
@@ -375,7 +283,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "hasinterest" link between this person and resource
+	 * deletes the "hasinterest" link between this group and resource
 	 * 
 	 * @param	resource
 	 * 			the Resource
@@ -398,7 +306,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "ismemberof" edge between this person and group
+	 * Creates a "ismemberof" edge between this group and group
 	 * 
 	 * @param	group
 	 *			the fr.inria.arles.yarta.resources.Group
@@ -411,7 +319,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "ismemberof" link between this person and group
+	 * deletes the "ismemberof" link between this group and group
 	 * 
 	 * @param	group
 	 * 			the fr.inria.arles.yarta.resources.Group
@@ -434,7 +342,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "participatesto" edge between this person and conversation
+	 * Creates a "participatesto" edge between this group and conversation
 	 * 
 	 * @param	conversation
 	 *			the Conversation
@@ -447,7 +355,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "participatesto" link between this person and conversation
+	 * deletes the "participatesto" link between this group and conversation
 	 * 
 	 * @param	conversation
 	 * 			the Conversation
@@ -470,7 +378,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "islocated" edge between this person and place
+	 * Creates a "islocated" edge between this group and place
 	 * 
 	 * @param	place
 	 *			the Place
@@ -483,7 +391,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "islocated" link between this person and place
+	 * deletes the "islocated" link between this group and place
 	 * 
 	 * @param	place
 	 * 			the Place
@@ -506,7 +414,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "creator" edge between this person and content
+	 * Creates a "creator" edge between this group and content
 	 * 
 	 * @param	content
 	 *			the Content
@@ -519,7 +427,7 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * deletes the "creator" link between this person and content
+	 * deletes the "creator" link between this group and content
 	 * 
 	 * @param	content
 	 * 			the Content
@@ -555,5 +463,13 @@ public class PersonImpl extends YartaResource implements Person {
 	@Override
 	public Set<fr.inria.arles.yarta.resources.Agent> getHasInterest_inverse() {
 		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_HASINTEREST_URI);
+	}
+
+	/**
+	 * inverse of {@link #getIsMemberOf()}
+	 */
+	@Override
+	public Set<fr.inria.arles.yarta.resources.Agent> getIsMemberOf_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_ISMEMBEROF_URI);
 	}
 }

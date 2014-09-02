@@ -5,39 +5,27 @@ import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
 
 /**
  * 
- * Person interface definition.
+ * Group interface definition.
  *
  */
-public interface Person extends Resource, Agent, fr.inria.arles.yarta.resources.Person {
+public interface Group extends Resource, Agent, fr.inria.arles.yarta.resources.Group {
 
-	public static final String typeURI = baseMSEURI + "#Person";
+	public static final String typeURI = baseMSEURI + "#Group";
 	
-	/** the URI for property lastName */
-	public static final String PROPERTY_LASTNAME_URI = baseMSEURI + "#lastName";
-
-	/** the URI for property phone */
-	public static final String PROPERTY_PHONE_URI = MSEManagerEx.baseMSEURI + "#phone";
+	/** the URI for property ownerName */
+	public static final String PROPERTY_OWNERNAME_URI = MSEManagerEx.baseMSEURI + "#ownerName";
 
 	/** the URI for property email */
 	public static final String PROPERTY_EMAIL_URI = baseMSEURI + "#email";
 
-	/** the URI for property location */
-	public static final String PROPERTY_LOCATION_URI = MSEManagerEx.baseMSEURI + "#location";
-
-	/** the URI for property userId */
-	public static final String PROPERTY_USERID_URI = baseMSEURI + "#userId";
-
 	/** the URI for property name */
 	public static final String PROPERTY_NAME_URI = baseMSEURI + "#name";
-
-	/** the URI for property firstName */
-	public static final String PROPERTY_FIRSTNAME_URI = baseMSEURI + "#firstName";
 
 	/** the URI for property homepage */
 	public static final String PROPERTY_HOMEPAGE_URI = baseMSEURI + "#homepage";
 
-	/** the URI for property room */
-	public static final String PROPERTY_ROOM_URI = MSEManagerEx.baseMSEURI + "#room";
+	/** the URI for property members */
+	public static final String PROPERTY_MEMBERS_URI = MSEManagerEx.baseMSEURI + "#members";
 
 	/** the URI for property knows */
 	public static final String PROPERTY_KNOWS_URI = baseMSEURI + "#knows";
@@ -67,35 +55,24 @@ public interface Person extends Resource, Agent, fr.inria.arles.yarta.resources.
 	public static final String PROPERTY_CREATOR_URI = baseMSEURI + "#creator";
 
 	/**
-	 * @return the phone
+	 * @return the ownername
 	 */
-	public String getPhone();
+	public String getOwnerName();
 
 	/**
-	 * @param	phone
-	 * 			the phone to set
+	 * @param	ownername
+	 * 			the ownername to set
 	 */
-	public void setPhone(String phone);
+	public void setOwnerName(String ownername);
 
 	/**
-	 * @return the location
+	 * @return the members
 	 */
-	public String getLocation();
+	public Long getMembers();
 
 	/**
-	 * @param	location
-	 * 			the location to set
+	 * @param	members
+	 * 			the members to set
 	 */
-	public void setLocation(String location);
-
-	/**
-	 * @return the room
-	 */
-	public String getRoom();
-
-	/**
-	 * @param	room
-	 * 			the room to set
-	 */
-	public void setRoom(String room);
+	public void setMembers(Long members);
 }
