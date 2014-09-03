@@ -24,11 +24,10 @@ import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends BaseActivity implements MatchDialog.Handler,
-		NameConfigureDialog.Handler, FeedbackDialog.Handler {
+		FeedbackDialog.Handler {
 
 	public static final int MENU_LOGOUT = 1;
 	public static final int MENU_FEEDBACK = 2;
-	public static final int MENU_NAME = 3;
 
 	private Player me;
 	private Match latestMatch;
@@ -56,10 +55,8 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		SubMenu subMenu = menu.addSubMenu(R.string.main_menu_more);
 
-		subMenu.add(0, MENU_NAME, 0, R.string.main_menu_configure);
 		subMenu.add(0, MENU_FEEDBACK, 0, R.string.main_menu_feedback);
 		subMenu.add(0, MENU_LOGOUT, 0, R.string.main_menu_logout);
-		// subMenu.add(0, MENU_ABOUT, 0, R.string.main_menu_about);
 
 		MenuItem parent = subMenu.getItem();
 		parent.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
@@ -75,9 +72,6 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			break;
 		case MENU_FEEDBACK:
 			onFeedbackClicked();
-			break;
-		case MENU_NAME:
-			onConfigure();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -211,38 +205,16 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 	}
 
 	@Override
-	public void onNameSet(String nickName) {
-		try {
-			if (me == null) {
-				Person p = getSAM().getMe();
-				me = new PlayerImpl(getSAM(), ((YartaResource) p).getNode());
-			}
-			me.setNickName(nickName);
-			setCtrlText(R.id.name, me.getNickName());
-
-			sendNotify();
-		} catch (KBException ex) {
-			ex.printStackTrace();
-		}
-		configureDlg = null;
-	}
-
-	@Override
 	protected void refreshUI() {
 		try {
 			if (me == null) {
 				Person p = getSAM().getMe();
 				me = new PlayerImpl(getSAM(), ((YartaResource) p).getNode());
 			}
-			String nickName = me.getNickName();
-
-			if (nickName == null) {
-				if (me.getUserId() != null) {
-					nickName = me.getUserId().replace("@inria.fr", "");
-				}
-				onConfigure();
+			String name = me.getName();
+			if (name != null) {
+				setCtrlText(R.id.name, name);
 			}
-			setCtrlText(R.id.name, nickName);
 		} catch (KBException ex) {
 			ex.printStackTrace();
 		}
@@ -338,11 +310,11 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 				result += ", ";
 			}
 
-			String nickName = player.getNickName();
-			if (nickName == null) {
-				nickName = player.getUserId().replace("@inria.fr", "");
+			String name = player.getName();
+			if (name == null) {
+				name = player.getUserId();
 			}
-			result += nickName;
+			result += name;
 		}
 		return result;
 	}
@@ -356,24 +328,6 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 		FeedbackDialog dialog = new FeedbackDialog(this);
 		dialog.setHandler(this);
 		dialog.show();
-	}
-
-	private NameConfigureDialog configureDlg;
-
-	protected void onConfigure() {
-		String nickName = me.getNickName();
-
-		if (nickName == null && me.getUserId() != null) {
-			nickName = me.getUserId().replace("@inria.fr", "");
-		}
-
-		if (configureDlg == null) {
-			configureDlg = new NameConfigureDialog(this, nickName);
-			configureDlg.setHandler(this);
-			configureDlg.show();
-		} else {
-			configureDlg.show();
-		}
 	}
 
 	@Override
