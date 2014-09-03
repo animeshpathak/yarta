@@ -72,9 +72,6 @@ public class UserItem implements Serializable {
 	}
 
 	public String getAvatarURL() {
-		if (avatarURL.endsWith("small")) {
-			avatarURL = avatarURL.replace("small", "medium");
-		}
 		return avatarURL;
 	}
 
