@@ -55,7 +55,7 @@ public class IrisBridge {
 					UserItem user = client.getUser(object.getName());
 
 					if (user != null) {
-						if (createPerson(user)) {
+						if (createPerson(user, true)) {
 							app.handleNotification("person "
 									+ user.getUsername() + " updated.");
 						}
@@ -87,7 +87,7 @@ public class IrisBridge {
 						String groupId = s.substring(s.indexOf('_') + 1);
 
 						GroupItem group = client.getGroup(groupId);
-						if (createGroup(group)) {
+						if (createGroup(group, true)) {
 							app.handleNotification("group " + groupId
 									+ " updated.");
 						}
@@ -118,7 +118,7 @@ public class IrisBridge {
 
 		boolean update = false;
 		for (UserItem user : users) {
-			update |= createPerson(user);
+			update |= createPerson(user, false);
 			update |= addKnows(user);
 		}
 
@@ -134,7 +134,7 @@ public class IrisBridge {
 
 		boolean update = false;
 		for (GroupItem group : groups) {
-			update |= createGroup(group);
+			update |= createGroup(group, false);
 			update |= addIsMemberOf(group);
 		}
 
@@ -213,10 +213,10 @@ public class IrisBridge {
 					item.getDescription());
 			update |= ensureSimpleTriple(s, Message.PROPERTY_TIME_URI,
 					String.valueOf(item.getTimestamp()));
-			update |= createPerson(item.getFrom());
+			update |= createPerson(item.getFrom(), false);
 
 			String reqId = client.getUsername();
-			
+
 			// set creator
 			Node u = getNode(item.isSent() ? client.getUsername() : item
 					.getFrom().getUsername());
@@ -328,9 +328,11 @@ public class IrisBridge {
 	 * 
 	 * @param kb
 	 * @param item
+	 * @param highres
+	 *            should the image quality be high res?
 	 * @return true if the person was updated
 	 */
-	private boolean createPerson(UserItem item) {
+	private boolean createPerson(UserItem item, boolean highres) {
 		boolean update = false;
 		try {
 			String userUniqueId = Person.typeURI + "_" + item.getUsername();
@@ -369,6 +371,12 @@ public class IrisBridge {
 
 				if (content.getData(pictureId) == null) {
 					content.setBitmap(pictureId, item.getAvatarURL());
+				} else if (highres) {
+					String avatarURL = item.getAvatarURL();
+					if (avatarURL.endsWith("small")) {
+						avatarURL = avatarURL.replace("small", "medium");
+					}
+					content.setBitmap(pictureId, item.getAvatarURL());
 				}
 			}
 		} catch (Exception ex) {
@@ -382,9 +390,11 @@ public class IrisBridge {
 	 * Creates a group with the given details.
 	 * 
 	 * @param item
+	 * @param highres
+	 *            should the image quality be high res?
 	 * @return true if the group was updated.
 	 */
-	private boolean createGroup(GroupItem item) {
+	private boolean createGroup(GroupItem item, boolean highres) {
 		boolean update = false;
 		try {
 			String groupId = Group.typeURI + "_" + item.getGuid();
@@ -411,12 +421,21 @@ public class IrisBridge {
 						s,
 						kb.getResourceByURINoPolicies(Group.PROPERTY_PICTURE_URI),
 						p, client.getUsername());
+				content.setBitmap(pictureId, item.getAvatarURL());
 				update = true;
 			} else {
 				pictureId = pictureId.substring(pictureId.indexOf('#') + 1);
+				
+				if (content.getData(pictureId) == null) {
+					content.setBitmap(pictureId, item.getAvatarURL());
+				} else if (highres) {
+					String avatarURL = item.getAvatarURL();
+					if (avatarURL.endsWith("small")) {
+						avatarURL = avatarURL.replace("small", "medium");
+					}
+					content.setBitmap(pictureId, item.getAvatarURL());
+				}
 			}
-
-			content.setBitmap(pictureId, item.getAvatarURL());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

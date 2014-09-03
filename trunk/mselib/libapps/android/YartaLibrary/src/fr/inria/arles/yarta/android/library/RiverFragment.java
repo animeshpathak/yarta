@@ -31,6 +31,7 @@ public class RiverFragment extends BaseFragment implements
 	private String username;
 
 	public void setGroupGuid(String groupGuid) {
+		groupGuid = groupGuid.substring(groupGuid.indexOf('_') + 1);
 		this.groupGuid = groupGuid;
 	}
 
