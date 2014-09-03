@@ -34,11 +34,11 @@ public class PlayerActivity extends BaseActivity {
 		player = new PlayerImpl(getSAM(), new MSEResource(getIntent()
 				.getStringExtra(PlayerGUID), Player.typeURI));
 
-		String nickName = player.getNickName();
-		if (nickName == null) {
-			nickName = player.getUserId().replace("@inria.fr", "");
+		String name = player.getName();
+		if (name == null) {
+			name = player.getUserId().replace("@inria.fr", "");
 		}
-		setCtrlText(R.id.name, nickName);
+		setCtrlText(R.id.name, name);
 
 		displayStats();
 	}

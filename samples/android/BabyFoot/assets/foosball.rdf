@@ -62,11 +62,6 @@
 			<rdfs:range rdf:resource="&xsd;int"/>
 		</owl:DatatypeProperty>
 		
-		<owl:DatatypeProperty rdf:about="#nickName">
-			<rdfs:domain rdf:resource="#Player"/>
-			<rdfs:range rdf:resource="&xsd;string"/>
-		</owl:DatatypeProperty>
-		
 		<!-- Object Properties -->
 		<owl:ObjectProperty rdf:about="#redO"
                       rdfs:label="redO">

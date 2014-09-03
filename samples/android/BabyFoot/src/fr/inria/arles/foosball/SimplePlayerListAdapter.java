@@ -58,12 +58,12 @@ public class SimplePlayerListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		String nickName = player.getNickName();
+		String name = player.getName();
 
-		if (nickName == null) {
-			nickName = player.getUserId().replace("@inria.fr", "");
+		if (name == null) {
+			name = player.getUserId();
 		}
-		holder.name.setText(nickName);
+		holder.name.setText(name);
 
 		return convertView;
 	}

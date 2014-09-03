@@ -26,9 +26,6 @@ public interface Player extends Resource, Agent, Person {
 	/** the URI for property email */
 	public static final String PROPERTY_EMAIL_URI = baseMSEURI + "#email";
 
-	/** the URI for property nickName */
-	public static final String PROPERTY_NICKNAME_URI = MSEManagerEx.baseMSEURI + "#nickName";
-
 	/** the URI for property userId */
 	public static final String PROPERTY_USERID_URI = baseMSEURI + "#userId";
 
@@ -101,17 +98,6 @@ public interface Player extends Resource, Agent, Person {
 	 * 			the scorepoints to set
 	 */
 	public void setScorePoints(Integer scorepoints);
-
-	/**
-	 * @return the nickname
-	 */
-	public String getNickName();
-
-	/**
-	 * @param	nickname
-	 * 			the nickname to set
-	 */
-	public void setNickName(String nickname);
 
 	/**
 	 * @return the winrate

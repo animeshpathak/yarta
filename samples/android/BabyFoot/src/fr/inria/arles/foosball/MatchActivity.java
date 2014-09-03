@@ -120,16 +120,12 @@ public class MatchActivity extends BaseActivity {
 	}
 
 	protected String playerToString(Player player) {
-		String nickName = player.getNickName();
+		String name = player.getName();
 
-		if (nickName == null) {
-			if (player.getUserId() != null) {
-				nickName = player.getUserId().replace("@inria.fr", "");
-			} else {
-				nickName = "NULL";
-			}
+		if (name == null) {
+			name = player.getUserId();
 		}
-		return nickName;
+		return name;
 	}
 
 	public void onBlueDefense(View view) {

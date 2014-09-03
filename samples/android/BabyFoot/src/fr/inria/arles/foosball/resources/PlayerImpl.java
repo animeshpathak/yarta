@@ -125,25 +125,6 @@ public class PlayerImpl extends YartaResource implements Player {
 	}
 
 	/**
-	 * @return the nickName. Null if value is not set.
-	 */
-	public String getNickName() {
-		return sam.getDataProperty(kbNode, PROPERTY_NICKNAME_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the nickName.
-	 * 
-	 * @param	string
-	 *			the nickName to be set
-	 */
-	public void setNickName(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_NICKNAME_URI, String.class,
-				string);
-	}
-
-	/**
 	 * @return the userId. Null if value is not set.
 	 */
 	public String getUserId() {
