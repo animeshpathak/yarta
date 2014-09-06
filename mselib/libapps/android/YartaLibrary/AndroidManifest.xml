@@ -88,7 +88,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/group_title" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.PostActivity"
+            android:name="fr.inria.arles.yarta.android.library.ContentActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/post_title" />
 

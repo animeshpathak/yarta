@@ -17,6 +17,7 @@ import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Message;
 
@@ -28,15 +29,227 @@ public class IrisBridge {
 
 	private static ElggClient client = ElggClient.getInstance();
 	private MSEApplication app;
-	private KnowledgeBase kb;
+	private MSEKnowledgeBase kb;
 	private ContentClientPictures content;
 
 	public IrisBridge(MSEApplication app, KnowledgeBase kb,
 			ContentClientPictures content) {
 		this.app = app;
-		this.kb = kb;
+		this.kb = (MSEKnowledgeBase) kb;
 		this.content = content;
+		queueThread.start();
 	}
+
+	/********************** WRITE CALLBACKS ***************************************/
+
+	/**
+	 * Gets fired when a new resource is being added.
+	 * 
+	 * @param nodeURI
+	 * @param typeURI
+	 */
+	public void onAddResource(String nodeURI, String typeURI) {
+		synchronized (resourceQueue) {
+			if (typeURI.equals(Content.typeURI)
+					|| typeURI.equals(Message.typeURI)) {
+				resourceQueue.add(new QueueItem(nodeURI, typeURI));
+			}
+		}
+	}
+
+	/**
+	 * Gets fired when a new triple is being added.
+	 * 
+	 * @param sub
+	 * @param pre
+	 * @param obj
+	 */
+	public void onAddTriple(Node sub, Node pre, Node obj) {
+		lastWrite = System.currentTimeMillis();
+
+		synchronized (resourceQueue) {
+			if (pre.getName().equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
+				resourceQueue.add(new QueueItem(sub, pre, obj));
+			}
+		}
+	}
+
+	static class QueueItem {
+		public String nodeURI;
+		public String typeURI;
+
+		public QueueItem(String nodeURI, String typeURI) {
+			this.nodeURI = nodeURI;
+			this.typeURI = typeURI;
+		}
+
+		public Node s;
+		public Node p;
+		public Node o;
+
+		public QueueItem(Node s, Node p, Node o) {
+			this.s = s;
+			this.p = p;
+			this.o = o;
+		}
+
+		public boolean isTriple() {
+			return s != null && p != null && o != null;
+		}
+	}
+
+	private static final long IdleTimeout = 1000;
+	private long lastWrite = 0;
+	private List<QueueItem> resourceQueue = new ArrayList<IrisBridge.QueueItem>();
+	private Runnable queueTask = new Runnable() {
+
+		@Override
+		public void run() {
+			boolean forever = true;
+			while (forever) {
+				try {
+					Thread.sleep(1000);
+					long now = System.currentTimeMillis();
+					if (now - lastWrite >= IdleTimeout) {
+						synchronized (resourceQueue) {
+							dequeueItems();
+						}
+					}
+				} catch (InterruptedException ex) {
+					break;
+				}
+			}
+		}
+	};
+	private Thread queueThread = new Thread(queueTask);
+
+	private void dequeueItems() {
+		while (resourceQueue.size() > 0) {
+			QueueItem resource = resourceQueue.get(0);
+			try {
+				int result = ElggClient.RESULT_OK;
+
+				if (resource.isTriple()) {
+					result = processAddedTriple(resource.s, resource.p,
+							resource.o);
+				} else {
+					result = processCreatedResource(resource.nodeURI,
+							resource.typeURI);
+				}
+
+				switch (result) {
+				case ElggClient.RESULT_OK:
+					resourceQueue.remove(0);
+					break;
+				case ElggClient.RESULT_AUTH_FAILED:
+					// TODO: show login notification
+					break;
+				case ElggClient.RESULT_NO_NET:
+					// TODO: show need internet notification
+					break;
+				}
+			} catch (Exception ex) {
+				resourceQueue.remove(0);
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	// TODO: friends, groups, etc.
+	private int processAddedTriple(Node s, Node p, Node o) throws Exception {
+		int result = ElggClient.RESULT_OK;
+
+		if (p.getName().equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
+			// get the group
+			String userId = getUserId(s);
+			String groupId = getResourceId(o);
+
+			// not owner, remove triple
+			if (!userId.equals(client.getUsername())) {
+				kb.removeTriple(s, p, o, client.getUsername());
+			} else {
+				result = client.joinGroup(groupId);
+
+				if (result == ElggClient.RESULT_OK) {
+					app.handleNotification("group joined");
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Processes a previously created resource. Returns an Elgg return code, OK
+	 * if the resource is of no interest.
+	 * 
+	 * @param nodeURI
+	 * @param typeURI
+	 * @return
+	 * @throws Exception
+	 */
+	private int processCreatedResource(String nodeURI, String typeURI)
+			throws Exception {
+		int result = ElggClient.RESULT_OK;
+
+		if (typeURI.equals(Content.typeURI)) {
+			Node hasReply = kb
+					.getResourceByURINoPolicies(Content.PROPERTY_HASREPLY_URI);
+			Node comment = kb.getResourceByURINoPolicies(nodeURI);
+			List<Triple> triples = kb.getPropertySubjectAsTriples(hasReply,
+					comment, client.getUsername());
+
+			// is a comment
+			if (triples.size() > 0) {
+				log("processCreatedResource(%s, %s)", nodeURI, typeURI);
+
+				String postId = triples.get(0).getSubject().getName();
+				postId = postId.substring(postId.indexOf('_') + 1);
+
+				String title = getSimpleLiteral(comment,
+						Content.PROPERTY_TITLE_URI);
+
+				result = client.addGroupPostComment(postId, title);
+
+				switch (result) {
+				case ElggClient.RESULT_OK:
+					kb.removeResource(nodeURI);
+					ensurePostComments(triples.get(0).getSubject());
+					break;
+				}
+			} else {
+				// is a content in a group
+				Node hasContent = kb
+						.getResourceByURINoPolicies(Group.PROPERTY_HASCONTENT_URI);
+				triples = kb.getPropertySubjectAsTriples(hasContent, comment,
+						client.getUsername());
+
+				if (triples.size() > 0) {
+					log("processCreatedResource(%s, %s)", nodeURI, typeURI);
+
+					String groupId = triples.get(0).getSubject().getName();
+					groupId = groupId.substring(groupId.indexOf('_') + 1);
+
+					String title = getSimpleLiteral(comment,
+							Content.PROPERTY_TITLE_URI);
+					String description = getSimpleLiteral(comment,
+							Content.PROPERTY_CONTENT_URI);
+
+					result = client.addGroupPost(groupId, title, description);
+
+					switch (result) {
+					case ElggClient.RESULT_OK:
+						kb.removeResource(nodeURI);
+						ensurePostComments(triples.get(0).getSubject());
+						break;
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/********************** READ CALLBACKS ****************************************/
 
 	/**
 	 * Ensures a given p, o triple will exist.
@@ -44,7 +257,8 @@ public class IrisBridge {
 	 * @param predicate
 	 * @param object
 	 */
-	public void ensureSubjectInformation(final Node predicate, final Node object) {
+	public void onGetPropertySubjectAsTriples(final Node predicate,
+			final Node object) {
 		final String p = predicate.getName();
 
 		new Thread(new Runnable() {
@@ -71,7 +285,8 @@ public class IrisBridge {
 		}).start();
 	}
 
-	public void ensureObjectInformation(final Node subject, final Node predicate) {
+	public void onGetPropertyObjectAsTriples(final Node subject,
+			final Node predicate) {
 		final String s = subject.getName();
 		final String p = predicate.getName();
 		new Thread(new Runnable() {
@@ -82,6 +297,10 @@ public class IrisBridge {
 					ensureFriends(subject);
 				} else if (p.equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
 					ensureGroups(subject);
+				} else if (p.equals(Group.PROPERTY_HASCONTENT_URI)) {
+					ensurePosts(subject);
+				} else if (p.equals(Content.PROPERTY_HASREPLY_URI)) {
+					ensurePostComments(subject);
 				} else if (s.contains(Group.typeURI)) {
 					if (getSimpleLiteral(subject, p) == null) {
 						String groupId = s.substring(s.indexOf('_') + 1);
@@ -89,6 +308,16 @@ public class IrisBridge {
 						GroupItem group = client.getGroup(groupId);
 						if (createGroup(group, true)) {
 							app.handleNotification("group " + groupId
+									+ " updated.");
+						}
+					}
+				} else if (s.contains(Content.typeURI)) {
+					if (getSimpleLiteral(subject, p) == null) {
+						String postId = s.substring(s.indexOf('_') + 1);
+
+						PostItem post = client.getGroupPost(postId);
+						if (createPost(post)) {
+							app.handleNotification("post " + postId
 									+ " updated.");
 						}
 					}
@@ -143,14 +372,62 @@ public class IrisBridge {
 		}
 	}
 
+	private void ensurePosts(Node node) {
+		String groupId = getResourceId(node);
+
+		List<PostItem> posts = client.getGroupPosts(groupId);
+
+		boolean update = false;
+		for (PostItem post : posts) {
+			update |= createPost(post);
+			update |= ensureTriple(node.getName(),
+					Group.PROPERTY_HASCONTENT_URI,
+					Content.typeURI + "_" + post.getGuid());
+		}
+
+		if (update) {
+			app.handleNotification("post list updated.");
+		}
+	}
+
+	private boolean ensureTriple(String s, String p, String o) {
+		Node subject = kb.getResourceByURINoPolicies(s);
+		Node predicate = kb.getResourceByURINoPolicies(p);
+		Node object = kb.getResourceByURINoPolicies(o);
+
+		try {
+			if (kb.getTriple(subject, predicate, object, client.getUsername()) == null) {
+				kb.addTriple(subject, predicate, object, client.getUsername());
+				return true;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	private void ensurePostComments(Node node) {
+		String postId = getResourceId(node);
+
+		List<PostItem> posts = client.getGroupPostComments(postId);
+
+		boolean update = false;
+		for (PostItem post : posts) {
+			update |= createPost(post);
+			String replyId = Content.typeURI + "_" + post.getGuid();
+			update |= ensureTriple(node.getName(),
+					Content.PROPERTY_HASREPLY_URI, replyId);
+		}
+
+		if (update) {
+			app.handleNotification("post comments updated.");
+		}
+	}
+
 	private boolean createConversation(List<MessageItem> messages) {
 		boolean update = false;
 
 		String reqId = client.getUsername();
-		Node contains = kb
-				.getResourceByURINoPolicies(Conversation.PROPERTY_CONTAINS_URI);
-		Node participatesTo = kb
-				.getResourceByURINoPolicies(Person.PROPERTY_PARTICIPATESTO_URI);
 
 		// to be able to pass it as ref
 		Node conversation[] = new Node[1];
@@ -170,21 +447,49 @@ public class IrisBridge {
 			}
 
 			for (Node peer : peers) {
-				if (kb.getTriple(peer, participatesTo, conversation[0], reqId) == null) {
-					kb.addTriple(peer, participatesTo, conversation[0], reqId);
-					update = true;
-				}
+				update |= ensureTriple(peer.getName(),
+						Person.PROPERTY_PARTICIPATESTO_URI,
+						conversation[0].getName());
 			}
 
 			for (MessageItem item : messages) {
 				String messageId = Message.typeURI + "_" + item.getGuid();
-				Node message = kb.getResourceByURINoPolicies(messageId);
-
-				if (kb.getTriple(conversation[0], contains, message, reqId) == null) {
-					kb.addTriple(conversation[0], contains, message, reqId);
-					update = true;
-				}
+				update |= ensureTriple(conversation[0].getName(),
+						Conversation.PROPERTY_CONTAINS_URI, messageId);
 			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return update;
+	}
+
+	private boolean createPost(PostItem item) {
+		boolean update = false;
+
+		String reqId = client.getUsername();
+		String postId = Content.typeURI + "_" + item.getGuid();
+
+		try {
+			Node post = kb.getResourceByURINoPolicies(postId);
+			if (post == null) {
+				update = true;
+				post = kb.addResource(postId, Content.typeURI, reqId);
+				log("createPost<%s>", item.getGuid());
+			}
+
+			update |= ensureSimpleTriple(post, Content.PROPERTY_TITLE_URI,
+					item.getTitle());
+			update |= ensureSimpleTriple(post, Content.PROPERTY_CONTENT_URI,
+					item.getDescription());
+			update |= ensureSimpleTriple(post, Content.PROPERTY_TIME_URI,
+					String.valueOf(item.getTime()));
+
+			// set creator, make sure it exists
+			update |= createPerson(item.getOwner(), false);
+
+			String userId = Person.typeURI + "_"
+					+ item.getOwner().getUsername();
+			update |= ensureTriple(userId, Agent.PROPERTY_CREATOR_URI, postId);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -218,14 +523,12 @@ public class IrisBridge {
 			String reqId = client.getUsername();
 
 			// set creator
-			Node u = getNode(item.isSent() ? client.getUsername() : item
-					.getFrom().getUsername());
-			Node p = kb.getResourceByURINoPolicies(Agent.PROPERTY_CREATOR_URI);
-			if (kb.getTriple(u, p, s, client.getUsername()) == null) {
-				kb.addTriple(u, p, s, reqId);
-				update = true;
-			}
+			String userId = Person.typeURI + "_"
+					+ (item.isSent() ? reqId : item.getFrom().getUsername());
+			update |= ensureTriple(userId, Agent.PROPERTY_CREATOR_URI,
+					messageId);
 
+			// get linked conversation
 			List<Triple> triples = kb.getPropertySubjectAsTriples(contains, s,
 					reqId);
 			for (Triple triple : triples) {
@@ -247,6 +550,15 @@ public class IrisBridge {
 		String userId = node.getName();
 		userId = userId.substring(userId.indexOf('_') + 1);
 		return userId;
+	}
+
+	/**
+	 * Gets the group id from a node's URI
+	 */
+	private String getResourceId(Node node) {
+		String groupId = node.getName();
+		groupId = groupId.substring(groupId.indexOf('_') + 1);
+		return groupId;
 	}
 
 	/**
@@ -425,7 +737,7 @@ public class IrisBridge {
 				update = true;
 			} else {
 				pictureId = pictureId.substring(pictureId.indexOf('#') + 1);
-				
+
 				if (content.getData(pictureId) == null) {
 					content.setBitmap(pictureId, item.getAvatarURL());
 				} else if (highres) {

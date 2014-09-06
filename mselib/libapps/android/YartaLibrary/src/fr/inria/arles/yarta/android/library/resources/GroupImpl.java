@@ -5,7 +5,9 @@ import fr.inria.arles.yarta.resources.Event;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Place;
 import fr.inria.arles.yarta.resources.YartaResource;
+
 import java.util.Set;
+
 import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
@@ -471,5 +473,20 @@ public class GroupImpl extends YartaResource implements Group {
 	@Override
 	public Set<fr.inria.arles.yarta.resources.Agent> getIsMemberOf_inverse() {
 		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_ISMEMBEROF_URI);
+	}
+
+	@Override
+	public boolean addHasContent(Content c) {
+		return sam.setObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, c);
+	}
+
+	@Override
+	public Set<Content> getHasContent() {
+		return sam.getObjectProperty(kbNode, PROPERTY_HASCONTENT_URI);
+	}
+
+	@Override
+	public boolean deleteHasContent(Content c) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, c);
 	}
 }

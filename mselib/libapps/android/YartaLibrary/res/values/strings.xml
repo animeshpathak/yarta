@@ -6,7 +6,6 @@
     <string name="service_baseNamespace">http://yarta.gforge.inria.fr/ontologies/mse.rdf#</string>
     <string name="service_baseRDF">mse-1.2.rdf</string>
     <string name="service_basePolicy">policies</string>
-
     <string name="dashboard_friend_request_format">User %s wants to be your friend.</string>
     <string name="dashboard_accept">Accept</string>
     <string name="eula_anonimous_usage">Help us improve Yarta by sending anonymouse API usage reports.</string>
@@ -55,8 +54,11 @@
     <string name="group_name">Name: %s</string>
     <string name="group_members">Members: %d</string>
     <string name="group_owner">Owner: %s</string>
-    <string name="group_posts">Blog</string>
+    <string name="group_posts">Discussions</string>
+    <string name="content_title">Add discussion</string>
+    <string name="content_title_hint">title</string>
     <string name="group_activity">Activity</string>
+    <string name="group_join_sent">Group join sent!</string>
     <string name="profile_title">Profile</string>
     <string name="profile_team">Location: %s</string>
     <string name="profile_room">Room: %s</string>
@@ -110,7 +112,7 @@
     <string name="wire_remove_message">Are you sure you want to remove this message?</string>
     <string name="wire_remove_cancel">Cancel</string>
     <string name="wire_remove_yes">Remove</string>
-    <string name="topic_title">Discussion topic</string>
+    <string name="topic_title">Article</string>
     <string name="topic_no_comment">No replies. To add one press \'+\'.</string>
     <string name="topic_comments">Replies</string>
     <string name="topic_add_comment">Add reply</string>

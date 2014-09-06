@@ -166,6 +166,7 @@ public class ElggClient {
 
 		if (noInternet() && callback != null) {
 			callback.onNetworkFailed();
+			result = RESULT_NO_NET;
 		}
 		return result;
 	}
@@ -198,6 +199,7 @@ public class ElggClient {
 
 	public static final int RESULT_OK = 0;
 	public static final int RESULT_AUTH_FAILED = -20;
+	public static final int RESULT_NO_NET = -50;
 
 	/**
 	 * Interface to be called when we must login
@@ -284,6 +286,24 @@ public class ElggClient {
 		int result = checkErrors(json);
 
 		log("%s: result<%d>, lastError<%s>", "addWire", result, lastError);
+		return result;
+	}
+
+	public int joinGroup(String guid) {
+		JSONObject json = callMethod("group.join", POST, "username", username,
+				"groupid", guid);
+
+		int result = checkErrors(json);
+		log("%s: result<%d>, lastError<%s>", "joinGroup", result, lastError);
+		return result;
+	}
+
+	public int leaveGroup(String guid) {
+		JSONObject json = callMethod("group.leave", POST, "username", username,
+				"groupid", guid);
+
+		int result = checkErrors(json);
+		log("%s: result<%d>, lastError<%s>", "leaveGroup", result, lastError);
 		return result;
 	}
 
@@ -694,8 +714,8 @@ public class ElggClient {
 	public List<PostItem> getGroupPosts(String groupId) {
 		List<PostItem> posts = new ArrayList<PostItem>();
 
-		JSONObject json = callMethod("blog.get_posts", GET, "context", "group",
-				"group_guid", groupId);
+		JSONObject json = callMethod("group.forum.get_posts", GET, "offset", 0,
+				"guid", groupId);
 		int result = checkErrors(json);
 
 		try {
@@ -706,7 +726,7 @@ public class ElggClient {
 
 				String guid = getString(item, "guid");
 				String title = getString(item, "title");
-				long time = item.getLong("time_created");
+				long time = item.getLong("time_created") * 1000;
 
 				String name = getString(item, "owner/name");
 				String username = getString(item, "owner/username");
@@ -724,19 +744,37 @@ public class ElggClient {
 		return posts;
 	}
 
+	public int deleteGroupPost(String postId) {
+		JSONObject json = callMethod("group.forum.delete_post", POST,
+				"topicid", "postId", "username", username);
+		int result = checkErrors(json);
+		log("%s: result<%d>, lastError<%s>", "addGroupPost", result, lastError);
+		return result;
+	}
+
+	public int addGroupPost(String groupId, String title, String text) {
+		JSONObject json = callMethod("group.forum.save_post", POST, "title",
+				encode(title), "desc", encode(text), "groupid", groupId,
+				"access_id", 1);
+		int result = checkErrors(json);
+		log("%s: result<%d>, lastError<%s>", "addGroupPost", result, lastError);
+		return result;
+	}
+
 	// post functions
-	public int addComment(String postGuid, String content) {
-		JSONObject json = callMethod("blog.post_comment", POST, "guid",
-				postGuid, "text", encode(content));
+	public int addGroupPostComment(String postId, String content) {
+		JSONObject json = callMethod("group.forum.save_reply", POST, "postid",
+				postId, "text", encode(content));
 		int result = checkErrors(json);
 		log("%s: result<%d>, lastError<%s>", "addComment", result, lastError);
 		return result;
 	}
 
-	public List<PostItem> getPostComments(String postGuid) {
+	public List<PostItem> getGroupPostComments(String postGuid) {
 		List<PostItem> comments = new ArrayList<PostItem>();
 
-		JSONObject json = callMethod("blog.get_comments", GET, "guid", postGuid);
+		JSONObject json = callMethod("group.forum.get_replies", GET, "guid",
+				postGuid);
 		int result = checkErrors(json);
 
 		try {
@@ -745,9 +783,9 @@ public class ElggClient {
 			for (int i = 0; i < all.length(); i++) {
 				JSONObject item = all.getJSONObject(i);
 
-				String guid = getString(item, "guid");
-				String title = getString(item, "description");
-				long time = item.getLong("time_created");
+				String guid = getString(item, "id");
+				String title = getString(item, "value");
+				long time = item.getLong("time_created") * 1000;
 
 				String name = getString(item, "owner/name");
 				String username = getString(item, "owner/username");
@@ -768,7 +806,7 @@ public class ElggClient {
 	}
 
 	// topic functions
-	public PostItem getTopic(String guid) {
+	public PostItem getGroupPost(String guid) {
 		JSONObject json = callMethod("group.forum.get_post", GET, "guid", guid,
 				"username", username);
 		int result = checkErrors(json);
@@ -779,7 +817,7 @@ public class ElggClient {
 
 			String title = getString(res, "title");
 			String description = getString(res, "description");
-			long time = res.getLong("time_created");
+			long time = res.getLong("time_created") * 1000;
 
 			String name = getString(res, "owner/name");
 			String username = getString(res, "owner/username");

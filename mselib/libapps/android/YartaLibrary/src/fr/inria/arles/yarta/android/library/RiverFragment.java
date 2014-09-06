@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Toast;
 
 public class RiverFragment extends BaseFragment implements
 		PullToRefreshListView.OnRefreshListener, RiverListAdapter.Callback,
@@ -95,7 +96,7 @@ public class RiverFragment extends BaseFragment implements
 				adapter.setItems(items);
 				list.onRefreshComplete();
 				if (groupGuid != null || username != null) {
-					PostActivity.setListViewHeightBasedOnChildren(list);
+					ContentActivity.setListViewHeightBasedOnChildren(list);
 
 					boolean noItems = items.size() == 0;
 					list.setVisibility(noItems ? View.GONE : View.VISIBLE);
@@ -163,17 +164,24 @@ public class RiverFragment extends BaseFragment implements
 			String groupId = Group.typeURI + "_" + object.getGuid().trim();
 			intent.putExtra(GroupActivity.GroupGuid, groupId);
 			startActivity(intent);
+		} else if (type.equals(ObjectItem.Topic)) {
+			Intent intent = new Intent(getSherlockActivity(),
+					ContentActivity.class);
+			intent.putExtra(ContentActivity.PostGuid, object.getGuid().trim());
+			startActivity(intent);
 		} else if (type.equals(ObjectItem.Blog) || type.equals(ObjectItem.Page)
 				|| type.equals(ObjectItem.PageTop)
 				|| type.equals(ObjectItem.Feedback)) {
-			Intent intent = new Intent(getSherlockActivity(),
-					PostActivity.class);
-			intent.putExtra(PostActivity.PostGuid, object.getGuid().trim());
-			startActivity(intent);
-		} else if (type.equals(ObjectItem.Topic)) {
+			// TODO: make this work
+			Toast.makeText(getActivity(), type, Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(getSherlockActivity(),
 					TopicActivity.class);
-			intent.putExtra(TopicActivity.TopicGuid, object.getGuid().trim());
+			if (type.equals(ObjectItem.Topic)) {
+				intent.putExtra(TopicActivity.TopicGuid, object.getGuid()
+						.trim());
+			} else {
+				intent.putExtra(TopicActivity.PostGuid, object.getGuid().trim());
+			}
 			startActivity(intent);
 		} else if (type.equals(ObjectItem.File)) {
 			Intent intent = new Intent(getSherlockActivity(),

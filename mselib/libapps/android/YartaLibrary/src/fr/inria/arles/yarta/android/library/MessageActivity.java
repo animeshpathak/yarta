@@ -1,6 +1,7 @@
 package fr.inria.arles.yarta.android.library;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -16,24 +17,28 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.MessageItem;
-import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.iris.web.ElggClient;
+import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.resources.Agent;
+import fr.inria.arles.yarta.resources.Conversation;
+import fr.inria.arles.yarta.resources.Message;
+import fr.inria.arles.yarta.resources.MessageImpl;
 
 public class MessageActivity extends BaseActivity {
 
-	public static final String Message = "Message";
-	public static final String Reply = "Reply";
-	public static final String User = "User";
+	public static final String MessageId = "MessageId";
+	public static final String ReplyId = "ReplyId";
+	public static final String UserId = "UserId";
 
 	private static final int MENU_SEND = 1;
 	private static final int MENU_REPLY = 2;
 
-	private MessageItem message;
-	private MessageItem reply;
+	private Message message;
+	private Message reply;
 
-	private List<UserItem> friends;
+	private List<Agent> friends;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +54,62 @@ public class MessageActivity extends BaseActivity {
 		refreshUI();
 	}
 
+	/**
+	 * Returns the peer for which to send the message
+	 * 
+	 * @param message
+	 * @return
+	 */
+	private Agent getPeer(Message message, Agent me) {
+		for (Conversation conversation : message.getContains_inverse()) {
+			for (Agent agent : conversation.getParticipatesTo_inverse()) {
+				if (!agent.equals(me)) {
+					return agent;
+				}
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public void refreshUI() {
-		if (getIntent().hasExtra(Message)) {
-			message = (MessageItem) getIntent().getSerializableExtra(Message);
+		if (getIntent().hasExtra(MessageId)) {
+			String messageId = getIntent().getStringExtra(MessageId);
+			message = new MessageImpl(getSAM(), new MSEResource(messageId,
+					Message.typeURI));
 			loadMessage();
 		} else {
-			// load friends in to spinner;
 			runner.runBackground(new Job() {
 
-				private UserItem item;
+				Agent peer;
 
 				@Override
 				public void doWork() {
-					friends = client.getFriends(client.getUsername(), 0);
+					Person me = null;
+					try {
+						friends = new ArrayList<Agent>();
+						me = getSAM().getMe();
+						friends.addAll(me.getKnows_inverse());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 
-					if (getIntent().hasExtra(Reply)) {
-						reply = (MessageItem) getIntent().getSerializableExtra(
-								Reply);
-						friends.add(reply.getFrom());
-					} else if (getIntent().hasExtra(User)) {
-						item = (UserItem) getIntent()
-								.getSerializableExtra(User);
-						friends.add(item);
+					if (getIntent().hasExtra(ReplyId)) {
+						String replyId = getIntent().getStringExtra(ReplyId);
+						reply = new MessageImpl(getSAM(), new MSEResource(
+								replyId, Message.typeURI));
+
+						peer = getPeer(reply, me);
+						friends.add(peer);
+					} else if (getIntent().hasExtra(UserId)) {
+						String userId = getIntent().getStringExtra(UserId);
+
+						try {
+							Person person = getSAM().getPersonByUserId(userId);
+							friends.add(person);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
 					}
 				}
 
@@ -88,20 +126,19 @@ public class MessageActivity extends BaseActivity {
 					spinner.setAdapter(adapter);
 
 					if (reply != null) {
-						setCtrlText(R.id.subject, reply.getSubject());
-						setSelectedUser(reply.getFrom());
-					} else if (item != null) {
-						setSelectedUser(item);
+						setCtrlText(R.id.subject,
+								Html.fromHtml(reply.getTitle()));
+						setSelectedUser(peer);
 					}
 				}
 			});
 		}
 	}
 
-	private void setSelectedUser(UserItem user) {
+	private void setSelectedUser(Agent user) {
 		Spinner spinner = (Spinner) findViewById(R.id.peer);
 		for (int i = 0; i < friends.size(); i++) {
-			if (friends.get(i).getUsername().equals(user.getUsername())) {
+			if (friends.get(i).equals(user)) {
 				spinner.setSelection(i);
 			}
 		}
@@ -111,25 +148,19 @@ public class MessageActivity extends BaseActivity {
 		findViewById(R.id.read).setVisibility(View.VISIBLE);
 		findViewById(R.id.compose).setVisibility(View.GONE);
 
-		setCtrlText(R.id.subject, Html.fromHtml(message.getSubject()));
-		setCtrlText(R.id.content, Html.fromHtml(message.getDescription()));
+		setCtrlText(R.id.subject, Html.fromHtml(message.getTitle()));
+		setCtrlText(R.id.content, Html.fromHtml(message.getContent()));
 
 		setFocusable(R.id.subject, false);
 		setFocusable(R.id.content, false);
 
-		setCtrlText(R.id.author, message.getFrom().getName());
+		for (Agent agent : message.getCreator_inverse()) {
+			setCtrlText(R.id.author, agent.getName());
+		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM, HH:mm",
 				Locale.getDefault());
-		setCtrlText(R.id.time,
-				sdf.format(new Date(message.getTimestamp() * 1000)));
-
-		runner.runBackground(new Job() {
-			@Override
-			public void doWork() {
-				client.readMessage(message);
-			}
-		});
+		setCtrlText(R.id.time, sdf.format(new Date(message.getTime())));
 	}
 
 	@Override
@@ -165,10 +196,14 @@ public class MessageActivity extends BaseActivity {
 		if (spinner.getSelectedItemPosition() == -1) {
 			return;
 		}
-		final UserItem item = friends.get(spinner.getSelectedItemPosition());
+		final Agent item = friends.get(spinner.getSelectedItemPosition());
 		final String subject = Html.toHtml(getCtrlHtml(R.id.subject));
 		final String body = Html.toHtml(getCtrlHtml(R.id.content));
-		final String replyTo = reply == null ? "0" : reply.getGuid();
+
+		String guid = reply.getUniqueId();
+		guid = guid.substring(guid.indexOf('_') + 1);
+
+		final String replyTo = reply == null ? "0" : guid;
 
 		if (body.length() == 0 || replyTo.length() == 0) {
 			Toast.makeText(this, R.string.message_empty_content_not_allowed,
@@ -182,8 +217,9 @@ public class MessageActivity extends BaseActivity {
 
 			@Override
 			public void doWork() {
-				result = client.sendMessage(item.getUsername(), subject, body,
-						replyTo);
+				String username = item.getUniqueId();
+				username = username.substring(username.indexOf('_') + 1);
+				result = client.sendMessage(username, subject, body, replyTo);
 			}
 
 			@Override
@@ -203,7 +239,7 @@ public class MessageActivity extends BaseActivity {
 
 	private void onReply() {
 		Intent intent = new Intent(this, MessageActivity.class);
-		intent.putExtra(MessageActivity.Reply, message);
+		intent.putExtra(MessageActivity.ReplyId, message.getUniqueId());
 		startActivity(intent);
 		finish();
 	}

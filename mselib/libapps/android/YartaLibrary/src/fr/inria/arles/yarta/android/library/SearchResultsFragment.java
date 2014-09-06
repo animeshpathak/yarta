@@ -115,8 +115,8 @@ public class SearchResultsFragment extends BaseFragment implements
 			String groupId = Group.typeURI + "_" + item.getGuid();
 			intent.putExtra(GroupActivity.GroupGuid, groupId);
 		} else if (type.equals(ObjectItem.Blog)) {
-			intent = new Intent(getSherlockActivity(), PostActivity.class);
-			intent.putExtra(PostActivity.PostGuid, item.getGuid());
+			intent = new Intent(getSherlockActivity(), ContentActivity.class);
+			intent.putExtra(ContentActivity.PostGuid, item.getGuid());
 		}
 
 		if (intent != null) {

@@ -220,6 +220,7 @@ public class YartaApp extends Application implements MSEApplication {
 
 	@Override
 	public void handleNotification(String notification) {
+		System.out.println(notification);
 		notifyAllObservers();
 	}
 

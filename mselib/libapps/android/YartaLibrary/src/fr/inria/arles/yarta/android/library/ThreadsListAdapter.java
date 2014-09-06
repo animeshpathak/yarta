@@ -12,7 +12,6 @@ import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
-import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Conversation;
@@ -51,8 +50,8 @@ public class ThreadsListAdapter extends BaseAdapter {
 		try {
 			this.sam = sam;
 			this.owner = sam.getMe();
-		} catch (KBException ex) {
-			System.err.println(ex.toString());
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 

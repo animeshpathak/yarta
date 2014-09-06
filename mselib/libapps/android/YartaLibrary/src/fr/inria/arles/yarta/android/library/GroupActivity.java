@@ -1,5 +1,8 @@
 package fr.inria.arles.yarta.android.library;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,19 +13,27 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.GroupImpl;
+import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.resources.Picture;
+import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.GenericPageAdapter;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
-public class GroupActivity extends BaseActivity {
+public class GroupActivity extends BaseActivity implements
+		ContentDialog.Callback {
+
+	private static final int MENU_JOIN = 1;
+	private static final int MENU_ADD = 2;
 
 	public static final String GroupGuid = "GroupGuid";
 
 	private String groupGuid;
+	private Group group;
 
 	private GenericPageAdapter adapter;
 	private TabHost tabHost;
@@ -34,6 +45,8 @@ public class GroupActivity extends BaseActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		groupGuid = getIntent().getStringExtra(GroupGuid);
+		group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
+				Group.typeURI));
 
 		adapter = new GenericPageAdapter(getSupportFragmentManager(), this);
 
@@ -44,6 +57,7 @@ public class GroupActivity extends BaseActivity {
 
 		GroupPostsFragment fragmentPosts = new GroupPostsFragment();
 		fragmentPosts.setRunner(runner);
+		fragmentPosts.setSAM(getSAM());
 		fragmentPosts.setGroupGuid(groupGuid);
 		adapter.addFragment(fragmentPosts, R.string.group_posts);
 
@@ -97,9 +111,6 @@ public class GroupActivity extends BaseActivity {
 	}
 
 	public void refreshUI() {
-		Group group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
-				Group.typeURI));
-
 		if (group.getName() != null) {
 			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
 		}
@@ -128,5 +139,51 @@ public class GroupActivity extends BaseActivity {
 		} else {
 			image.setImageResource(R.drawable.group_default);
 		}
+
+		int position = tabHost.getCurrentTab();
+		BaseFragment fragment = (BaseFragment) adapter.getItem(position);
+		fragment.refreshUI();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem item = menu.add(0, MENU_JOIN, 0, R.string.group_title);
+		item.setIcon(R.drawable.icon_join_group);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		item = menu.add(0, MENU_ADD, 0, R.string.group_title);
+		item.setIcon(R.drawable.icon_add);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_JOIN:
+			try {
+				Person person = getSAM().getMe();
+				person.addIsMemberOf(group);
+
+				Toast.makeText(this, R.string.group_join_sent,
+						Toast.LENGTH_SHORT).show();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			break;
+		case MENU_ADD:
+			ContentDialog dlg = new ContentDialog(this, group);
+			dlg.setCallback(this);
+			dlg.setSAM(getSAM());
+			dlg.show();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onContentAdded() {
+		refreshUI();
 	}
 }

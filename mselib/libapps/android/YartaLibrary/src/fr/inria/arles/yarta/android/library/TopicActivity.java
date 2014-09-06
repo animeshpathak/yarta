@@ -28,16 +28,18 @@ import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class TopicActivity extends BaseActivity implements
-		PullToRefreshListView.OnRefreshListener, PostsListAdapter.Callback,
-		TopicAddDialog.Callback {
+		PullToRefreshListView.OnRefreshListener, TopicListAdapter.Callback,
+		TopicReplyDialog.Callback, TopicCommentDialog.Callback {
 
 	public static final String TopicGuid = "TopicGuid";
+	public static final String PostGuid = "PostGuid";
 
 	private static final int MENU_ADD = 1;
 
 	private String topicGuid;
+	private String postGuid;
 
-	private PostsListAdapter adapter;
+	private TopicListAdapter adapter;
 	private PullToRefreshListView list;
 
 	@Override
@@ -46,9 +48,13 @@ public class TopicActivity extends BaseActivity implements
 		setContentView(R.layout.activity_topic);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		topicGuid = getIntent().getStringExtra(TopicGuid);
+		if (getIntent().hasExtra(TopicGuid)) {
+			topicGuid = getIntent().getStringExtra(TopicGuid);
+		} else if (getIntent().hasExtra(PostGuid)) {
+			postGuid = getIntent().getStringExtra(PostGuid);
+		}
 
-		adapter = new PostsListAdapter(this);
+		adapter = new TopicListAdapter(this);
 		adapter.setCallback(this);
 
 		list = (PullToRefreshListView) findViewById(R.id.listComents);
@@ -77,11 +83,23 @@ public class TopicActivity extends BaseActivity implements
 		refreshCommentsList();
 	}
 
+	@Override
+	public void onCommentAdded() {
+		refreshCommentsList();
+	}
+
 	private void onAddComment() {
-		TopicAddDialog dlg = new TopicAddDialog(this, topicGuid);
-		dlg.setCallback(this);
-		dlg.setRunner(runner);
-		dlg.show();
+		if (topicGuid != null) {
+			TopicReplyDialog dlg = new TopicReplyDialog(this, topicGuid);
+			dlg.setCallback(this);
+			dlg.setRunner(runner);
+			dlg.show();
+		} else if (postGuid != null) {
+			TopicCommentDialog dlg = new TopicCommentDialog(this, postGuid);
+			dlg.setCallback(this);
+			dlg.setRunner(runner);
+			dlg.show();
+		}
 	}
 
 	@Override
@@ -101,7 +119,11 @@ public class TopicActivity extends BaseActivity implements
 
 			@Override
 			public void doWork() {
-				items = client.getTopicReplies(topicGuid);
+				if (topicGuid != null) {
+					items = client.getTopicReplies(topicGuid);
+				} else if (postGuid != null) {
+					items = client.getGroupPostComments(postGuid);
+				}
 			}
 
 			@Override
@@ -176,7 +198,11 @@ public class TopicActivity extends BaseActivity implements
 
 			@Override
 			public void doWork() {
-				item = client.getTopic(topicGuid);
+				if (topicGuid != null) {
+					item = client.getGroupPost(topicGuid);
+				} else if (postGuid != null) {
+					item = client.getGroupPost(postGuid);
+				}
 
 				if (item != null) {
 					if (item.getOwner() != null) {
@@ -239,6 +265,6 @@ public class TopicActivity extends BaseActivity implements
 		// nothing happens, it's a comment
 	}
 
-	private SimpleDateFormat sdf = new SimpleDateFormat("DD/MM, HH:mm",
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM, HH:mm",
 			Locale.getDefault());
 }

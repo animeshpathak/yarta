@@ -1,6 +1,5 @@
 package fr.inria.arles.yarta.android.library;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import com.actionbarsherlock.view.Menu;

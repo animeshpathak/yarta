@@ -1,32 +1,34 @@
 package fr.inria.arles.yarta.android.library;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.PostItem;
-import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.util.PullToRefreshListView;
+import fr.inria.arles.yarta.android.library.resources.Group;
+import fr.inria.arles.yarta.android.library.resources.GroupImpl;
+import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.resources.Content;
 
 public class GroupPostsFragment extends BaseFragment implements
-		PullToRefreshListView.OnRefreshListener, PostsListAdapter.Callback {
+		PullToRefreshListView.OnRefreshListener, ContentListAdapter.Callback {
 
-	private PostsListAdapter adapter;
+	private ContentListAdapter adapter;
 	private PullToRefreshListView list;
 	private View emptyView;
 
-	private String groupGuid;
+	private Group group;
 
 	public void setGroupGuid(String groupGuid) {
-		this.groupGuid = groupGuid;
+		group = new GroupImpl(sam, new MSEResource(groupGuid, Group.typeURI));
 	}
 
 	@Override
@@ -35,7 +37,7 @@ public class GroupPostsFragment extends BaseFragment implements
 		View root = inflater.inflate(R.layout.fragment_group_posts, container,
 				false);
 
-		adapter = new PostsListAdapter(getSherlockActivity());
+		adapter = new ContentListAdapter(getSherlockActivity(), sam);
 		adapter.setCallback(this);
 
 		list = (PullToRefreshListView) root.findViewById(R.id.listPosts);
@@ -63,70 +65,43 @@ public class GroupPostsFragment extends BaseFragment implements
 		refreshPostsList();
 	}
 
-	private List<PostItem> items;
+	private List<Content> items;
 
 	private void refreshPostsList() {
 		runner.runBackground(new Job() {
 
 			@Override
 			public void doWork() {
-				items = client.getGroupPosts(groupGuid);
+				items = new ArrayList<Content>();
+				items.addAll(group.getHasContent());
+				MessagesActivity.sort(items, false);
 			}
 
 			@Override
 			public void doUIAfter() {
 				adapter.setItems(items);
 				list.onRefreshComplete();
-				PostActivity.setListViewHeightBasedOnChildren(list);
+				ContentActivity.setListViewHeightBasedOnChildren(list);
 
 				boolean noItems = items.size() == 0;
 
 				list.setVisibility(noItems ? View.GONE : View.VISIBLE);
 				emptyView.setVisibility(noItems ? View.VISIBLE : View.GONE);
-				new Thread(lazyImageLoader).start();
 			}
 		});
 	}
 
-	private Runnable lazyImageLoader = new Runnable() {
-
-		@Override
-		public void run() {
-			for (PostItem item : items) {
-				String url = item.getOwner().getAvatarURL();
-				if (ImageCache.getDrawable(url) == null) {
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-						handler.post(refreshListAdapter);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		}
-	};
-
-	private Handler handler = new Handler();
-	private Runnable refreshListAdapter = new Runnable() {
-
-		@Override
-		public void run() {
-			adapter.notifyDataSetChanged();
-		}
-	};
-
 	@Override
-	public void onClickProfile(UserItem item) {
+	public void onClickProfile(Person item) {
 		Intent intent = new Intent(getSherlockActivity(), ProfileActivity.class);
-		intent.putExtra(ProfileActivity.UserName, item.getUsername());
+		intent.putExtra(ProfileActivity.UserName, item.getUserId());
 		startActivity(intent);
 	}
 
 	@Override
-	public void onClickPost(PostItem item) {
-		Intent intent = new Intent(getSherlockActivity(), PostActivity.class);
-		intent.putExtra(PostActivity.PostGuid, item.getGuid());
+	public void onClickPost(Content item) {
+		Intent intent = new Intent(getSherlockActivity(), ContentActivity.class);
+		intent.putExtra(ContentActivity.PostGuid, item.getUniqueId());
 		startActivity(intent);
 	}
 }

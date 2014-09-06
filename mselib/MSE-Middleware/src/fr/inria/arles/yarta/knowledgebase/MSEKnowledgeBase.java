@@ -235,6 +235,16 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 		}
 	}
 
+	public void removeResource(String resourceUri) {
+		synchronized (model) {
+			Resource resource = model.getResource(resourceUri);
+			if (resource != null) {
+				model.removeAll(resource, null, (RDFNode) null);
+				model.removeAll(null, null, resource);
+			}
+		}
+	}
+
 	@Override
 	public Node addResource(Node node, String requestorId) throws KBException {
 

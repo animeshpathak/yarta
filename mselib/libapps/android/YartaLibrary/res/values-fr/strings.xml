@@ -56,7 +56,7 @@
     <string name="group_name">%s</string>
     <string name="group_members">%d membres</string>
     <string name="group_owner">Responsable(s): %s</string>
-    <string name="group_posts">Articles</string>
+    <string name="group_posts">Discussions</string>
     <string name="group_activity">Activité</string>
     <string name="post_title">Article</string>
     <string name="post_comments">Commentaires</string>
@@ -96,7 +96,7 @@
     <string name="post_no_comment">Aucun commentaire. Pour ajouter un presse \'+\'.</string>
     <string name="main_no_activity">Aucune activité.</string>
     <string name="main_no_article">Aucun article.</string>
-    <string name="topic_title">Informations sur le sujet</string>
+    <string name="topic_title">Article</string>
     <string name="topic_no_comment">Aucun réponse. Pour ajouter un presse \'+\'.</string>
     <string name="topic_comments">Réponses</string>
     <string name="topic_add_comment">Ajouter réponse</string>

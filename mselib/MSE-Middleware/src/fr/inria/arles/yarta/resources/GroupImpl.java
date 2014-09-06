@@ -202,4 +202,19 @@ public class GroupImpl extends YartaResource implements Group {
 	public boolean deleteParticipatesTo(Conversation c) {
 		return sam.deleteObjectProperty(kbNode, PROPERTY_PARTICIPATESTO_URI, c);
 	}
+
+	@Override
+	public boolean addHasContent(Content c) {
+		return sam.setObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, c);
+	}
+
+	@Override
+	public Set<Content> getHasContent() {
+		return sam.getObjectProperty(kbNode, PROPERTY_HASCONTENT_URI);
+	}
+
+	@Override
+	public boolean deleteHasContent(Content c) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, c);
+	}
 }
