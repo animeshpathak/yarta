@@ -12,7 +12,6 @@ import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
@@ -60,13 +59,12 @@ public class DonationApp extends Application implements MSEApplication,
 
 	public void initMSE(Observer observer) {
 		addObserver(observer);
-		ensureBaseFiles(this);
 
 		if (mse == null) {
 			try {
 				mse = new MSEManagerEx();
-				mse.initialize(dataPath + "/" + baseOntologyFilePath, dataPath
-						+ "/" + basePolicyFilePath, this, this);
+				mse.initialize(getAsset("donations.rdf"), getAsset("policies"),
+						this, this);
 			} catch (Exception ex) {
 				mse = null;
 			}
@@ -146,25 +144,18 @@ public class DonationApp extends Application implements MSEApplication,
 	}
 
 	/**
-	 * In case it's the very first time, copy the base rdf & policy to the
-	 * specified folder.
+	 * Exports an asset to a public path.
+	 * 
+	 * @param name
+	 * @return the path
 	 */
-	private void ensureBaseFiles(Context context) {
-		dataPath = context.getFilesDir().getAbsolutePath();
-
-		dumpAsset(context, dataPath, baseOntologyFilePath);
-		dumpAsset(context, dataPath, basePolicyFilePath);
-	}
-
-	/**
-	 * Dumps an asset in the specified folder.
-	 */
-	private void dumpAsset(Context context, String folder, String fileName) {
+	private String getAsset(String name) {
+		String dataPath = getFilesDir().getAbsolutePath();
+		String outPath = dataPath + "/" + name;
 		try {
-			InputStream fin = context.getAssets().open(fileName,
-					AssetManager.ACCESS_RANDOM);
-			FileOutputStream fout = new FileOutputStream(folder + "/"
-					+ fileName);
+			InputStream fin = getAssets()
+					.open(name, AssetManager.ACCESS_RANDOM);
+			FileOutputStream fout = new FileOutputStream(outPath);
 
 			int count = 0;
 			byte buffer[] = new byte[4096];
@@ -178,6 +169,7 @@ public class DonationApp extends Application implements MSEApplication,
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return outPath;
 	}
 
 	/**
@@ -249,10 +241,6 @@ public class DonationApp extends Application implements MSEApplication,
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
-
-	private String baseOntologyFilePath = "donations.rdf";
-	private String basePolicyFilePath = "policies";
-	private String dataPath;
 
 	@Override
 	public String getAppId() {

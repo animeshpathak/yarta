@@ -5,13 +5,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
 import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 
@@ -19,8 +17,6 @@ import android.content.res.AssetManager;
  * Basic Yarta Application which handles all MSE functionality (client).
  */
 public class YartaApp extends Application implements MSEApplication {
-
-	private static final String BaseRDF = "elgg.rdf";
 	/**
 	 * This is the UI Observer interface which should be implemented by those
 	 * who want real time updates over UI data.
@@ -45,27 +41,18 @@ public class YartaApp extends Application implements MSEApplication {
 	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
 
 	/**
-	 * In case it's the very first time, copy the base rdf & policy to the
-	 * specified folder.
+	 * Drops an asset to the public directory returning its path.
+	 * 
+	 * @param name
+	 * @return
 	 */
-	private void ensureBaseFiles(Context context) {
+	private String getAsset(String name) {
 		String dataPath = getFilesDir().getAbsolutePath();
-		String baseOntologyFilePath = BaseRDF;
-		String basePolicyFilePath = getString(R.string.service_basePolicy);
-
-		dumpAsset(context, dataPath, baseOntologyFilePath);
-		dumpAsset(context, dataPath, basePolicyFilePath);
-	}
-
-	/**
-	 * Dumps an asset in the specified folder.
-	 */
-	private void dumpAsset(Context context, String folder, String fileName) {
+		String outPath = dataPath + "/" + name;
 		try {
-			InputStream fin = context.getAssets().open(fileName,
-					AssetManager.ACCESS_RANDOM);
-			FileOutputStream fout = new FileOutputStream(folder + "/"
-					+ fileName);
+			InputStream fin = getAssets()
+					.open(name, AssetManager.ACCESS_RANDOM);
+			FileOutputStream fout = new FileOutputStream(outPath);
 
 			int count = 0;
 			byte buffer[] = new byte[4096];
@@ -79,6 +66,7 @@ public class YartaApp extends Application implements MSEApplication {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return outPath;
 	}
 
 	public void initMSE(Observer observer) {
@@ -86,18 +74,12 @@ public class YartaApp extends Application implements MSEApplication {
 			addObserver(observer);
 		}
 
-		ensureBaseFiles(this);
-
-		String dataPath = getFilesDir().getAbsolutePath();
-		String baseOntologyFilePath = BaseRDF;
-		String basePolicyFilePath = getString(R.string.service_basePolicy);
-
 		if (mse == null) {
 			mse = new MSEManagerEx();
 
 			try {
-				mse.initialize(dataPath + "/" + baseOntologyFilePath, dataPath
-						+ "/" + basePolicyFilePath, this, this);
+				mse.initialize(getAsset("elgg.rdf"), getAsset("policies"),
+						this, this);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				mse = null;

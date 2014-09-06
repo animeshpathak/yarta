@@ -12,7 +12,6 @@ import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 
@@ -40,13 +39,11 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	public void initMSE(Observer observer) {
 		addObserver(observer);
 
-		ensureBaseFiles(this);
-
 		if (mse == null || sam == null) {
 			try {
 				mse = new MSEManagerEx();
-				mse.initialize(dataPath + "/" + baseOntologyFilePath, dataPath
-						+ "/" + basePolicyFilePath, this, this);
+				mse.initialize(getAsset("foosball.rdf"), getAsset("policies"),
+						this, this);
 			} catch (Exception ex) {
 				mse = null;
 			}
@@ -151,25 +148,18 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	}
 
 	/**
-	 * In case it's the very first time, copy the base rdf & policy to the
-	 * specified folder.
+	 * Gets an asset and exports it public by returning the path.
+	 * 
+	 * @param name
+	 * @return
 	 */
-	private void ensureBaseFiles(Context context) {
-		dataPath = context.getFilesDir().getAbsolutePath();
-
-		dumpAsset(context, dataPath, baseOntologyFilePath);
-		dumpAsset(context, dataPath, basePolicyFilePath);
-	}
-
-	/**
-	 * Dumps an asset in the specified folder.
-	 */
-	private void dumpAsset(Context context, String folder, String fileName) {
+	private String getAsset(String name) {
+		String dataPath = getFilesDir().getAbsolutePath();
+		String outPath = dataPath + "/" + name;
 		try {
-			InputStream fin = context.getAssets().open(fileName,
-					AssetManager.ACCESS_RANDOM);
-			FileOutputStream fout = new FileOutputStream(folder + "/"
-					+ fileName);
+			InputStream fin = getAssets()
+					.open(name, AssetManager.ACCESS_RANDOM);
+			FileOutputStream fout = new FileOutputStream(outPath);
 
 			int count = 0;
 			byte buffer[] = new byte[4096];
@@ -183,6 +173,7 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return outPath;
 	}
 
 	/**
@@ -254,10 +245,6 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
-
-	private String baseOntologyFilePath = "foosball.rdf";
-	private String basePolicyFilePath = "policies";
-	private String dataPath;
 
 	@Override
 	public String getAppId() {
