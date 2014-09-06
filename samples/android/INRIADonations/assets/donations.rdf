@@ -13,14 +13,6 @@
          xmlns:owl="&owl;"
          xmlns:rdf="&rdf;"
          xmlns:rdfs="&rdfs;">
-		 
-		 <!-- Ontology Information -->
-		 <owl:Ontology rdf:about="">
-			<owl:imports>
-				<owl:Ontology rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#"/>
-			</owl:imports>
-		</owl:Ontology>
-		
 		<!-- Classes -->
 		<owl:Class rdf:about="#Announcement">
 			<rdfs:subClassOf rdf:resource="&mse;Content" />
@@ -150,8 +142,4 @@
 			<mse:name>Sophia</mse:name>
 			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
 		</rdf:Description>
-
-		<!-- TODO: add sanjay with his picture -->
-		
-		<!-- add groups. add people. later. first encryption ndk simple.-->
 </rdf:RDF>
