@@ -805,7 +805,6 @@ public class ElggClient {
 		return comments;
 	}
 
-	// topic functions
 	public PostItem getGroupPost(String guid) {
 		JSONObject json = callMethod("group.forum.get_post", GET, "guid", guid,
 				"username", username);
@@ -829,23 +828,24 @@ public class ElggClient {
 			lastError = ex.toString();
 		}
 
-		log("%s: result<%d>, lastError<%s>", "getTopic", result, lastError);
+		log("%s: result<%d>, lastError<%s>", "getGroupPost", result, lastError);
 		return post;
 	}
 
-	public int addTopicReply(String topicGuid, String content) {
-		JSONObject json = callMethod("group.forum.save_reply", POST, "postid",
-				topicGuid, "text", encode(content));
+	// micro-blogging
+	public int addBlogComment(String blogGuid, String content) {
+		JSONObject json = callMethod("blog.post_comment", POST, "guid",
+				blogGuid, "text", encode(content));
 		int result = checkErrors(json);
-		log("%s: result<%d>, lastError<%s>", "addTopicReply", result, lastError);
+		log("%s: result<%d>, lastError<%s>", "addBlogComment", result, lastError);
 		return result;
 	}
 
-	public List<PostItem> getTopicReplies(String topicGuid) {
+	public List<PostItem> getBlogComments(String blogGuid) {
 		List<PostItem> replies = new ArrayList<PostItem>();
 
-		JSONObject json = callMethod("group.forum.get_replies", GET, "guid",
-				topicGuid);
+		JSONObject json = callMethod("blog.get_comments", GET, "guid",
+				blogGuid, "offset", 0);
 		int result = checkErrors(json);
 
 		try {
@@ -854,8 +854,8 @@ public class ElggClient {
 			for (int i = 0; i < all.length(); i++) {
 				JSONObject item = all.getJSONObject(i);
 
-				String guid = getString(item, "entity_guid");
-				String title = getString(item, "value");
+				String guid = getString(item, "guid");
+				String title = getString(item, "description");
 				long time = item.getLong("time_created");
 
 				String name = getString(item, "owner/name");
@@ -870,7 +870,7 @@ public class ElggClient {
 			lastError = ex.toString();
 		}
 
-		log("%s: result<%d>, lastError<%s>", "getTopicReplies", result,
+		log("%s: result<%d>, lastError<%s>", "getBlogComments", result,
 				lastError);
 		return replies;
 	}
