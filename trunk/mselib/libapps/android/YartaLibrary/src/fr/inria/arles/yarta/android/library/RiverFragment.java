@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Toast;
 
 public class RiverFragment extends BaseFragment implements
 		PullToRefreshListView.OnRefreshListener, RiverListAdapter.Callback,
@@ -172,16 +171,9 @@ public class RiverFragment extends BaseFragment implements
 		} else if (type.equals(ObjectItem.Blog) || type.equals(ObjectItem.Page)
 				|| type.equals(ObjectItem.PageTop)
 				|| type.equals(ObjectItem.Feedback)) {
-			// TODO: make this work
-			Toast.makeText(getActivity(), type, Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(getSherlockActivity(),
-					TopicActivity.class);
-			if (type.equals(ObjectItem.Topic)) {
-				intent.putExtra(TopicActivity.TopicGuid, object.getGuid()
-						.trim());
-			} else {
-				intent.putExtra(TopicActivity.PostGuid, object.getGuid().trim());
-			}
+					BlogActivity.class);
+			intent.putExtra(BlogActivity.BlogGuid, object.getGuid().trim());
 			startActivity(intent);
 		} else if (type.equals(ObjectItem.File)) {
 			Intent intent = new Intent(getSherlockActivity(),
@@ -189,15 +181,7 @@ public class RiverFragment extends BaseFragment implements
 			intent.putExtra(FileActivity.FileGuid, object.getGuid().trim());
 			startActivity(intent);
 		} else {
-			// String description = object.getDescription();
-			// if (description == null) {
-			// description = "-";
-			// }
-			// String format =
-			// getString(R.string.main_river_cant_display_object);
-			// String message = String.format(format, object.getName(), type,
-			// description);
-			// PopupDialog.show(getSherlockActivity(), message);
+			// TODO: handle unknown content type
 		}
 	}
 

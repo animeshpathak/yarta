@@ -1,30 +1,28 @@
 package fr.inria.arles.yarta.android.library;
 
-import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ElggClient;
-import fr.inria.arles.yarta.android.library.util.BaseDialog;
-import fr.inria.arles.yarta.android.library.util.JobRunner;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.ElggClient;
+import fr.inria.arles.yarta.android.library.util.BaseDialog;
+import fr.inria.arles.yarta.android.library.util.JobRunner;
 
-public class TopicCommentDialog extends BaseDialog implements
-		View.OnClickListener {
+public class BlogCommentDialog extends BaseDialog implements View.OnClickListener {
 
 	public interface Callback {
-		public void onCommentAdded();
+		public void onReplyAdded();
 	}
 
 	private Callback callback;
 	private JobRunner runner;
 
-	private String postGuid;
-	private ElggClient client = ElggClient.getInstance();
+	private String topicGuid;
 
-	public TopicCommentDialog(Context context, String postGuid) {
+	public BlogCommentDialog(Context context, String topicGuid) {
 		super(context);
-		this.postGuid = postGuid;
+		this.topicGuid = topicGuid;
 	}
 
 	public void setCallback(Callback callback) {
@@ -39,12 +37,11 @@ public class TopicCommentDialog extends BaseDialog implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setTitle(R.string.post_add_comment);
-		setContentView(R.layout.dialog_add_comment);
+		setTitle(R.string.topic_add_comment);
+		setContentView(R.layout.dialog_add_topic);
 
 		findViewById(R.id.cancel).setOnClickListener(this);
 		findViewById(R.id.set).setOnClickListener(this);
-		trackUI("CommentAdd");
 	}
 
 	@Override
@@ -73,18 +70,19 @@ public class TopicCommentDialog extends BaseDialog implements
 
 				@Override
 				public void doWork() {
-					result = client.addGroupPostComment(postGuid, text);
+					result = ElggClient.getInstance().addBlogComment(topicGuid,
+							text);
 				}
 
 				@Override
 				public void doUIAfter() {
 					if (result == -1) {
 						Toast.makeText(getContext().getApplicationContext(),
-								client.getLastError(), Toast.LENGTH_LONG)
-								.show();
+								ElggClient.getInstance().getLastError(),
+								Toast.LENGTH_LONG).show();
 					} else {
 						dismiss();
-						callback.onCommentAdded();
+						callback.onReplyAdded();
 					}
 				}
 			});

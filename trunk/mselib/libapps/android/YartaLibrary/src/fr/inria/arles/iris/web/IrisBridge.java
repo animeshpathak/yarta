@@ -316,7 +316,7 @@ public class IrisBridge {
 						String postId = s.substring(s.indexOf('_') + 1);
 
 						PostItem post = client.getGroupPost(postId);
-						if (createPost(post)) {
+						if (post != null && createPost(post)) {
 							app.handleNotification("post " + postId
 									+ " updated.");
 						}

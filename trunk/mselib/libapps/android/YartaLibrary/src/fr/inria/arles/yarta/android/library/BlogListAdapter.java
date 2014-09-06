@@ -20,7 +20,7 @@ import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.PostItem;
 import fr.inria.arles.iris.web.UserItem;
 
-public class TopicListAdapter extends BaseAdapter implements
+public class BlogListAdapter extends BaseAdapter implements
 		View.OnClickListener {
 
 	public interface Callback {
@@ -45,7 +45,7 @@ public class TopicListAdapter extends BaseAdapter implements
 	private LayoutInflater inflater;
 	private Callback callback;
 
-	public TopicListAdapter(Context context) {
+	public BlogListAdapter(Context context) {
 		inflater = LayoutInflater.from(context);
 	}
 

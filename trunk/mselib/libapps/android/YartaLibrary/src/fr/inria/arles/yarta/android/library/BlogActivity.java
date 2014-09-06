@@ -27,19 +27,17 @@ import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
-public class TopicActivity extends BaseActivity implements
-		PullToRefreshListView.OnRefreshListener, TopicListAdapter.Callback,
-		TopicReplyDialog.Callback, TopicCommentDialog.Callback {
+public class BlogActivity extends BaseActivity implements
+		PullToRefreshListView.OnRefreshListener, BlogListAdapter.Callback,
+		BlogCommentDialog.Callback {
 
-	public static final String TopicGuid = "TopicGuid";
-	public static final String PostGuid = "PostGuid";
+	public static final String BlogGuid = "PostGuid";
 
 	private static final int MENU_ADD = 1;
 
-	private String topicGuid;
 	private String postGuid;
 
-	private TopicListAdapter adapter;
+	private BlogListAdapter adapter;
 	private PullToRefreshListView list;
 
 	@Override
@@ -48,13 +46,11 @@ public class TopicActivity extends BaseActivity implements
 		setContentView(R.layout.activity_topic);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		if (getIntent().hasExtra(TopicGuid)) {
-			topicGuid = getIntent().getStringExtra(TopicGuid);
-		} else if (getIntent().hasExtra(PostGuid)) {
-			postGuid = getIntent().getStringExtra(PostGuid);
+		if (getIntent().hasExtra(BlogGuid)) {
+			postGuid = getIntent().getStringExtra(BlogGuid);
 		}
 
-		adapter = new TopicListAdapter(this);
+		adapter = new BlogListAdapter(this);
 		adapter.setCallback(this);
 
 		list = (PullToRefreshListView) findViewById(R.id.listComents);
@@ -83,23 +79,11 @@ public class TopicActivity extends BaseActivity implements
 		refreshCommentsList();
 	}
 
-	@Override
-	public void onCommentAdded() {
-		refreshCommentsList();
-	}
-
 	private void onAddComment() {
-		if (topicGuid != null) {
-			TopicReplyDialog dlg = new TopicReplyDialog(this, topicGuid);
-			dlg.setCallback(this);
-			dlg.setRunner(runner);
-			dlg.show();
-		} else if (postGuid != null) {
-			TopicCommentDialog dlg = new TopicCommentDialog(this, postGuid);
-			dlg.setCallback(this);
-			dlg.setRunner(runner);
-			dlg.show();
-		}
+		BlogCommentDialog dlg = new BlogCommentDialog(this, postGuid);
+		dlg.setCallback(this);
+		dlg.setRunner(runner);
+		dlg.show();
 	}
 
 	@Override
@@ -119,11 +103,7 @@ public class TopicActivity extends BaseActivity implements
 
 			@Override
 			public void doWork() {
-				if (topicGuid != null) {
-					items = client.getTopicReplies(topicGuid);
-				} else if (postGuid != null) {
-					items = client.getGroupPostComments(postGuid);
-				}
+				items = client.getBlogComments(postGuid);
 			}
 
 			@Override
@@ -198,11 +178,7 @@ public class TopicActivity extends BaseActivity implements
 
 			@Override
 			public void doWork() {
-				if (topicGuid != null) {
-					item = client.getGroupPost(topicGuid);
-				} else if (postGuid != null) {
-					item = client.getGroupPost(postGuid);
-				}
+				item = client.getGroupPost(postGuid);
 
 				if (item != null) {
 					if (item.getOwner() != null) {

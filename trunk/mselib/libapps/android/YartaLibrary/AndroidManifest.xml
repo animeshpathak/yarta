@@ -135,7 +135,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="fr.inria.arles.yarta.android.library.TopicActivity"
+            android:name="fr.inria.arles.yarta.android.library.BlogActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/topic_title" />
         <activity
