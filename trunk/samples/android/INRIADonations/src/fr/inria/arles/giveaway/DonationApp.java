@@ -89,22 +89,6 @@ public class DonationApp extends Application implements MSEApplication,
 		}
 	}
 
-	public void clearMSE() {
-		if (mse != null) {
-			try {
-				if (comm != null) {
-					comm.setMessageReceiver(null);
-				}
-				mse.clear();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			mse = null;
-			sam = null;
-			comm = null;
-		}
-	}
-
 	public void addLoginObserver(LoginObserver observer) {
 		if (!loginObservers.contains(observer)) {
 			loginObservers.add(observer);

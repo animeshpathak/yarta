@@ -212,6 +212,7 @@ public class Parser implements OntDocumentManager.ReadFailureHandler {
 		context.put("Classes", classes);
 		context.put("PackageName", packageName + "." + managementPackage);
 		context.put("StorageAcMgrClass", storageAcMgrClass);
+		context.put("YartaResourcePackage", YartaResourcePackage);
 		context.put("ResourcesPackage", packageName + "." + resourcePackage);
 
 		List<String> lstImports = new ArrayList<String>();
@@ -360,6 +361,9 @@ public class Parser implements OntDocumentManager.ReadFailureHandler {
 
 		model.getDocumentManager().setReadFailureHandler(this);
 
+		// read base rdf
+		FileManager.get().readModel(model, "res/mse-1.2.rdf");
+		// read custom rdf
 		FileManager.get().readModel(model, rdfFile);
 
 		if (error != null) {

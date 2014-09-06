@@ -5,7 +5,6 @@
     <string name="app_socialdata">Access social data</string>
     <string name="app_socialdata_description">Access social data</string>
     <string name="main_menu_more">More</string>
-    <string name="main_menu_logout">Sign-out</string>
     <string name="main_menu_configure">Set name</string>
     <string name="main_menu_feedback">Feedback</string>
     <string name="main_title">Dashboard</string>

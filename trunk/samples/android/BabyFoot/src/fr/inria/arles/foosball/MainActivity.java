@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 
 import fr.inria.arles.foosball.R;
 import fr.inria.arles.foosball.util.JobRunner.Job;
@@ -26,7 +25,6 @@ import android.widget.Toast;
 public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 		FeedbackDialog.Handler {
 
-	public static final int MENU_LOGOUT = 1;
 	public static final int MENU_FEEDBACK = 2;
 
 	private Player me;
@@ -53,23 +51,16 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		SubMenu subMenu = menu.addSubMenu(R.string.main_menu_more);
-
-		subMenu.add(0, MENU_FEEDBACK, 0, R.string.main_menu_feedback);
-		subMenu.add(0, MENU_LOGOUT, 0, R.string.main_menu_logout);
-
-		MenuItem parent = subMenu.getItem();
-		parent.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
-		parent.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		MenuItem item = menu.add(0, MENU_FEEDBACK, 0,
+				R.string.main_menu_feedback);
+		item.setIcon(R.drawable.icon_feedback);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_LOGOUT:
-			onLogoutClicked();
-			break;
 		case MENU_FEEDBACK:
 			onFeedbackClicked();
 			break;
@@ -317,11 +308,6 @@ public class MainActivity extends BaseActivity implements MatchDialog.Handler,
 			result += name;
 		}
 		return result;
-	}
-
-	protected void onLogoutClicked() {
-		clearMSE();
-		finish();
 	}
 
 	protected void onFeedbackClicked() {
