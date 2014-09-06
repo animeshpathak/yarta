@@ -16,7 +16,6 @@ import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
 public class GroupsFragment extends BaseFragment implements
@@ -66,7 +65,7 @@ public class GroupsFragment extends BaseFragment implements
 						items.add(new GroupImpl(sam, new MSEResource(group
 								.getUniqueId(), Group.typeURI)));
 					}
-				} catch (KBException ex) {
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}

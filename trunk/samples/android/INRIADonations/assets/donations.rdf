@@ -52,11 +52,6 @@
 			<rdfs:range rdf:resource="&xsd;string"/>
 		</owl:DatatypeProperty>
 		
-		<owl:DatatypeProperty rdf:about="#time">
-			<rdfs:domain rdf:resource="#Announcement" />
-			<rdfs:range rdf:resource="&xsd;long"/>
-		</owl:DatatypeProperty>
-		
 		<owl:DatatypeProperty rdf:about="#phone">
 			<rdfs:domain rdf:resource="&mse;Person" />
 			<rdfs:range rdf:resource="&xsd;string" />

@@ -52,11 +52,6 @@
 			<rdfs:range rdf:resource="&xsd;string"/>
 		</owl:DatatypeProperty>
 		
-		<owl:DatatypeProperty rdf:about="#time">
-			<rdfs:domain rdf:resource="#Announcement" />
-			<rdfs:range rdf:resource="&xsd;long"/>
-		</owl:DatatypeProperty>
-		
 		<owl:DatatypeProperty rdf:about="#phone">
 			<rdfs:domain rdf:resource="&mse;Person" />
 			<rdfs:range rdf:resource="&xsd;string" />
@@ -113,6 +108,47 @@
 
 		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Misc">
 			<rdf:type rdf:resource="#Category"/>
+		</rdf:Description>
+
+		<!-- Predefined places -->
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Bordeaux">
+			<mse:name>Bordeaux</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
+		</rdf:Description>
+		
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Grenoble">
+			<mse:name>Grenoble</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
+		</rdf:Description>
+		
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Lille">
+			<mse:name>Lille</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
+		</rdf:Description>
+		
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Nancy">
+			<mse:name>Nancy</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
+		</rdf:Description>
+		
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Paris">
+			<mse:name>Paris</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
+		</rdf:Description>
+		
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Rennes">
+			<mse:name>Rennes</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
+		</rdf:Description>
+		
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Saclay">
+			<mse:name>Saclay</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
+		</rdf:Description>
+		
+		<rdf:Description rdf:about="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Sophia">
+			<mse:name>Sophia</mse:name>
+			<rdf:type rdf:resource="http://yarta.gforge.inria.fr/ontologies/mse.rdf#Place" />
 		</rdf:Description>
 
 		<!-- TODO: add sanjay with his picture -->

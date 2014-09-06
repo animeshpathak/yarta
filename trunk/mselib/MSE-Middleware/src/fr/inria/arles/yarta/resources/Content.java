@@ -22,8 +22,16 @@ public interface Content extends Resource {
 	public static final String PROPERTY_SOURCE_URI = baseMSEURI + "#source";
 
 	/** the URI for the property title */
-	public static final String PROPERTY_TITLE_URI = baseMSEURI
-			+ "#title";
+	public static final String PROPERTY_TITLE_URI = baseMSEURI + "#title";
+	
+	/** the time stamp */
+	public static final String PROPERTY_TIME_URI = baseMSEURI + "#time";
+	
+	/** the content */
+	public static final String PROPERTY_CONTENT_URI = baseMSEURI + "#content";
+
+	/** the URI for the property title */
+	public static final String PROPERTY_HASREPLY_URI = baseMSEURI + "#hasReply";
 
 	/**
 	 * @return the format
@@ -68,6 +76,34 @@ public interface Content extends Resource {
 	 *            the title to set
 	 */
 	public void setTitle(String contentTitle);
+	
+	/**
+	 * Returns the time stamp associated with this message.
+	 * 
+	 * @return
+	 */
+	public Long getTime();
+
+	/**
+	 * Sets the time stamp associated with this message.
+	 * 
+	 * @param timestmap
+	 */
+	public void setTime(Long timestmap);
+	
+	/**
+	 * Returns the content associated with this message.
+	 * 
+	 * @return
+	 */
+	public String getContent();
+
+	/**
+	 * Sets the content associated with this message.
+	 * 
+	 * @param content
+	 */
+	public void setContent(String content);
 
 	/**
 	 * inverse of {@link Agent#getCreator()}
@@ -76,4 +112,42 @@ public interface Content extends Resource {
 	 *         if there are no such agents. null if there was an error
 	 */
 	public Set<Agent> getCreator_inverse();
+
+	/**
+	 * inverse of {@link Group#getHasContent()}
+	 * 
+	 * @return the list of groups in which this content is held.
+	 */
+	public Set<Group> getHasContent_inverse();
+
+	/**
+	 * Creates a "has reply" edge between this content and a content
+	 * 
+	 * @param c
+	 *            The content which is the reply
+	 * @return true if all went well, false otherwise
+	 */
+	public boolean addHasReply(Content c);
+
+	/**
+	 * 
+	 * @return The list of contents which are replies.
+	 */
+	public Set<Content> getHasReply();
+
+	/**
+	 * deletes the "has reply" link between this content and a content
+	 * 
+	 * @param c
+	 *            The content which is the reply
+	 * @return true if success. false is something went wrong
+	 */
+	public boolean deleteHasReply(Content c);
+	
+	/**
+	 * inverse of {@link Content#getHasReply()}
+	 * 
+	 * @return the list of contents for which this is a reply.
+	 */
+	public Set<Content> getHasReply_inverse();
 }

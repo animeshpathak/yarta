@@ -224,15 +224,15 @@
   
   <owl:DatatypeProperty rdf:about="#time"
                         rdfs:label="creation time">
-    <rdfs:comment>This represents a UNIX timestamp which refers to the creation time of a message.</rdfs:comment>
-    <rdfs:domain rdf:resource="#Message"/>
+    <rdfs:comment>This represents a UNIX timestamp which refers to the creation time of a content.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Content"/>
     <rdfs:range rdf:resource="&xsd;long"/>
   </owl:DatatypeProperty>
 
   <owl:DatatypeProperty rdf:about="#content"
                         rdfs:label="content">
-    <rdfs:comment>This represents content of a message.</rdfs:comment>
-    <rdfs:domain rdf:resource="#Message"/>
+    <rdfs:comment>This represents content of a content.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Content"/>
     <rdfs:range rdf:resource="&xsd;string"/>
   </owl:DatatypeProperty>
 
@@ -306,6 +306,18 @@
   <owl:ObjectProperty rdf:about="#isMemberOf">
     <rdfs:domain rdf:resource="#Agent"/>
     <rdfs:range rdf:resource="#Group"/>
+  </owl:ObjectProperty>
+
+  <!-- Content attached to groups -->
+  <owl:ObjectProperty rdf:about="#hasContent">
+    <rdfs:domain rdf:resource="#Group"/>
+    <rdfs:range rdf:resource="#Content"/>
+  </owl:ObjectProperty>
+
+  <!-- Comment or Reply -->
+  <owl:ObjectProperty rdf:about="#hasReply">
+    <rdfs:domain rdf:resource="#Content"/>
+    <rdfs:range rdf:resource="#Content"/>
   </owl:ObjectProperty>
 
   <owl:ObjectProperty rdf:about="#contains">

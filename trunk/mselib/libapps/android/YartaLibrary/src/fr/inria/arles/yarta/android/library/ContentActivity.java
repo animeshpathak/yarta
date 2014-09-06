@@ -1,14 +1,17 @@
 package fr.inria.arles.yarta.android.library;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -17,23 +20,27 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.PostItem;
-import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.util.PullToRefreshListView;
+import fr.inria.arles.yarta.android.library.resources.Person;
+import fr.inria.arles.yarta.android.library.resources.PersonImpl;
+import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
+import fr.inria.arles.yarta.resources.Agent;
+import fr.inria.arles.yarta.resources.Content;
+import fr.inria.arles.yarta.resources.ContentImpl;
 
-public class PostActivity extends BaseActivity implements
-		PullToRefreshListView.OnRefreshListener, PostsListAdapter.Callback,
-		CommentAddDialog.Callback {
+public class ContentActivity extends BaseActivity implements
+		PullToRefreshListView.OnRefreshListener, ContentListAdapter.Callback,
+		ContentCommentDialog.Callback {
 
 	public static final String PostGuid = "PostGuid";
 
 	private static final int MENU_ADD = 1;
 
-	private String postGuid;
+	private Content post;
 
-	private PostsListAdapter adapter;
+	private ContentListAdapter adapter;
 	private PullToRefreshListView list;
 
 	@Override
@@ -42,9 +49,16 @@ public class PostActivity extends BaseActivity implements
 		setContentView(R.layout.activity_post);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		postGuid = getIntent().getStringExtra(PostGuid);
+		String postId = getIntent().getStringExtra(PostGuid);
 
-		adapter = new PostsListAdapter(this);
+		if (!postId.contains("_")) {
+			postId = Content.typeURI + "_" + postId;
+		}
+
+		post = new ContentImpl(getSAM(), new MSEResource(postId,
+				Content.typeURI));
+
+		adapter = new ContentListAdapter(this, getSAM());
 		adapter.setCallback(this);
 
 		list = (PullToRefreshListView) findViewById(R.id.listComents);
@@ -71,18 +85,6 @@ public class PostActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onCommentAdded() {
-		refreshCommentsList();
-	}
-
-	private void onAddComment() {
-		CommentAddDialog dlg = new CommentAddDialog(this, postGuid);
-		dlg.setCallback(this);
-		dlg.setRunner(runner);
-		dlg.show();
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_ADD:
@@ -92,14 +94,24 @@ public class PostActivity extends BaseActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	private List<PostItem> items;
+	private void onAddComment() {
+		ContentCommentDialog dlg = new ContentCommentDialog(this, post);
+		dlg.setCallback(this);
+		dlg.setSAM(getSAM());
+		dlg.show();
+	}
+
+	private List<Content> items;
 
 	private void refreshCommentsList() {
 		runner.runBackground(new Job() {
 
 			@Override
 			public void doWork() {
-				items = client.getPostComments(postGuid);
+				items = new ArrayList<Content>();
+				items.addAll(post.getHasReply());
+
+				MessagesActivity.sort(items, false);
 			}
 
 			@Override
@@ -112,7 +124,6 @@ public class PostActivity extends BaseActivity implements
 				list.setVisibility(noItems ? View.GONE : View.VISIBLE);
 				findViewById(R.id.listEmpty).setVisibility(
 						noItems ? View.VISIBLE : View.GONE);
-				new Thread(lazyImageLoader).start();
 			}
 		});
 	}
@@ -137,83 +148,47 @@ public class PostActivity extends BaseActivity implements
 				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 		listView.setLayoutParams(params);
 		listView.requestLayout();
+		listView.postInvalidate();
 	}
 
-	private Runnable lazyImageLoader = new Runnable() {
-
-		@Override
-		public void run() {
-			for (PostItem item : items) {
-				String url = item.getOwner().getAvatarURL();
-				if (ImageCache.getDrawable(url) == null) {
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-						handler.post(refreshListAdapter);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		}
-	};
-
-	private Handler handler = new Handler();
-	private Runnable refreshListAdapter = new Runnable() {
-
-		@Override
-		public void run() {
-			adapter.notifyDataSetChanged();
-		}
-	};
-
 	public void refreshUI() {
-		runner.runBackground(new Job() {
+		for (Agent agent : post.getCreator_inverse()) {
+			setCtrlText(R.id.name, Html.fromHtml(agent.getName()));
+			Person person = new PersonImpl(getSAM(), new MSEResource(
+					agent.getUniqueId(), Person.typeURI));
 
-			private PostItem item;
+			Bitmap bitmap = null;
 
-			@Override
-			public void doWork() {
-				item = client.getTopic(postGuid);
-
-				if (item != null) {
-					if (item.getOwner() != null) {
-						String avatarURL = item.getOwner().getAvatarURL();
-						if (ImageCache.getDrawable(avatarURL) == null) {
-							try {
-								ImageCache.setDrawable(avatarURL,
-										ImageCache.drawableFromUrl(avatarURL));
-							} catch (Exception ex) {
-							}
-						}
-					}
-				}
+			for (Picture picture : person.getPicture()) {
+				bitmap = contentClient.getBitmap(picture);
 			}
 
-			@Override
-			public void doUIAfter() {
-				if (item == null) {
-					return;
-				} else if (item.getOwner() == null) {
-					return;
-				}
-				setCtrlText(R.id.name, Html.fromHtml(item.getOwner().getName()));
-				setCtrlText(R.id.title, Html.fromHtml(item.getTitle()));
-				setCtrlText(R.id.content, Html.fromHtml(item.getDescription()));
-				setCtrlText(R.id.time, getString(R.string.post_time_na));
+			ImageView image = (ImageView) findViewById(R.id.icon);
 
-				ImageView image = (ImageView) findViewById(R.id.icon);
-				Drawable drawable = ImageCache.getDrawable(item.getOwner()
-						.getAvatarURL());
-				if (drawable != null) {
-					image.setImageDrawable(drawable);
-				} else {
-					image.setVisibility(View.GONE);
-				}
-
-				refreshCommentsList();
+			if (bitmap != null) {
+				image.setImageBitmap(bitmap);
+			} else {
+				image.setVisibility(View.GONE);
 			}
-		});
+		}
+
+		if (post.getTitle() != null) {
+			setCtrlText(R.id.title, Html.fromHtml(post.getTitle()));
+		}
+
+		if (post.getContent() != null) {
+			setCtrlText(R.id.content, Html.fromHtml(post.getContent()));
+		}
+
+		try {
+			setCtrlText(
+					R.id.time,
+					getString(R.string.topic_time)
+							+ sdf.format(new Date(post.getTime())));
+		} catch (Exception ex) {
+		}
+
+		refreshCommentsList();
 	}
 
 	@Override
@@ -222,14 +197,22 @@ public class PostActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onClickProfile(UserItem item) {
+	public void onClickProfile(Person item) {
 		Intent intent = new Intent(this, ProfileActivity.class);
-		intent.putExtra(ProfileActivity.UserName, item.getUsername());
+		intent.putExtra(ProfileActivity.UserName, item.getUserId());
 		startActivity(intent);
 	}
 
 	@Override
-	public void onClickPost(PostItem item) {
+	public void onClickPost(Content item) {
 		// nothing happens, it's a comment
+	}
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM, HH:mm",
+			Locale.getDefault());
+
+	@Override
+	public void onCommentAdded() {
+		refreshCommentsList();
 	}
 }

@@ -121,4 +121,31 @@ public class MessageImpl extends YartaResource implements Message {
 		return sam.getObjectProperty_inverse(kbNode,
 				Conversation.PROPERTY_CONTAINS_URI);
 	}
+
+	@Override
+	public Set<Group> getHasContent_inverse() {
+		return sam.getObjectProperty_inverse(kbNode,
+				Group.PROPERTY_HASCONTENT_URI);
+	}
+
+	@Override
+	public boolean addHasReply(Content c) {
+		return sam.setObjectProperty(kbNode, PROPERTY_HASREPLY_URI, c);
+	}
+
+	@Override
+	public Set<Content> getHasReply() {
+		return sam.getObjectProperty(kbNode, PROPERTY_HASREPLY_URI);
+	}
+
+	@Override
+	public boolean deleteHasReply(Content c) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_HASREPLY_URI, c);
+	}
+
+	@Override
+	public Set<Content> getHasReply_inverse() {
+		return sam.getObjectProperty_inverse(kbNode,
+				Content.PROPERTY_HASREPLY_URI);
+	}
 }

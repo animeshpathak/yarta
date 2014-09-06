@@ -1,7 +1,5 @@
 package fr.inria.arles.yarta.resources;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;

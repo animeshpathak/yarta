@@ -202,6 +202,16 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 
 	// //////////////// Utility Methods //////////////////////////
 
+	private Map<String, String> dataPropertyCache = new HashMap<String, String>();
+
+	public String get(Node node, String prop) {
+		return dataPropertyCache.get(node.getName() + prop);
+	}
+
+	public void set(Node node, String prop, String value) {
+		dataPropertyCache.put(node.getName() + prop, value);
+	}
+
 	/**
 	 * get a data property directly from the KB
 	 * 
@@ -214,6 +224,10 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 	 */
 	public String getDataProperty(Node resourceNode, String propertyUri,
 			Class<?> c) {
+		if (get(resourceNode, propertyUri) != null) {
+			return get(resourceNode, propertyUri);
+		}
+
 		try {
 			tempTriples = thinKnowledgeBase.getPropertyObjectAsTriples(
 					resourceNode, getPropertyNode(propertyUri), ownerId);
@@ -226,7 +240,9 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 			return null;
 		} else {
 			if (c == String.class) {
-				return (tempTriples.get(0).getObject().getName());
+				String value = tempTriples.get(0).getObject().getName();
+				set(resourceNode, propertyUri, value);
+				return value;
 			} else {
 				// TODO check for other classes. Prepare a proper object
 				logger.e(STORAGE_ACCESS_MGR_LOGTAG, "Non-string class " + c
@@ -250,12 +266,12 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 	 */
 	public void setDataProperty(Node resourceNode, String propertyUri,
 			Class<?> c, Object property) {
-
 		if (property == null) {
 			logger.e(STORAGE_ACCESS_MGR_LOGTAG,
 					"Null property passed. Returning.");
 			return;
 		}
+		set(resourceNode, propertyUri, property.toString());
 		// check if the Object is the proper class.
 
 		// if (!(property instanceof c)){

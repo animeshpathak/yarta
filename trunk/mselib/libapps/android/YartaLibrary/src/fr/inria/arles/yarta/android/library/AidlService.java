@@ -47,7 +47,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	 */
 	private KnowledgeBase knowledgeBase;
 	private CommunicationManager communicationMgr;
-	
+
 	/**
 	 * The bridge between Iris & Yarta
 	 */
@@ -80,7 +80,8 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	}
 
 	public AidlService(MSEService init, AnalyticsTracker tracker,
-			KnowledgeBase knowledgeBase, CommunicationManager communicationMgr, ContentClientPictures contentClient) {
+			KnowledgeBase knowledgeBase, CommunicationManager communicationMgr,
+			ContentClientPictures contentClient) {
 		this.service = init;
 		this.tracker = tracker;
 		this.knowledgeBase = knowledgeBase;
@@ -134,6 +135,8 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 			result = Conversion.toBundle(knowledgeBase.addResource(nodeURI,
 					typeURI, requestorId));
+
+			bridge.onAddResource(nodeURI, typeURI);
 
 		} catch (Exception ex) {
 			logError("AidlService.addResource ex: %s", ex);
@@ -200,9 +203,15 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		tracker.beforeAPIUsage();
 		try {
 			log("AidlService.addTriple[knowledgeBase = %s]", knowledgeBase);
-			result = Conversion.toBundle(knowledgeBase.addTriple(
-					Conversion.toNode(s), Conversion.toNode(p),
-					Conversion.toNode(o), requestorId));
+
+			Node sub = Conversion.toNode(s);
+			Node pre = Conversion.toNode(p);
+			Node obj = Conversion.toNode(o);
+
+			result = Conversion.toBundle(knowledgeBase.addTriple(sub, pre, obj,
+					requestorId));
+
+			bridge.onAddTriple(sub, pre, obj);
 		} catch (Exception ex) {
 			logError("AidlService.addTriple ex: %s", ex);
 		}
@@ -268,8 +277,8 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
 			}
-			
-			bridge.ensureObjectInformation(subject, predicate);
+
+			bridge.onGetPropertyObjectAsTriples(subject, predicate);
 		} catch (Exception ex) {
 			logError("AidlService.getPropertyObjectAsTriples ex: %s", ex);
 		}
@@ -285,7 +294,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		try {
 			log("AidlService.getPropertySubjectAsTriples[knowledgeBase = %s]",
 					knowledgeBase);
-			
+
 			Node predicate = Conversion.toNode(p);
 			Node object = Conversion.toNode(o);
 			List<Triple> triples = knowledgeBase.getPropertySubjectAsTriples(
@@ -294,8 +303,8 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
 			}
-			
-			bridge.ensureSubjectInformation(predicate, object);
+
+			bridge.onGetPropertySubjectAsTriples(predicate, object);
 		} catch (Exception ex) {
 			logError("AidlService.getPropertySubjectAsTriples ex: %s", ex);
 			ex.printStackTrace();

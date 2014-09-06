@@ -1,6 +1,5 @@
 package fr.inria.arles.yarta.resources;
 
-import java.util.List;
 import java.util.Set;
 
 /**

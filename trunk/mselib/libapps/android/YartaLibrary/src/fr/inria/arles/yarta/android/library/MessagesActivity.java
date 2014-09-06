@@ -1,25 +1,24 @@
 package fr.inria.arles.yarta.android.library;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.MessageItem;
-import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
+import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.ConversationImpl;
 import fr.inria.arles.yarta.resources.Message;
@@ -32,6 +31,24 @@ public class MessagesActivity extends BaseActivity implements
 
 	private MessagesListAdapter adapter;
 	private Conversation conversation;
+
+	public static void sort(List<? extends Content> list,
+			final boolean ascending) {
+		Collections.sort(list, new Comparator<Content>() {
+
+			@Override
+			public int compare(Content lhs, Content rhs) {
+				long l = lhs.getTime();
+				long r = rhs.getTime();
+				if (l < r) {
+					return ascending ? -1 : 1;
+				} else if (l > r) {
+					return ascending ? 1 : -1;
+				}
+				return 0;
+			}
+		});
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +69,17 @@ public class MessagesActivity extends BaseActivity implements
 		execute(new Job() {
 			Person me;
 			String title;
-			Set<Message> messages;
+			List<Message> messages;
 
 			@Override
 			public void doWork() {
 				try {
 					me = getSAM().getMe();
-					messages = conversation.getContains();
+					messages = new ArrayList<Message>();
+					messages.addAll(conversation.getContains());
+
+					sort(messages, true);
+
 					for (Agent agent : conversation.getParticipatesTo_inverse()) {
 						if (!agent.equals(me))
 							title = agent.getName();
@@ -97,7 +118,9 @@ public class MessagesActivity extends BaseActivity implements
 
 	private void onReply() {
 		Intent intent = new Intent(this, MessageActivity.class);
-		intent.putExtra(MessageActivity.Reply, (MessageItem) adapter.getItem(0));
+
+		Message message = (Message) adapter.getItem(0);
+		intent.putExtra(MessageActivity.ReplyId, message.getUniqueId());
 		startActivity(intent);
 		finish();
 	}
@@ -105,9 +128,10 @@ public class MessagesActivity extends BaseActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		Message message = (Message) adapter.getItem(position);
+
 		Intent intent = new Intent(this, MessageActivity.class);
-		intent.putExtra(MessageActivity.Message,
-				(MessageItem) adapter.getItem(position));
+		intent.putExtra(MessageActivity.MessageId, message.getUniqueId());
 		startActivity(intent);
 	}
 }

@@ -6,10 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
-import fr.inria.arles.iris.web.PostItem;
-import fr.inria.arles.iris.web.UserItem;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
@@ -19,14 +15,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.web.ImageCache;
+import fr.inria.arles.iris.web.PostItem;
+import fr.inria.arles.iris.web.UserItem;
 
-public class PostsListAdapter extends BaseAdapter implements
+public class TopicListAdapter extends BaseAdapter implements
 		View.OnClickListener {
 
 	public interface Callback {
-		public void onClickProfile(UserItem item);
+		public void onClickProfile(UserItem user);
 
-		public void onClickPost(PostItem item);
+		public void onClickPost(PostItem post);
 	}
 
 	private class ViewHolder {
@@ -45,7 +45,7 @@ public class PostsListAdapter extends BaseAdapter implements
 	private LayoutInflater inflater;
 	private Callback callback;
 
-	public PostsListAdapter(Context context) {
+	public TopicListAdapter(Context context) {
 		inflater = LayoutInflater.from(context);
 	}
 
