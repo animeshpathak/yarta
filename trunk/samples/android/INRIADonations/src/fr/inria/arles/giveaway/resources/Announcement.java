@@ -16,9 +16,6 @@ public interface Announcement extends Resource, Content {
 	/** the URI for property title */
 	public static final String PROPERTY_TITLE_URI = baseMSEURI + "#title";
 
-	/** the URI for property time */
-	public static final String PROPERTY_TIME_URI = MSEManagerEx.baseMSEURI + "#time";
-
 	/** the URI for property price */
 	public static final String PROPERTY_PRICE_URI = MSEManagerEx.baseMSEURI + "#price";
 

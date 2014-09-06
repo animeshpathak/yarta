@@ -188,8 +188,7 @@ public class ItemActivity extends BaseActivity implements View.OnClickListener {
 			String userId = creator.getUserId();
 
 			Intent intent = new Intent("Yarta.Profile");
-			intent.putExtra("UserName",
-					userId.substring(0, userId.indexOf('@')));
+			intent.putExtra("UserName", userId);
 			startActivity(intent);
 		}
 	}
