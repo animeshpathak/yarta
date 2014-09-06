@@ -88,10 +88,6 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app.uninitMSE();
 	}
 
-	protected void clearMSE() {
-		app.clearMSE();
-	}
-
 	protected void initMSE() {
 		app.initMSE(this);
 	}

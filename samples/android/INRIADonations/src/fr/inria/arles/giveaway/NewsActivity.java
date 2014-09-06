@@ -37,7 +37,6 @@ public class NewsActivity extends BaseActivity implements
 	private static final int SIDE_MENU_SALES = 4;
 
 	private static final int SIDE_MENU_FEEDBACK = 5;
-	private static final int SIDE_MENU_LOGOUT = 6;
 
 	private MenuItem addMenuItem;
 	private int currentView = -1;
@@ -58,21 +57,6 @@ public class NewsActivity extends BaseActivity implements
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	private MenuListAdapter drawerAdapter;
-
-	public void onClickLogout() {
-		AlertDialog.show(this, getString(R.string.main_logout_are_you_sure),
-				getString(R.string.main_logout_confirm),
-				getString(R.string.main_logout_ok),
-				getString(R.string.main_logout_cancel),
-				new AlertDialog.Handler() {
-
-					@Override
-					public void onOK() {
-						clearMSE();
-						finish();
-					}
-				});
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -166,10 +150,8 @@ public class NewsActivity extends BaseActivity implements
 
 		if (position == SIDE_MENU_EDIT_PROFILE || position == 0) {
 			try {
-				String userId = getSAM().getMe().getUserId();
 				Intent intent = new Intent("Yarta.Profile");
-				intent.putExtra("UserName",
-						userId.substring(0, userId.indexOf('@')));
+				intent.putExtra("UserName", getSAM().getMe().getUserId());
 				startActivity(intent);
 			} catch (Exception ex) {
 				// TODO: some logging;
@@ -178,11 +160,6 @@ public class NewsActivity extends BaseActivity implements
 		}
 		if (position == SIDE_MENU_FEEDBACK) {
 			onSendFeedback();
-			return;
-		}
-
-		if (position == SIDE_MENU_LOGOUT) {
-			onClickLogout();
 			return;
 		}
 
@@ -291,8 +268,6 @@ public class NewsActivity extends BaseActivity implements
 
 		sideMenuItems.add(new SideMenuItem(
 				getString(R.string.news_send_feedback), SIDE_MENU_FEEDBACK));
-		sideMenuItems.add(new SideMenuItem(
-				getString(R.string.news_profile_logout), SIDE_MENU_LOGOUT));
 	}
 
 	@Override

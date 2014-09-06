@@ -15,6 +15,12 @@ public class $StorageAcMgrClass extends StorageAccessManager {
 	public $StorageAcMgrClass() {
 		super();
 #foreach ($Class in $Classes)
+
+	#if ($Class.isDerivedFrom('Person'))
+		bindInterfacetoImplementation(${YartaResourcePackage}Person.typeURI,
+				"${ResourcesPackage}.${Class.Name}Impl");
+	#end
+	
 		bindInterfacetoImplementation(${Class.Name}.typeURI,
 				"${ResourcesPackage}.${Class.Name}Impl");
 #end

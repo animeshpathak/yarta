@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY mse "http://yarta.gforge.inria.fr/ontologies/mse.rdf">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&mse;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;"
+		 xmlns:mse="http://yarta.gforge.inria.fr/ontologies/mse.rdf#">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about="">
+    <rdfs:comment xml:lang="en">Changes from version 1.0. Added some datatype properties for entities Content, Event and Place. Datatype properties regarding Content are inspired by the Dublin Core specification (and thus can be easily mapped on it if needed). Also added the UID datatype property to associate the user with an MSE user id.</rdfs:comment>
+    <rdfs:comment xml:lang="en">MSE ontology v1.1 -- Created by Alessandra Toninelli @ INRIA Paris</rdfs:comment>
+    <rdfs:comment xml:lang="en">The MSE ontology does not directly import FOAF properties because the current version of FoaF is OWL-Full (due to DL axioms + mixed use of OWL Datatype and Object property). To avoid this complexity, we keep our ontology as OWL Lite (RDFS-like), but we model properties so that the mapping onto FoaF is made easy to perform. In this way, existing FoaF profiles can be directly imported and used if needed. For coherence purposes, the same approach was taken with respect to the Dublin Core, although the DC has RDF-S complexity.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Version 1.1 of the RDF ontology describing social networks. This ontology provides (i) first-class entities, i.e., nodes that are believed to be essential to build a social network (ii) first-class relationships. i.e., links between those nodes that are not application-specific but characterize the basic relation between some of the first-class entities. This ontology is far from being exhaustive and it is meant to be extended and possibly modified. Application developers are provided with a base set of classes and properties they can use to describe their social networks. The addition of new entities and relationships is made by subclassing RDF classe and RDF properties provided within this model. It is also possible to add new properties from scratch between existing or subclassed classes.Finally, given the existence of MSE properties having direct correspondent in FOAF and DC, it is always possible to set the equivalence between MSE properties and FOAF/DC properties and import FOAF or DC profiles. This would bring the complexity of the resulting ontology to OWL, but would allow more advanced reasoning. We leave this choice to the application developer.</rdfs:comment>
+    <rdfs:label xml:lang="en">MSE Ontology 1.1</rdfs:label>
+  </owl:Ontology>
+
+<!-- Classes -->
+  <owl:Class rdf:about="#Agent"
+             rdfs:label="agent">
+    <rdfs:comment xml:lang="en">The most general class for agentive entities. This is the class that traditionally includes groups and single person. See also FoaF and DOLCE-UltraLite</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CompositeEvent"
+             rdfs:label="composite event">
+    <rdfs:comment>An event consisting of two or more single events, which may take place in parallel or in sequence.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Composite events might be handled, for example, by means of RDF Containers (Bag, Alt and Seq). It has to be verified if they are suitable for data processing purposes. The property used to state that one SingleEvent belongs to a CompositeEvent is the rdfs:member property.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Content"
+             rdfs:label="content">
+    <rdfs:comment>A generic class representing all possible types of entities carrying some information.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Event"
+             rdfs:label="event">
+    <rdfs:comment xml:lang="en">The notion of event is twofold. From a theoretical perspective, events represent 4D occurrences, i.e., occurrences that happen both in space and time. Differently from 3D occurrences (e.g., Person) events exist in time and do not change, at least as a whole, over time. From a social application perspective, events represent entities happening in time having some kind of social meaning/impact. Social events, such as  meetings, parties or talks, are common examples of events, although they do not cover all the expressivity of this class. For example, a location-based social application might model the entering of a person in a room as an Event. Specialized subclasses are therefore needed for each application.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Group"
+             rdfs:label="group">
+    <rdfs:comment xml:lang="en">A group is a set of people. Both groups and single persons have the same first-class properties linking them to other first-class entities: therefore, they are modeled as subclass of the same Agent class. A person is linked to a group by the rdfs:member property. We reuse this existing property, whether another more specific property is needed has to be seen.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Agent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ParEvent"
+             rdfs:label="a set of parallel events">
+    <rdfs:subClassOf rdf:resource="#CompositeEvent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Person"
+             rdfs:label="person">
+    <rdfs:comment xml:lang="en">Person can be mapped onto existing social ontologies, such Friend-of-A-Friend.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Person has a number of datatype properties (i.e., properties whose value is a literal, such as a string or an integer) + some object properties (e.g., knows). These properties are inspired by FoaF, and thus set equivalent to them. The fruit ontology does not directly import the properties because the current version of FoaF is OWL-Full (due to DL axioms + mixed use of OWL Datatype and Object property).  To avoid this complexity, we keep our ontology as OWL Lite (RDFS-like), but we model properties so that the mapping onto FoaF is made easy to perform. Also, existing FoaF profiles can be directly imported and used if needed.</rdfs:comment>
+    <rdfs:comment xml:lang="en">This class actually refer to a human being, which is the main actor of any social situation.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Agent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Place">
+    <rdfs:comment xml:lang="en">This class represents a generic notion of place/location. Several subclasses are possible, depending on the application needs. Place can include other places, recursively.</rdfs:comment>
+    <rdfs:label xml:lang="en">place</rdfs:label>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SeqEvent"
+             rdfs:label="sequence of events">
+    <rdfs:subClassOf rdf:resource="#CompositeEvent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SingleEvent"
+             rdfs:label="single event">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Topic"
+             rdfs:label="topic">
+    <rdfs:comment xml:lang="en">This class represents any topic that might be, for example, subject of interest for a person or object of description in a document (content) or many others. It was inspired by users tagging activities. As such, it might be mapped onto keywords, folksonomies or more structured taxonomies.</rdfs:comment>
+  </owl:Class>
+  
+  <owl:Class rdf:about="#Message"
+             rdfs:label="message">
+    <rdfs:comment xml:lang="en">This class represents a message.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Content"/>
+  </owl:Class>
+  
+  <owl:Class rdf:about="#Conversation"
+             rdfs:label="conversation">
+    <rdfs:comment xml:lang="en">This class represents a container for contents of type message</rdfs:comment>
+  </owl:Class>
+
+<!-- Annotation Properties -->
+  <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
+  <owl:AnnotationProperty rdf:about="&rdfs;label"/>
+  <owl:AnnotationProperty rdf:about="&rdfs;seeAlso"/>
+  <owl:AnnotationProperty rdf:about="&owl;versionInfo"/>
+
+<!-- Datatype Properties -->
+
+  <owl:DatatypeProperty rdf:about="#description"
+                        rdfs:label="description">
+    <rdfs:comment>Textual description of an event. Not sure we need it.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Event"/>
+	<rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#email">
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#firstName">
+    <rdfs:comment xml:lang="en">Can be mapped onto FOAF firstName</rdfs:comment>
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#format"
+                        rdfs:label="format">
+    <rdfs:comment>Can be mapped on Dublin Core Metadata Set 1.1 format</rdfs:comment>
+    <rdfs:domain rdf:resource="#Content"/>
+	<rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#homepage">
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#identifier"
+                        rdfs:comment="Can be mapped on DC identifier"
+                        rdfs:label="identifier">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:domain rdf:resource="#Content"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#lastName">
+    <rdfs:comment xml:lang="en">Can be mapped on foaf:lastName</rdfs:comment>
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#latitude"
+                        rdfs:comment="Expressed in degrees"
+                        rdfs:label="latitude">
+    <rdfs:domain rdf:resource="#Place"/>
+	<rdfs:range rdf:resource="&xsd;float"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#longitude"
+                        rdfs:comment="Expressed in degrees."
+                        rdfs:label="longitude">
+    <rdfs:domain rdf:resource="#Place"/>
+	<rdfs:range rdf:resource="&xsd;float"/>
+  </owl:DatatypeProperty>
+
+  <!-- Agent - Place List -->
+  <rdf:Description rdf:about="#AP">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:resource="#AP1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AP1">
+	<rdf:first rdf:resource="#Agent"/>
+	<rdf:rest rdf:resource="#AP2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AP2">
+	<rdf:first rdf:resource="#Place"/>
+	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil" />
+  </rdf:Description>
+  
+  <owl:DatatypeProperty rdf:about="#name"
+                        rdfs:label="name">
+	<rdfs:domain rdf:resource="#AP" />
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#source"
+                        rdfs:label="source">
+    <rdfs:comment>Can be mapped onto Dublin Core (element set 1.1) source.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Content"/>
+    <rdfs:seeAlso xml:lang="en">http://dublincore.org/documents/dces/</rdfs:seeAlso>
+	<rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <!-- Topic - Content - Event List -->
+  <rdf:Description rdf:about="#TCE">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:resource="#TCE1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TCE1">
+	<rdf:first rdf:resource="#Topic"/>
+	<rdf:rest rdf:resource="#TCE2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TCE2">
+	<rdf:first rdf:resource="#Content"/>
+	<rdf:rest rdf:resource="#TCE3" />
+  </rdf:Description>
+  <rdf:Description rdf:about="#TCE3">
+	<rdf:first rdf:resource="#Event"/>
+	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil" />
+  </rdf:Description>
+  
+  <owl:DatatypeProperty rdf:about="#title"
+                        rdfs:label="title">
+    <rdfs:comment>Can be mapped on Dublin Core Metadata Element Set 1.1 title.</rdfs:comment>
+	<rdfs:domain rdf:resource="#TCE"/>
+    <rdfs:seeAlso xml:lang="en">http://dublincore.org/documents/dces/</rdfs:seeAlso>
+	<rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+  
+
+  <owl:DatatypeProperty rdf:about="#userId"
+                        rdfs:label="MSE user id">
+    <rdfs:comment>Associated by Yarta to any user to allow further identification in the social graph. Must be unique within the same Yarta instance</rdfs:comment>
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+  
+  <owl:DatatypeProperty rdf:about="#time"
+                        rdfs:label="creation time">
+    <rdfs:comment>This represents a UNIX timestamp which refers to the creation time of a content.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Content"/>
+    <rdfs:range rdf:resource="&xsd;long"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#content"
+                        rdfs:label="content">
+    <rdfs:comment>This represents content of a content.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Content"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+  <owl:ObjectProperty rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#li"/>
+  <owl:ObjectProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+
+  <owl:ObjectProperty rdf:about="#creator"
+                      rdfs:label="creator">
+    <rdfs:comment xml:lang="en">Holding between an Agent and a Content.Equivalent to Dublin Core creator. The property has been created in the MSE ontology instead of simply importing it from DC because it is a first-class relationship between two first-class entities.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="#Content"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasInterest">
+    <rdfs:comment xml:lang="en">The range of this property is not constrained to be any particular class. A person could be in fact interested to another person, a topic, a location or a content, or any other subclass of these.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Agent"/>
+	<rdfs:range rdf:resource="#Resource"/>
+    <rdfs:label xml:lang="en">is interested in</rdfs:label>
+  </owl:ObjectProperty>
+
+  <!-- Agent - Event - Place List -->
+  <rdf:Description rdf:about="#AEP">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:resource="#AEP1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AEP1">
+	<rdf:first rdf:resource="#Agent"/>
+	<rdf:rest rdf:resource="#AEP2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AEP2">
+	<rdf:first rdf:resource="#Event"/>
+	<rdf:rest rdf:resource="#AEP3" />
+  </rdf:Description>
+  <rdf:Description rdf:about="#AEP3">
+	<rdf:first rdf:resource="#Place"/>
+	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil" />
+  </rdf:Description>
+  
+  <owl:ObjectProperty rdf:about="#isLocated">
+    <rdfs:comment xml:lang="en">Places can be recursively located in other places, i.e., they are in a containment/inclusion relation.</rdfs:comment>
+    <rdfs:comment xml:lang="en">This property links both person and event to the location where it currently exists. The usage of location will be slightly different for people and events, but the base relationship remains the same. In fact, based on the definition, Person and Event are 3D and 4D occurrences: the 3 dimensions are given by tridimensional space. Events also have time, but this does not change their existing in physical space.</rdfs:comment>
+    <rdfs:comment xml:lang="en">is located in</rdfs:comment>
+	<rdfs:domain rdf:resource="#AEP" />
+    <rdfs:range rdf:resource="#Place"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isTagged"
+                      rdfs:label="is tagged as">
+    <rdfs:comment xml:lang="en">This property is used to link any first-class entity (except Topic) with a certain topic. It is a very general property and is meant to represent the very common action of tagging resources (in a broad sense) on the Web, but also in the physical world (e.g., leaving comments on places)</rdfs:comment>
+	<rdfs:domain rdf:resource="#Resource"/>
+    <rdfs:range rdf:resource="#Topic"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#knows"
+                      rdfs:label="knows">
+    <rdfs:comment xml:lang="en">Can be mapped on foaf:knows</rdfs:comment>
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="#Agent"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isAttending">
+    <rdfs:comment xml:lang="en">The basic relationship (first-class) between a Person and an Event is the "participation". This comes from the definition of Person and Event: Event is a 4D occurrence ( = exists in space and time), Person is a 3D occurrence ( = exists in space and might change over time).</rdfs:comment>
+    <rdfs:comment xml:lang="en">The participation relation will be subclassed as needed by the application.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:label xml:lang="en">is attending</rdfs:label>
+    <rdfs:range rdf:resource="#Event"/>
+  </owl:ObjectProperty>
+  
+  <owl:ObjectProperty rdf:about="#isMemberOf">
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="#Group"/>
+  </owl:ObjectProperty>
+
+  <!-- Content attached to groups -->
+  <owl:ObjectProperty rdf:about="#hasContent">
+    <rdfs:domain rdf:resource="#Group"/>
+    <rdfs:range rdf:resource="#Content"/>
+  </owl:ObjectProperty>
+
+  <!-- Comment or Reply -->
+  <owl:ObjectProperty rdf:about="#hasReply">
+    <rdfs:domain rdf:resource="#Content"/>
+    <rdfs:range rdf:resource="#Content"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#contains">
+    <rdfs:comment xml:lang="en">This shows the messages contained in a particular conversation.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Conversation"/>
+    <rdfs:label xml:lang="en">participates to</rdfs:label>
+    <rdfs:range rdf:resource="#Message"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#participatesTo">
+    <rdfs:comment xml:lang="en">This shows the participation of an Agent to a particular conversation.</rdfs:comment>
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:label xml:lang="en">participates to</rdfs:label>
+    <rdfs:range rdf:resource="#Conversation"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

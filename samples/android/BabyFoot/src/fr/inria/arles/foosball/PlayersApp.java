@@ -103,22 +103,6 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 		return null;
 	}
 
-	public void clearMSE() {
-		if (mse != null) {
-			try {
-				if (comm != null) {
-					comm.setMessageReceiver(null);
-				}
-				mse.clear();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			mse = null;
-			sam = null;
-			comm = null;
-		}
-	}
-
 	public void uninitMSE() {
 		if (mse != null) {
 			try {

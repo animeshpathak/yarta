@@ -90,27 +90,27 @@ public class Common {
 	 */
 	public static Category getLocalizedCategory(Context context,
 			StorageAccessManagerEx sam, String category) {
-		final String mse = "http://yarta.gforge.inria.fr/ontologies/mse.rdf";
+		final String dons = "http://yarta.gforge.inria.fr/ontologies/donations.rdf";
 		String categoryId = null;
 
 		if (category.equals(context.getString(R.string.category_kitchen))) {
-			categoryId = mse + "#Kitchen";
+			categoryId = dons + "#Kitchen";
 		} else if (category.equals(context
 				.getString(R.string.category_furniture))) {
-			categoryId = mse + "#Furniture";
+			categoryId = dons + "#Furniture";
 		} else if (category.equals(context.getString(R.string.category_games))) {
-			categoryId = mse + "#Games";
+			categoryId = dons + "#Games";
 		} else if (category
 				.equals(context.getString(R.string.category_laisure))) {
-			categoryId = mse + "#Leisure";
+			categoryId = dons + "#Leisure";
 		} else if (category
 				.equals(context.getString(R.string.category_animals))) {
-			categoryId = mse + "#Animals";
+			categoryId = dons + "#Animals";
 		} else if (category.equals(context
 				.getString(R.string.category_bricolaje))) {
-			categoryId = mse + "#Gardening";
+			categoryId = dons + "#Gardening";
 		} else if (category.equals(context.getString(R.string.category_misc))) {
-			categoryId = mse + "#Misc";
+			categoryId = dons + "#Misc";
 		}
 
 		if (categoryId != null) {

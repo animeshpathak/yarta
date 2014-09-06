@@ -659,7 +659,8 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 	 * @return The KB Node created.
 	 */
 	public Node createNewNode(String typeuri) {
-		String newID = kbNameSpace + UUID.randomUUID().toString();
+		String namespace = getNamespace(typeuri);
+		String newID = namespace + UUID.randomUUID().toString();
 		try {
 			Node newNode = thinKnowledgeBase.addResource(newID, typeuri,
 					ownerId);
@@ -669,6 +670,19 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 					"KBException crating new node of type " + typeuri, e);
 			return null;
 		}
+	}
+
+	/**
+	 * Returns the namespace asociated with an URI
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	private String getNamespace(String uri) {
+		if (uri.contains("#")) {
+			return uri.substring(0, uri.indexOf("#") + 1);
+		}
+		return kbNameSpace;
 	}
 
 	/**
