@@ -14,6 +14,7 @@ import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -86,7 +87,8 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		this.tracker = tracker;
 		this.knowledgeBase = knowledgeBase;
 		this.communicationMgr = communicationMgr;
-		this.bridge = new IrisBridge(this, knowledgeBase, contentClient);
+		this.bridge = new IrisBridge((Context) init, this, knowledgeBase,
+				contentClient);
 	}
 
 	@Override
@@ -725,6 +727,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			try {
 				application.handleNotification(query);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				log("handleNotification ex: %s", ex);
 			}
 		}

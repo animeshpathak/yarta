@@ -152,6 +152,9 @@ public class ContentActivity extends BaseActivity implements
 	}
 
 	public void refreshUI() {
+		if (post == null) {
+			return;
+		}
 		for (Agent agent : post.getCreator_inverse()) {
 			setCtrlText(R.id.name, Html.fromHtml(agent.getName()));
 			Person person = new PersonImpl(getSAM(), new MSEResource(

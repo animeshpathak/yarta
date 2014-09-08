@@ -22,6 +22,7 @@ import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.communication.YCommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import fr.inria.arles.yarta.resources.Constants;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -97,6 +98,7 @@ public class LibraryService extends Service implements MSEApplication,
 			log("loadClientDataAndNotify<%s>", app.getAppId());
 			app.handleKBReady(getUserId());
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			logError("error: %s", ex);
 		}
 		return result;
@@ -154,13 +156,16 @@ public class LibraryService extends Service implements MSEApplication,
 
 			((MSEKnowledgeBase) knowledgeBase).setUpdateHelper(helper);
 
-			knowledgeBase.initialize(dataPath + "/" + baseOntologyFilePath,
-					mseNamespace, dataPath + "/" + basePolicyFilePath, userId);
+			knowledgeBase.initialize(getAsset("mse-1.2.rdf"),
+					Constants.baseMSEURI + "#", getAsset("policies"), userId);
 
 			try {
-				String kbPath = dataPath + "/kb.rdf";
-				if (new File(kbPath).exists()) {
-					MSEKnowledgeBaseUtils.importDataFromRDF(kbPath,
+				// import elgg's rdf
+				MSEKnowledgeBaseUtils.importDataFromRDF(getAsset("elgg.rdf"),
+						knowledgeBase);
+
+				if (new File(getStorePath()).exists()) {
+					MSEKnowledgeBaseUtils.importDataFromRDF(getStorePath(),
 							knowledgeBase);
 				}
 			} catch (Exception ex) {
@@ -182,11 +187,16 @@ public class LibraryService extends Service implements MSEApplication,
 		return true;
 	}
 
+	private String getStorePath() {
+		String storePath = getFilesDir().getAbsolutePath() + "/kb.rdf";
+		return storePath;
+	}
+
 	@Override
 	public boolean save() {
+
 		MSEKnowledgeBaseUtils.printMSEKnowledgeBase(
-				(MSEKnowledgeBase) knowledgeBase, dataPath + "/kb.rdf",
-				"RDF/XML");
+				(MSEKnowledgeBase) knowledgeBase, getStorePath(), "RDF/XML");
 		return true;
 	}
 
@@ -241,10 +251,6 @@ public class LibraryService extends Service implements MSEApplication,
 		client.setUsername(settings.getString(Settings.USER_NAME));
 		client.setUserGuid(settings.getString(Settings.USER_GUID));
 		client.setToken(settings.getString(Settings.USER_TOKEN));
-
-		initStrings();
-
-		ensureBaseFiles(dataPath);
 
 		registerReceiver(helloReceiver, new IntentFilter(HelloReceiver.Action));
 
@@ -358,36 +364,21 @@ public class LibraryService extends Service implements MSEApplication,
 	}
 
 	/**
-	 * Initializes used strings.
+	 * Drops an asset to the public directory returning its path.
+	 * 
+	 * @param name
+	 * @return
 	 */
-	private void initStrings() {
-		baseOntologyFilePath = getString(R.string.service_baseRDF);
-		basePolicyFilePath = getString(R.string.service_basePolicy);
-		mseNamespace = getString(R.string.service_baseNamespace);
-
-		dataPath = getFilesDir().getAbsolutePath();
-	}
-
-	/**
-	 * Ensures the base ontology is always dumped.
-	 */
-	private void ensureBaseFiles(String folder) {
-		dumpAsset(folder, baseOntologyFilePath);
-		dumpAsset(folder, basePolicyFilePath);
-	}
-
-	/**
-	 * Dumps an asset in the specified folder.
-	 */
-	private void dumpAsset(String folder, String fileName) {
+	private String getAsset(String name) {
+		String dataPath = getFilesDir().getAbsolutePath();
+		String outPath = dataPath + "/" + name;
 		try {
-			InputStream fin = getAssets().open(fileName,
-					AssetManager.ACCESS_RANDOM);
-			FileOutputStream fout = new FileOutputStream(folder + "/"
-					+ fileName);
+			InputStream fin = getAssets()
+					.open(name, AssetManager.ACCESS_RANDOM);
+			FileOutputStream fout = new FileOutputStream(outPath);
 
 			int count = 0;
-			byte buffer[] = new byte[1024];
+			byte buffer[] = new byte[4096];
 
 			while ((count = fin.read(buffer)) != -1) {
 				fout.write(buffer, 0, count);
@@ -396,8 +387,9 @@ public class LibraryService extends Service implements MSEApplication,
 			fin.close();
 			fout.close();
 		} catch (Exception ex) {
-			log("Error in dumpAsset: %s", ex.getMessage());
+			ex.printStackTrace();
 		}
+		return outPath;
 	}
 
 	// logging stuff
@@ -438,14 +430,6 @@ public class LibraryService extends Service implements MSEApplication,
 	}
 
 	private HelloReceiver helloReceiver = new HelloReceiver();
-
-	// file stuff
-	private String dataPath;
-
-	/** these will be loaded from string.xml **/
-	private String baseOntologyFilePath;
-	private String basePolicyFilePath;
-	private String mseNamespace;
 
 	// GA tracker
 	private static AnalyticsTracker tracker = new AnalyticsTracker();

@@ -4,6 +4,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.Settings;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -50,9 +51,9 @@ public class EulaActivity extends SherlockActivity {
 	}
 
 	protected void proceedToApplication() {
-		YartaApp app = (YartaApp) getApplication();
-		app.initMSE(null);
-		
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+
 		// finish since handleKBReady will be called
 		finish();
 	}

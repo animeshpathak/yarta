@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-// TODO: better cache in db's
 public class ImageCache {
 
 	private static Map<String, Drawable> cache = new HashMap<String, Drawable>();

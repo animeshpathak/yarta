@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.IBinder;
 import android.os.RemoteException;
 import fr.inria.arles.yarta.knowledgebase.KBException;
@@ -81,6 +82,8 @@ public class CMClient implements CommunicationManager {
 	public int clear() {
 		try {
 			mIRemoteService.clear();
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -107,6 +110,8 @@ public class CMClient implements CommunicationManager {
 		log("sendHello(%s)", partnerID);
 		try {
 			return mIRemoteService.sendHello(partnerID);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("sendHello ex: %s", ex);
 			ex.printStackTrace();
@@ -119,6 +124,8 @@ public class CMClient implements CommunicationManager {
 		log("sendUpdateRequest(%s)", partnerID);
 		try {
 			return mIRemoteService.sendUpdateRequest(partnerID);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("sendUpdateRequest ex: %s", ex);
 			ex.printStackTrace();
@@ -133,6 +140,8 @@ public class CMClient implements CommunicationManager {
 			message.setAppId(application.getAppId());
 			return mIRemoteService.sendMessage(peerId,
 					Conversion.toBundle(message));
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("sendMessage ex: %s", ex);
 			ex.printStackTrace();
@@ -145,6 +154,8 @@ public class CMClient implements CommunicationManager {
 		log("sendResource(%s, %s)", peerId, uniqueId);
 		try {
 			return mIRemoteService.sendResource(peerId, uniqueId);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("sendMessage ex: %s", ex);
 			ex.printStackTrace();
@@ -157,6 +168,8 @@ public class CMClient implements CommunicationManager {
 		log("sendNotify(%s)", peerId);
 		try {
 			return mIRemoteService.sendNotify(peerId);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("sendMessage ex: %s", ex);
 			ex.printStackTrace();
@@ -203,6 +216,15 @@ public class CMClient implements CommunicationManager {
 	}
 
 	/**
+	 * Triggered when the communication with the AIDL service is lost. Does all
+	 * the re-bindings.
+	 */
+	private void rebind() {
+		doStartService();
+		doBindService();
+	}
+
+	/**
 	 * Logs an error with given parameters.
 	 * 
 	 * @param format
@@ -242,9 +264,7 @@ public class CMClient implements CommunicationManager {
 			log("onServiceDisconnected");
 			mIRemoteService = null;
 
-			// restart & rebind
-			doStartService();
-			doBindService();
+			rebind();
 		}
 	};
 

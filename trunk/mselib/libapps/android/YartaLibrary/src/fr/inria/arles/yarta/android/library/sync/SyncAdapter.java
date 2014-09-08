@@ -103,12 +103,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements
 
 	@Override
 	public void handleNotification(String notification) {
-		log("handleNotification(%)", notification);
+		log("handleNotification(%s)", notification);
 	}
 
 	@Override
 	public boolean handleQuery(String query) {
-		log("handleQuery(%)", query);
+		log("handleQuery(%s)", query);
 		return false;
 	}
 

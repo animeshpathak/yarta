@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import android.content.Context;
+import fr.inria.arles.iris.web.ElggClient.WebCallback;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
 import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
 import fr.inria.arles.yarta.android.library.resources.Agent;
@@ -25,19 +27,43 @@ import fr.inria.arles.yarta.resources.Message;
  * This class contains useful methods to fetch data into KB using the Iris web
  * client.
  */
-public class IrisBridge {
+public class IrisBridge implements WebCallback {
 
 	private static ElggClient client = ElggClient.getInstance();
+	private Context context;
 	private MSEApplication app;
 	private MSEKnowledgeBase kb;
 	private ContentClientPictures content;
+	private boolean loggedin = false;
+	private boolean nointernet = false;
 
-	public IrisBridge(MSEApplication app, KnowledgeBase kb,
+	public IrisBridge(Context context, MSEApplication app, KnowledgeBase kb,
 			ContentClientPictures content) {
+		this.context = context;
 		this.app = app;
 		this.kb = (MSEKnowledgeBase) kb;
 		this.content = content;
+
+		client.addCallback(this);
+
 		queueThread.start();
+	}
+
+	@Override
+	public void onAuthenticationFailed() {
+		loggedin = false;
+		Notification.showLogin(context);
+	}
+
+	@Override
+	public void onAuthentication() {
+		loggedin = true;
+		Notification.hideLogin(context);
+	}
+
+	@Override
+	public void onNetworkFailed() {
+		// no internet
 	}
 
 	/********************** WRITE CALLBACKS ***************************************/
@@ -49,6 +75,7 @@ public class IrisBridge {
 	 * @param typeURI
 	 */
 	public void onAddResource(String nodeURI, String typeURI) {
+		lastWrite = System.currentTimeMillis();
 		synchronized (resourceQueue) {
 			if (typeURI.equals(Content.typeURI)
 					|| typeURI.equals(Message.typeURI)) {
@@ -108,7 +135,9 @@ public class IrisBridge {
 			boolean forever = true;
 			while (forever) {
 				try {
-					Thread.sleep(1000);
+					while (!loggedin) {
+						Thread.sleep(1000);
+					}
 					long now = System.currentTimeMillis();
 					if (now - lastWrite >= IdleTimeout) {
 						synchronized (resourceQueue) {
@@ -127,6 +156,7 @@ public class IrisBridge {
 		while (resourceQueue.size() > 0) {
 			QueueItem resource = resourceQueue.get(0);
 			try {
+				nointernet = false;
 				int result = ElggClient.RESULT_OK;
 
 				if (resource.isTriple()) {
@@ -142,12 +172,15 @@ public class IrisBridge {
 					resourceQueue.remove(0);
 					break;
 				case ElggClient.RESULT_AUTH_FAILED:
-					// TODO: show login notification
+					loggedin = false;
 					break;
 				case ElggClient.RESULT_NO_NET:
-					// TODO: show need internet notification
+					nointernet = true;
 					break;
 				}
+
+				if (!loggedin || nointernet)
+					break;
 			} catch (Exception ex) {
 				resourceQueue.remove(0);
 				ex.printStackTrace();
@@ -372,12 +405,24 @@ public class IrisBridge {
 		}
 	}
 
+	/**
+	 * Ensure the existence of posts in a group.
+	 * 
+	 * @param node
+	 */
 	private void ensurePosts(Node node) {
 		String groupId = getResourceId(node);
 
 		List<PostItem> posts = client.getGroupPosts(groupId);
 
 		boolean update = false;
+
+		// check if group does exist
+		if (kb.getResourceByURINoPolicies(node.getName()) == null) {
+			GroupItem group = client.getGroup(groupId);
+			update |= createGroup(group, false);
+		}
+
 		for (PostItem post : posts) {
 			update |= createPost(post);
 			update |= ensureTriple(node.getName(),
@@ -785,13 +830,15 @@ public class IrisBridge {
 	private String getSimpleLiteral(Node s, String predicateURI) {
 		String value = null;
 		try {
-			List<Triple> triples = kb.getPropertyObjectAsTriples(s,
-					kb.getResourceByURINoPolicies(predicateURI),
-					client.getUsername());
-			for (Triple t : triples) {
-				value = t.getObject().getName();
+			Node predicate = kb.getResourceByURINoPolicies(predicateURI);
+			// predicate might not be in the KB
+			if (predicate != null) {
+				List<Triple> triples = kb.getPropertyObjectAsTriples(s,
+						predicate, client.getUsername());
+				for (Triple t : triples) {
+					value = t.getObject().getName();
+				}
 			}
-
 		} catch (KBException ex) {
 			ex.printStackTrace();
 		}

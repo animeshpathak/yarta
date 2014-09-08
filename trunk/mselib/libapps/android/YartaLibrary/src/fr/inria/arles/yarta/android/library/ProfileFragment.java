@@ -28,7 +28,7 @@ public class ProfileFragment extends BaseFragment {
 	private static final int MENU_COMPOSE = 2;
 	private static final int MENU_ADD = 3;
 
-	private String username = ElggClient.getInstance().getUsername();
+	private String username;
 	private RiverFragment activityFragment;
 	private Person user;
 
@@ -44,7 +44,10 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshUI();
+
+		if (sam != null) {
+			refreshUI();
+		}
 	}
 
 	public void setUsername(String username) {
@@ -107,6 +110,9 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public void refreshUI() {
 		try {
+			if (username == null) {
+				username = ElggClient.getInstance().getUsername();
+			}
 			user = sam.getPersonByUserId(username);
 			if (user == null) {
 				return;
