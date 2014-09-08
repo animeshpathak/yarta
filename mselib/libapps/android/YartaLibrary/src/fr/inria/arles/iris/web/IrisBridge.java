@@ -144,6 +144,7 @@ public class IrisBridge implements WebCallback {
 							dequeueItems();
 						}
 					}
+					Thread.sleep(1000);
 				} catch (InterruptedException ex) {
 					break;
 				}
