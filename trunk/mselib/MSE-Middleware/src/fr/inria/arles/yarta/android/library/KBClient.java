@@ -444,57 +444,17 @@ public class KBClient implements KnowledgeBase {
 	private PolicyManager policyManager = new PolicyManager() {
 
 		@Override
-		public void removeRule(int position) {
+		public boolean loadPolicies(String path) {
 			if (mIPolicyManager != null) {
 				try {
-					mIPolicyManager.removeRule(position);
+					return mIPolicyManager.loadPolicies(path);
 				} catch (DeadObjectException ex) {
 					rebind();
 				} catch (Exception ex) {
-					logError("removeRule: %s", ex);
+					logError("loadPolicies: %s", ex);
 				}
 			}
-		}
-
-		@Override
-		public int getRulesCount() {
-			if (mIPolicyManager != null) {
-				try {
-					return mIPolicyManager.getRulesCount();
-				} catch (DeadObjectException ex) {
-					rebind();
-				} catch (Exception ex) {
-					logError("getRulesCount: %s", ex);
-				}
-			}
-			return 0;
-		}
-
-		@Override
-		public String getRule(int position) {
-			if (mIPolicyManager != null) {
-				try {
-					return mIPolicyManager.getRule(position);
-				} catch (DeadObjectException ex) {
-					rebind();
-				} catch (Exception ex) {
-					logError("getRule: %s", ex);
-				}
-			}
-			return null;
-		}
-
-		@Override
-		public void addRule(String rule) {
-			if (mIPolicyManager != null) {
-				try {
-					mIPolicyManager.addRule(rule);
-				} catch (DeadObjectException ex) {
-					rebind();
-				} catch (Exception ex) {
-					logError("addRule: %s", ex);
-				}
-			}
+			return false;
 		}
 	};
 

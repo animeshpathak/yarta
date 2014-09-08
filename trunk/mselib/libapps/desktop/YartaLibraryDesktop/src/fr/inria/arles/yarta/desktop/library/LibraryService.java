@@ -120,6 +120,8 @@ public class LibraryService extends UnicastRemoteObject implements Service,
 					}
 				}
 
+				knowledgeBase.getPolicyManager().loadPolicies(policyFile);
+
 				commMgr.setUpdateHelper(helper);
 				commMgr.initialize(settings.getString(Settings.LastUser),
 						knowledgeBase, this, null);
