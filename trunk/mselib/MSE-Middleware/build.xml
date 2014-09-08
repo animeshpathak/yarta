@@ -41,6 +41,7 @@
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/resources/*" />
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/middleware/msemanagement/*" />
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/android/library/*" />
+			<fileset dir="${bin}" includes="fr/inria/arles/yarta/desktop/library/**" />
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/middleware/communication/*" />
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/knowledgebase/policy/*" />
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/knowledgebase/*" />
