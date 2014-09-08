@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Callouts</string>
+    <string name="callout_new">new callout</string>
+    <string name="callout_join">join callout</string>
+    <string name="callout_save">save callout</string>
+    <string name="callout_none">No callouts.\r\nTo create one tap \'+\'.</string>
+    <string name="callout_comments_none">To join thumbs up!</string>
+    <string name="app_callout">Callout</string>
+    <string name="app_createcallout">Create callout</string>
+    <string name="app_title_hint">title</string>
+    <string name="app_description_hint">description</string>
+    <string name="app_date_hint">date</string>
+    <string name="app_time_hint">time</string>
+    <string name="app_all_fields">Input all fields.</string>
+    <string name="callout_join_text">Count me in!</string>
+    <string name="app_callout_format">Date: %1$s\r\nTime: %2$s\r\nDescription: %3$s</string>
+
+</resources>
