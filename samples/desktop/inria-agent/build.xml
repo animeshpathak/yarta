@@ -1,0 +1,51 @@
+<project name="inria-agent" default="dist" basedir=".">
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="${external}/desktop" />
+	
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${bin}" />
+	</target>
+	
+	<target name="compile" depends="init" description="compile the source">
+		<javac debug="true" debuglevel="lines,vars,source" target="1.6" srcdir="${src}" destdir="${bin}">
+			<classpath>
+				<fileset dir="${lib}">
+					<include name="mse-middleware.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="release" depends="compile">
+		
+		<!-- Copy all templates to dist -->
+		<copy todir="${dist}/res" overwrite="true">
+			<fileset dir="res">
+				<include name="*"/>
+			</fileset>
+		</copy>
+		
+		<!-- Generate Jar file -->
+		<jar jarfile="${dist}/inria-agent.jar" basedir="${bin}">
+			<manifest>
+				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+				<attribute name="Class-Path" value="." />
+				<attribute name="Rsrc-Main-Class" value="fr.inria.arles.agent.Main"/>
+				<attribute name="Rsrc-Class-Path" value="./ mse-middleware.jar"/>
+			</manifest>
+			
+			<zipfileset src="${lib}/jar-in-jar-loader.zip"/>
+			<fileset dir="${bin}"/>
+			<zipfileset dir="${lib}" includes="mse-middleware.jar"/>
+		</jar>
+	</target>
+	
+	<target name="clean" description="clean up">
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+</project>
