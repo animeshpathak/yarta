@@ -7,7 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -50,7 +53,7 @@ public class MSEPolicyManager implements PolicyManager {
 	private String user_namespace;
 	private YLogger logger = YLoggerFactory.getLogger();
 
-	public ArrayList<String> policies = new ArrayList<String>();
+	public Set<String> policies = new HashSet<String>();
 
 	/**
 	 * temporary model used in queries;
@@ -78,7 +81,20 @@ public class MSEPolicyManager implements PolicyManager {
 		user_namespace = userNamespace;
 		dataOwner = owner;
 
-		File queryFile = new File(filePR);
+		policies.addAll(getPolicies(filePR));
+
+		if (userNamespace == null) {
+			logger.e("MSEPolicyManager.initialize", "namespace is null");
+		}
+	}
+
+	public boolean loadPolicies(String path) {
+		policies.addAll(getPolicies(path));
+		return true;
+	}
+
+	private List<String> getPolicies(String path) {
+		File queryFile = new File(path);
 		ArrayList<String> policiesArrayList = new ArrayList<String>();
 		try {
 			BufferedReader input = new BufferedReader(new FileReader(queryFile));
@@ -97,11 +113,8 @@ public class MSEPolicyManager implements PolicyManager {
 			logger.e("MSEPolicyManager.initialize", "Policies file not found",
 					e);
 		}
-		policies = policiesArrayList;
 
-		if (userNamespace == null) {
-			logger.e("MSEPolicyManager.initialize", "namespace is null");
-		}
+		return policiesArrayList;
 	}
 
 	public void uninitialize(String filePR) {
@@ -115,26 +128,6 @@ public class MSEPolicyManager implements PolicyManager {
 			logger.e("MSEPolicyManager.uninitialize",
 					"input/output operation failed", e);
 		}
-	}
-
-	@Override
-	public int getRulesCount() {
-		return policies.size();
-	}
-
-	@Override
-	public String getRule(int position) {
-		return policies.get(position);
-	}
-
-	@Override
-	public void removeRule(int position) {
-		policies.remove(position);
-	}
-
-	@Override
-	public void addRule(String rule) {
-		policies.add(rule);
 	}
 
 	/**
@@ -270,6 +263,7 @@ public class MSEPolicyManager implements PolicyManager {
 
 	public Model getAllowedModel(String action, String requestorUserId,
 			Model model, Triple triple) {
+		Model result = null;
 		Node subject = triple.getSubject();
 		Node predicate = triple.getProperty();
 		Node object = triple.getObject();
@@ -282,11 +276,7 @@ public class MSEPolicyManager implements PolicyManager {
 					"action not allowed. Cannot add triple which has one of more variables");
 			return null;
 		} else {
-			if (tempResults == null) {
-				tempResults = ModelFactory.createDefaultModel();
-			} else {
-				tempResults.removeAll();
-			}
+			result = ModelFactory.createDefaultModel();
 
 			addRequestorInfo(model, requestorUserId, action);
 
@@ -297,15 +287,15 @@ public class MSEPolicyManager implements PolicyManager {
 
 				temp = executeQuery(policy, model, subject, predicate, object);
 				if ((temp != null) && (!temp.isEmpty())) {
-					tempResults.add(temp);
+					result.add(temp);
 				}
 			}
 
 			removeRequestorInfo(model, requestorUserId, action);
-			removeRequestorInfo(tempResults, requestorUserId, action);
+			removeRequestorInfo(result, requestorUserId, action);
 		}
 
-		return tempResults;
+		return result;
 	}
 
 	/**

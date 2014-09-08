@@ -6,34 +6,10 @@ package fr.inria.arles.yarta.knowledgebase.interfaces;
 public interface PolicyManager {
 
 	/**
-	 * Returns the rules count;
+	 * Loads a policy file.
 	 * 
-	 * @return int
+	 * @param path
+	 * @return
 	 */
-	public int getRulesCount();
-
-	/**
-	 * Returns the rule at the specified position.
-	 * 
-	 * @param position
-	 *            int
-	 * @return String
-	 */
-	public String getRule(int position);
-
-	/**
-	 * Removes the rule at the specified position.
-	 * 
-	 * @param position
-	 *            int
-	 */
-	public void removeRule(int position);
-
-	/**
-	 * Adds the specified rule.
-	 * 
-	 * @param rule
-	 *            String
-	 */
-	public void addRule(String rule);
+	public boolean loadPolicies(String path);
 }

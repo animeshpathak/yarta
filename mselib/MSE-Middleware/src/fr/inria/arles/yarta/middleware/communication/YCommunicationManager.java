@@ -9,8 +9,8 @@ import java.util.UUID;
 
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
+import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBaseUtils;
 import fr.inria.arles.yarta.knowledgebase.MSELiteral;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.knowledgebase.MSETriple;
 import fr.inria.arles.yarta.knowledgebase.UpdateHelper;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
@@ -33,6 +33,8 @@ import fr.inria.arles.yarta.resources.YartaResource;
  * nodes.
  */
 public class YCommunicationManager implements CommunicationManager, Receiver {
+
+	private static final String RdfTypePredicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
 	private String userId;
 	private Connection connection;
@@ -444,13 +446,12 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 				// continue;
 				// }
 
-				String typePredicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 				List<Triple> properties = knowledgeBase
 						.getAllPropertiesAsTriples(node, id);
 
 				for (int i = 0; i < properties.size(); i++) {
 					if (properties.get(i).getProperty().getName()
-							.equals(typePredicate)
+							.equals(RdfTypePredicate)
 							&& i != 0) {
 						Triple t = properties.get(0);
 						properties.set(0, properties.get(i));
@@ -461,13 +462,6 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 
 				boolean dirty = false;
 				for (Triple triple : properties) {
-					// TODO: rdf:Seq
-					if (triple.getProperty().getName()
-							.contains(ThinKnowledgeBase.RDF_NAMESPACE + "_")) {
-						triple = new MSETriple(triple.getSubject(),
-								new MSEResource(ThinKnowledgeBase.RDF_NAMESPACE
-										+ "li", "grosca"), triple.getObject());
-					}
 					long time = helper.getTime(triple);
 					if (time == 0) {
 						time = System.currentTimeMillis();
@@ -551,28 +545,42 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 			} else {
 				for (int i = 0; i < triples.size(); i++) {
 					Triple triple = triples.get(i);
+					Node s = triple.getSubject();
+					Node p = triple.getProperty();
+					Node o = triple.getObject();
 					Long time = times.get(i);
 					try {
-						if (knowledgeBase.getTriple(triple.getSubject(),
-								triple.getProperty(), triple.getObject(),
-								userId) == null) {
+						if (knowledgeBase.getTriple(s, p, o, userId) == null) {
+							if (RdfTypePredicate.equals(p.getName())) {
+								Node subjectType = knowledgeBase
+										.getResourceByURINoPolicies(o.getName());
+								
+								// read web ontology
+								if (subjectType == null) {
+									log.e(LOGTAG,
+											o.getName()
+													+ " type unknown. Will try to download it.");
+
+									String ontology = o.getName();
+									ontology = ontology.substring(0,
+											ontology.indexOf('#'));
+									MSEKnowledgeBaseUtils.importDataFromURL(
+											ontology, knowledgeBase);
+								}
+							}
 
 							/**
 							 * if literal, remove previous props;
 							 */
-							if (triple.getObject().whichNode() == Node.RDF_LITERAL) {
+							if (o.whichNode() == Node.RDF_LITERAL) {
 								List<Triple> prevProps = knowledgeBase
-										.getPropertyObjectAsTriples(
-												triple.getSubject(),
-												triple.getProperty(), id);
+										.getPropertyObjectAsTriples(s, p, id);
 								for (Triple t : prevProps) {
 									knowledgeBase.removeTriple(t.getSubject(),
 											t.getProperty(), t.getObject(), id);
 								}
 							}
-							Triple t = knowledgeBase.addTriple(
-									triple.getSubject(), triple.getProperty(),
-									triple.getObject(), id);
+							Triple t = knowledgeBase.addTriple(s, p, o, id);
 
 							if (t != null) {
 								helper.setTime(t, time);

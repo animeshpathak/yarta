@@ -15,6 +15,7 @@ import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBaseUtils;
 import fr.inria.arles.yarta.knowledgebase.UpdateHelper;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
+import fr.inria.arles.yarta.knowledgebase.interfaces.PolicyManager;
 import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
@@ -95,6 +96,10 @@ public class LibraryService extends Service implements MSEApplication,
 		try {
 			result &= MSEKnowledgeBaseUtils.importDataFromRDF(source,
 					knowledgeBase);
+
+			PolicyManager policyMgr = knowledgeBase.getPolicyManager();
+			result &= policyMgr.loadPolicies(policyFile);
+
 			log("loadClientDataAndNotify<%s>", app.getAppId());
 			app.handleKBReady(getUserId());
 		} catch (Exception ex) {

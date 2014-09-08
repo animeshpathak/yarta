@@ -488,27 +488,8 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		IPolicyManager.Stub stub = new IPolicyManager.Stub() {
 
 			@Override
-			public void removeRule(int position) throws RemoteException {
-				tracker.sendAPIUsage("PolicyManager.removeRule");
-				knowledgeBase.getPolicyManager().removeRule(position);
-			}
-
-			@Override
-			public int getRulesCount() throws RemoteException {
-				tracker.sendAPIUsage("PolicyManager.getRulesCount");
-				return knowledgeBase.getPolicyManager().getRulesCount();
-			}
-
-			@Override
-			public String getRule(int position) throws RemoteException {
-				tracker.sendAPIUsage("PolicyManager.getRule");
-				return knowledgeBase.getPolicyManager().getRule(position);
-			}
-
-			@Override
-			public void addRule(String rule) throws RemoteException {
-				tracker.sendAPIUsage("PolicyManager.addRule");
-				knowledgeBase.getPolicyManager().addRule(rule);
+			public boolean loadPolicies(String path) throws RemoteException {
+				return knowledgeBase.getPolicyManager().loadPolicies(path);
 			}
 		};
 		return stub;

@@ -190,7 +190,7 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 			@Override
 			public void run() {
 				try {
-					// getCOMM().sendUpdateRequest(InriaID);
+					getCOMM().sendUpdateRequest(InriaID);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -204,7 +204,7 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 			@Override
 			public void run() {
 				try {
-					// getCOMM().sendNotify(InriaID);
+					getCOMM().sendNotify(InriaID);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -226,5 +226,5 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 		return this.getPackageName();
 	}
 
-	// public static final String InriaID = "inria@inria.fr";
+	public static final String InriaID = "test";
 }

@@ -199,7 +199,7 @@ public class DonationApp extends Application implements MSEApplication,
 				@Override
 				public void run() {
 					try {
-						// getCOMM().sendUpdateRequest(Common.InriaID);
+						getCOMM().sendUpdateRequest(Common.InriaID);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -230,7 +230,7 @@ public class DonationApp extends Application implements MSEApplication,
 
 			@Override
 			public void run() {
-				// getCOMM().sendNotify(Common.InriaID);
+				getCOMM().sendNotify(Common.InriaID);
 			}
 		}).start();
 	}

@@ -95,6 +95,27 @@ public class MSEKnowledgeBaseUtils {
 	}
 
 	/**
+	 * Reads an RDF from Internet.
+	 * 
+	 * @param url
+	 * @param kb
+	 * @return
+	 */
+	public static boolean importDataFromURL(String url, KnowledgeBase kb) {
+		Model model = ((MSEKnowledgeBase) kb).model;
+
+		try {
+			model.read(url);
+		} catch (Exception e) {
+			logger.d("MSEKnowledgeBaseUtils.importDataFromURL",
+					"RDF url not found", e);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Import data in the KB from an input stream
 	 * 
 	 * @param i
