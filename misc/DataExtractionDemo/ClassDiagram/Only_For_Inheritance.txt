@@ -1,9 +1,0 @@
-The Only_For_Inheritance.png Class diagram is meant to get the inheritance view among the classes
-of the msemanagement package. The method parameters and datatypes shown in this diagram may 
-be different that the original one. My eclipse plugin for class diagram has expired, so cant 
-generate new inheritance diagram for classes.
-
-ClassDiagram_DataTypes is the correct class diagram that has the datatypes and 
-function parameters exactly as that in the source code.
-
- 
