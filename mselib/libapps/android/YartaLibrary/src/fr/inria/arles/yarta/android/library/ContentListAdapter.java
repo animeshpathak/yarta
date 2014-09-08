@@ -150,9 +150,7 @@ public class ContentListAdapter extends BaseAdapter implements
 
 		switch (v.getId()) {
 		case R.id.container:
-			if (item.getUniqueId().contains(Content.typeURI)) {
-				callback.onClickPost(item);
-			}
+			callback.onClickPost(item);
 			break;
 		case R.id.author:
 			callback.onClickProfile(getAuthor(item));

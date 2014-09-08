@@ -30,7 +30,8 @@ public class ElggClient {
 
 	private HttpClient client;
 	private String lastError;
-	private WebCallback callback;
+
+	private List<WebCallback> callbacks = new ArrayList<WebCallback>();
 
 	private ElggClient() {
 		client = new HttpClient();
@@ -160,13 +161,13 @@ public class ElggClient {
 			lastError = ex.toString();
 			ex.printStackTrace();
 		}
-		if (result == RESULT_AUTH_FAILED && callback != null) {
-			callback.onAuthenticationFailed();
+		if (result == RESULT_AUTH_FAILED) {
+			notifiyAuthenticatioFailure();
 		}
 
-		if (noInternet() && callback != null) {
-			callback.onNetworkFailed();
+		if (noInternet()) {
 			result = RESULT_NO_NET;
+			notifyNetworkFailure();
 		}
 		return result;
 	}
@@ -207,15 +208,13 @@ public class ElggClient {
 	public interface WebCallback {
 		public void onAuthenticationFailed();
 
+		public void onAuthentication();
+
 		public void onNetworkFailed();
 	}
 
 	public static ElggClient getInstance() {
 		return instance;
-	}
-
-	public void setCallback(WebCallback callback) {
-		this.callback = callback;
 	}
 
 	public String getUsername() {
@@ -236,6 +235,43 @@ public class ElggClient {
 
 	public void setToken(String token) {
 		client.setToken(token);
+		notifiyAuthentication();
+	}
+
+	public void addCallback(WebCallback callback) {
+		synchronized (callbacks) {
+			callbacks.add(callback);
+		}
+	}
+
+	public void removeCallback(WebCallback callback) {
+		synchronized (callbacks) {
+			callbacks.remove(callback);
+		}
+	}
+
+	public void notifiyAuthenticatioFailure() {
+		synchronized (callbacks) {
+			for (WebCallback callback : callbacks) {
+				callback.onAuthenticationFailed();
+			}
+		}
+	}
+
+	public void notifiyAuthentication() {
+		synchronized (callbacks) {
+			for (WebCallback callback : callbacks) {
+				callback.onAuthentication();
+			}
+		}
+	}
+
+	public void notifyNetworkFailure() {
+		synchronized (callbacks) {
+			for (WebCallback callback : callbacks) {
+				callback.onNetworkFailed();
+			}
+		}
 	}
 
 	public void setUsername(String username) {
@@ -837,7 +873,8 @@ public class ElggClient {
 		JSONObject json = callMethod("blog.post_comment", POST, "guid",
 				blogGuid, "text", encode(content));
 		int result = checkErrors(json);
-		log("%s: result<%d>, lastError<%s>", "addBlogComment", result, lastError);
+		log("%s: result<%d>, lastError<%s>", "addBlogComment", result,
+				lastError);
 		return result;
 	}
 
@@ -1127,7 +1164,7 @@ public class ElggClient {
 		try {
 			String token = getString(json, "result");
 			if (token != null) {
-				client.setToken(token);
+				setToken(token);
 				this.username = username;
 				this.userGuid = getUserGuid(username);
 			}

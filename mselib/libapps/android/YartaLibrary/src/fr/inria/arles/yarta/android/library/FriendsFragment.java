@@ -47,7 +47,10 @@ public class FriendsFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshUI();
+
+		if (sam != null) {
+			refreshUI();
+		}
 	}
 
 	@Override

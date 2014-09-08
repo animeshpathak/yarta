@@ -11,9 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.IBinder;
 import android.os.RemoteException;
-
 import fr.inria.arles.yarta.Criteria;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Graph;
@@ -108,6 +108,8 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.addLiteral(value, dataType,
 					requestorId);
 			return (Node) result.getSerializable("Node");
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on addLiteral: %s", ex);
 		}
@@ -120,6 +122,8 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.addResourceNode(
 					Conversion.toBundle(node), requestorId);
 			return Conversion.toNode(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on addResource: %s", ex);
 		}
@@ -132,6 +136,8 @@ public class KBClient implements KnowledgeBase {
 		try {
 			return Conversion.toNode(mIRemoteService.addResource(nodeURI,
 					typeURI, requestorId));
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on addResource: %s", ex);
 		}
@@ -145,6 +151,8 @@ public class KBClient implements KnowledgeBase {
 		}
 		try {
 			return mIRemoteService.getMyNameSpace();
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getMyNameSpace: %s", ex);
 		}
@@ -159,6 +167,8 @@ public class KBClient implements KnowledgeBase {
 					.addTriple(Conversion.toBundle(s), Conversion.toBundle(p),
 							Conversion.toBundle(o), requestorId);
 			return Conversion.toTriple(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on addTriple: %s", ex);
 		}
@@ -173,6 +183,8 @@ public class KBClient implements KnowledgeBase {
 					.getTriple(Conversion.toBundle(s), Conversion.toBundle(p),
 							Conversion.toBundle(o), requestorId);
 			return Conversion.toTriple(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getTriple: %s", ex);
 		}
@@ -187,6 +199,8 @@ public class KBClient implements KnowledgeBase {
 					Conversion.toBundle(s), Conversion.toBundle(p),
 					Conversion.toBundle(o), requestorId);
 			return Conversion.toTriple(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on removeTriple: %s", ex);
 		}
@@ -199,6 +213,8 @@ public class KBClient implements KnowledgeBase {
 		try {
 			Bundle result = mIRemoteService.getResourceByURI(URI, requestorId);
 			return Conversion.toNode(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getResourceByURI: %s", ex);
 		}
@@ -210,6 +226,8 @@ public class KBClient implements KnowledgeBase {
 		try {
 			Bundle result = mIRemoteService.getResourceByURINoPolicies(URI);
 			return Conversion.toNode(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getResourceByURINoPolicies: %s", ex);
 		}
@@ -226,6 +244,8 @@ public class KBClient implements KnowledgeBase {
 			for (Bundle bundle : result) {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getAllPropertiesAsTriples: %s", ex);
 		}
@@ -240,6 +260,8 @@ public class KBClient implements KnowledgeBase {
 			for (Bundle bundle : result) {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getKBAsTriples: %s", ex);
 		}
@@ -257,6 +279,8 @@ public class KBClient implements KnowledgeBase {
 			for (Bundle bundle : result) {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getPropertyAsTriples: %s", ex);
 		}
@@ -274,6 +298,8 @@ public class KBClient implements KnowledgeBase {
 			for (Bundle bundle : result) {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getPropertyObjectAsTriples: %s", ex);
 		}
@@ -291,6 +317,8 @@ public class KBClient implements KnowledgeBase {
 			for (Bundle bundle : result) {
 				lstResult.add(Conversion.toTriple(bundle));
 			}
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getPropertySubjectAsTriples: %s", ex);
 		}
@@ -305,6 +333,8 @@ public class KBClient implements KnowledgeBase {
 					.getPropertyObject(Conversion.toBundle(s),
 							Conversion.toBundle(p), requestorId);
 			return Conversion.toGraph(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getPropertyObject: %s", ex);
 		}
@@ -319,6 +349,8 @@ public class KBClient implements KnowledgeBase {
 					.getPropertySubject(Conversion.toBundle(p),
 							Conversion.toBundle(o), requestorId);
 			return Conversion.toGraph(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getPropertySubject: %s", ex);
 		}
@@ -331,6 +363,8 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.addGraph(Conversion.toBundle(g),
 					requestorId);
 			return Conversion.toGraph(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on addGraph: %s", ex);
 		}
@@ -344,6 +378,8 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.getProperty(Conversion.toBundle(s),
 					Conversion.toBundle(o), requestorId);
 			return Conversion.toGraph(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getProperty: %s", ex);
 		}
@@ -357,6 +393,8 @@ public class KBClient implements KnowledgeBase {
 			Bundle result = mIRemoteService.getAllProperties(
 					Conversion.toBundle(s), requestorId);
 			return Conversion.toGraph(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getAllProperties: %s", ex);
 		}
@@ -374,6 +412,8 @@ public class KBClient implements KnowledgeBase {
 		try {
 			Bundle result = mIRemoteService.getKB(requestorId);
 			return Conversion.toGraph(result);
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getKB: %s", ex);
 		}
@@ -385,6 +425,8 @@ public class KBClient implements KnowledgeBase {
 		try {
 			mIPolicyManager = mIRemoteService.getPolicyManager();
 			return policyManager;
+		} catch (DeadObjectException ex) {
+			rebind();
 		} catch (Exception ex) {
 			logError("Exception on getPolicyManager: %s", ex);
 		}
@@ -406,6 +448,8 @@ public class KBClient implements KnowledgeBase {
 			if (mIPolicyManager != null) {
 				try {
 					mIPolicyManager.removeRule(position);
+				} catch (DeadObjectException ex) {
+					rebind();
 				} catch (Exception ex) {
 					logError("removeRule: %s", ex);
 				}
@@ -417,6 +461,8 @@ public class KBClient implements KnowledgeBase {
 			if (mIPolicyManager != null) {
 				try {
 					return mIPolicyManager.getRulesCount();
+				} catch (DeadObjectException ex) {
+					rebind();
 				} catch (Exception ex) {
 					logError("getRulesCount: %s", ex);
 				}
@@ -429,6 +475,8 @@ public class KBClient implements KnowledgeBase {
 			if (mIPolicyManager != null) {
 				try {
 					return mIPolicyManager.getRule(position);
+				} catch (DeadObjectException ex) {
+					rebind();
 				} catch (Exception ex) {
 					logError("getRule: %s", ex);
 				}
@@ -441,6 +489,8 @@ public class KBClient implements KnowledgeBase {
 			if (mIPolicyManager != null) {
 				try {
 					mIPolicyManager.addRule(rule);
+				} catch (DeadObjectException ex) {
+					rebind();
 				} catch (Exception ex) {
 					logError("addRule: %s", ex);
 				}
@@ -467,6 +517,17 @@ public class KBClient implements KnowledgeBase {
 		context.unbindService(mConnection);
 	}
 
+	/**
+	 * Triggered when the connection with AIDL is lost. Does all the
+	 * re-bindings.
+	 */
+	private void rebind() {
+		log("rebind service");
+		rebind = true;
+		doStartService();
+		doBindService();
+	}
+
 	private ILibraryService mIRemoteService;
 	private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -490,11 +551,7 @@ public class KBClient implements KnowledgeBase {
 		public void onServiceDisconnected(ComponentName className) {
 			log("onServiceDisconnected");
 			mIRemoteService = null;
-
-			// avoid calling initialize twice;
-			rebind = true;
-			doStartService();
-			doBindService();
+			rebind();
 		}
 	};
 

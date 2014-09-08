@@ -36,13 +36,7 @@ public class RequirementsActivity extends SherlockActivity {
 
 	private void proceedToApplication() {
 		DonationApp app = (DonationApp) getApplication();
-		app.initMSE(new Observer() {
-
-			@Override
-			public void updateInfo() {
-				// does nothing;
-			}
-		});
+		app.initMSE(null);
 		// finish since handleKBReady will be called
 		finish();
 	}

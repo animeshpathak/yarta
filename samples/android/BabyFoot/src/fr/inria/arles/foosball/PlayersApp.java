@@ -2,8 +2,8 @@ package fr.inria.arles.foosball;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import fr.inria.arles.foosball.msemanagement.MSEManagerEx;
 import fr.inria.arles.foosball.msemanagement.StorageAccessManagerEx;
@@ -19,13 +19,7 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 
 	public interface Observer {
 		public void updateInfo();
-	}
 
-	/**
-	 * This is the Observer which will let the activities know when the MSE is
-	 * logged out
-	 */
-	public interface LoginObserver {
 		public void onLogout();
 	}
 
@@ -33,8 +27,7 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	private StorageAccessManagerEx sam;
 	private MSEManagerEx mse;
 
-	private List<Observer> observers = new ArrayList<PlayersApp.Observer>();
-	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
+	private Set<Observer> observers = new HashSet<PlayersApp.Observer>();
 
 	public void initMSE(Observer observer) {
 		addObserver(observer);
@@ -53,34 +46,32 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	}
 
 	public void addObserver(Observer observer) {
-		if (!observers.contains(observer)) {
-			observers.add(observer);
+		synchronized (observers) {
+			if (observer != null) {
+				observers.add(observer);
+			}
 		}
 	}
 
 	public void removeObserver(Observer handler) {
-		observers.remove(handler);
-	}
-
-	public void notifyAllObservers() {
-		for (Observer observer : observers) {
-			observer.updateInfo();
+		synchronized (observers) {
+			observers.remove(handler);
 		}
 	}
 
-	public void addLoginObserver(LoginObserver observer) {
-		if (!loginObservers.contains(observer)) {
-			loginObservers.add(observer);
+	public void notifyUpdateInfo() {
+		synchronized (observers) {
+			for (Observer observer : observers) {
+				observer.updateInfo();
+			}
 		}
 	}
 
-	public void removeLoginObserver(LoginObserver observer) {
-		loginObservers.remove(observer);
-	}
-
-	private void notifyAllLoginObservers() {
-		for (LoginObserver observer : loginObservers) {
-			observer.onLogout();
+	public void notifiyLogout() {
+		synchronized (observers) {
+			for (Observer observer : observers) {
+				observer.onLogout();
+			}
 		}
 	}
 
@@ -88,11 +79,11 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	public boolean handleMessage(String id, Message message) {
 		switch (message.getType()) {
 		case Message.TYPE_UPDATE_REPLY:
-			notifyAllObservers();
+			notifyUpdateInfo();
 			break;
 
 		case Message.TYPE_PUSH:
-			notifyAllObservers();
+			notifyUpdateInfo();
 			break;
 		}
 		return false;
@@ -165,7 +156,7 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 	 */
 	@Override
 	public void handleNotification(String notification) {
-		notifyAllObservers();
+		notifyUpdateInfo();
 	}
 
 	@Override
@@ -183,12 +174,12 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 			mse.setOwnerUID(userId);
 			sam.setOwnerID(userId);
 
-			notifyAllObservers();
+			notifyUpdateInfo();
 
 			startMainActivity();
 			sendUpdate();
 		} else {
-			notifyAllLoginObservers();
+			notifiyLogout();
 			uninitMSE();
 		}
 	}

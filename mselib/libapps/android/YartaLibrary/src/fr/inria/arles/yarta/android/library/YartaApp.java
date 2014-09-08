@@ -2,15 +2,14 @@ package fr.inria.arles.yarta.android.library;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
 import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 import android.app.Application;
-import android.content.Intent;
 import android.content.res.AssetManager;
 
 /**
@@ -23,13 +22,7 @@ public class YartaApp extends Application implements MSEApplication {
 	 */
 	public interface Observer {
 		public void updateInfo();
-	}
 
-	/**
-	 * This is the Observer which will let the activities know when the MSE is
-	 * logged out
-	 */
-	public interface LoginObserver {
 		public void onLogout();
 	}
 
@@ -37,8 +30,7 @@ public class YartaApp extends Application implements MSEApplication {
 	private StorageAccessManagerEx sam;
 	private CommunicationManager comm;
 
-	private List<Observer> observers = new ArrayList<Observer>();
-	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
+	private Set<Observer> observers = new HashSet<Observer>();
 
 	/**
 	 * Drops an asset to the public directory returning its path.
@@ -85,13 +77,13 @@ public class YartaApp extends Application implements MSEApplication {
 				mse = null;
 			}
 		} else {
-			if (observer != null) {
-				observer.updateInfo();
-			} else {
+			//if (observer != null) {
+			//	observer.updateInfo();
+			//} else {
 				// no observer, but initialized already
 				// so we might call it manually
-				handleKBReady(mse.getOwnerUID());
-			}
+			//	handleKBReady(mse.getOwnerUID());
+			//}
 		}
 	}
 
@@ -123,21 +115,12 @@ public class YartaApp extends Application implements MSEApplication {
 			sam.setOwnerID(userId);
 
 			notifyAllObservers();
-
-			startMainActivity();
 		} else {
-			notifyAllLoginObservers();
+			for (Observer observer : observers) {
+				observer.onLogout();
+			}
 			uninitMSE();
 		}
-	}
-
-	/**
-	 * Starts the main activity of the app;
-	 */
-	private void startMainActivity() {
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
 	}
 
 	@Override
@@ -156,25 +139,9 @@ public class YartaApp extends Application implements MSEApplication {
 		observers.remove(observer);
 	}
 
-	public void addLoginObserver(LoginObserver observer) {
-		if (!loginObservers.contains(observer)) {
-			loginObservers.add(observer);
-		}
-	}
-
-	public void removeLoginObserver(LoginObserver observer) {
-		loginObservers.remove(observer);
-	}
-
 	private void notifyAllObservers() {
 		for (Observer observer : observers) {
 			observer.updateInfo();
-		}
-	}
-
-	private void notifyAllLoginObservers() {
-		for (LoginObserver observer : loginObservers) {
-			observer.onLogout();
 		}
 	}
 

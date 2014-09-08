@@ -66,6 +66,8 @@ public class ProfileActivity extends BaseActivity {
 			ft.replace(R.id.content_frame, fragment);
 			ft.commit();
 		} else {
+			fragment.setSAM(getSAM());
+			fragment.setContentClient(contentClient);
 			fragment.refreshUI();
 		}
 	}

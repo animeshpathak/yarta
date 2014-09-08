@@ -25,13 +25,7 @@ public class DonationApp extends Application implements MSEApplication,
 	 */
 	public interface Observer {
 		public void updateInfo();
-	}
 
-	/**
-	 * This is the Observer which will let the activities know when the MSE is
-	 * logged out
-	 */
-	public interface LoginObserver {
 		public void onLogout();
 	}
 
@@ -55,7 +49,6 @@ public class DonationApp extends Application implements MSEApplication,
 	}
 
 	private List<Observer> observers = new ArrayList<Observer>();
-	private List<LoginObserver> loginObservers = new ArrayList<LoginObserver>();
 
 	public void initMSE(Observer observer) {
 		addObserver(observer);
@@ -69,7 +62,9 @@ public class DonationApp extends Application implements MSEApplication,
 				mse = null;
 			}
 		} else {
-			observer.updateInfo();
+			if (observer != null) {
+				observer.updateInfo();
+			}
 		}
 	}
 
@@ -86,22 +81,6 @@ public class DonationApp extends Application implements MSEApplication,
 			mse = null;
 			sam = null;
 			comm = null;
-		}
-	}
-
-	public void addLoginObserver(LoginObserver observer) {
-		if (!loginObservers.contains(observer)) {
-			loginObservers.add(observer);
-		}
-	}
-
-	public void removeLoginObserver(LoginObserver observer) {
-		loginObservers.remove(observer);
-	}
-
-	private void notifyAllLoginObservers() {
-		for (LoginObserver observer : loginObservers) {
-			observer.onLogout();
 		}
 	}
 
@@ -165,18 +144,33 @@ public class DonationApp extends Application implements MSEApplication,
 	}
 
 	public void addObserver(Observer observer) {
-		if (!observers.contains(observer)) {
-			observers.add(observer);
+		synchronized (observers) {
+			if (observer != null && !observers.contains(observer)) {
+				observers.add(observer);
+			}
 		}
 	}
 
 	public void removeObserver(Observer observer) {
-		observers.remove(observer);
+		synchronized (observers) {
+			observers.remove(observer);
+		}
 	}
 
 	private void notifyAllObservers() {
-		for (Observer observer : observers) {
-			observer.updateInfo();
+		synchronized (observers) {
+			for (Observer observer : observers) {
+				observer.updateInfo();
+			}	
+		}
+		
+	}
+
+	private void notifyAllLoginObservers() {
+		synchronized (observers) {
+			for (Observer observer : observers) {
+				observer.onLogout();
+			}	
 		}
 	}
 

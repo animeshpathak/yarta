@@ -34,15 +34,18 @@ public class MainActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		initDrawer();
 		refreshUI();
 	}
 
 	@Override
 	public void refreshUI() {
-		// force first item to be selected
-		onDrawerItem(currentPosition);
+		// force first item to be selected if was initialized
+		if (drawerToggle != null && drawerLayout != null && drawerList != null
+				&& drawerAdapter != null) {
+			onDrawerItem(currentPosition);
+		}
 	}
 
 	@Override
@@ -225,6 +228,10 @@ public class MainActivity extends BaseActivity implements
 		BaseFragment fragment = sideMenuItems.get(position).getFragment();
 		setTitle(sideMenuItems.get(position).getText());
 
+		fragment.setRunner(runner);
+		fragment.setSAM(getSAM());
+		fragment.setContentClient(contentClient);
+
 		if (!fragment.isAdded()) {
 			ft.replace(R.id.content_frame, fragment);
 		} else {
@@ -256,16 +263,6 @@ public class MainActivity extends BaseActivity implements
 				R.drawable.drawer_feedback, null));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_logout),
 				R.drawable.drawer_disconnect, null));
-
-		for (SideMenuItem item : sideMenuItems) {
-			BaseFragment fragment = item.getFragment();
-
-			if (fragment != null) {
-				fragment.setRunner(runner);
-				fragment.setSAM(getSAM());
-				fragment.setContentClient(contentClient);
-			}
-		}
 	}
 
 	private void onNotificationsClick() {

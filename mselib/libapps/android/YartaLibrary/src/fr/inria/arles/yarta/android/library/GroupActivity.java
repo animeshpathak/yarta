@@ -111,6 +111,10 @@ public class GroupActivity extends BaseActivity implements
 	}
 
 	public void refreshUI() {
+		if (group == null) {
+			return;
+		}
+
 		if (group.getName() != null) {
 			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
 		}
