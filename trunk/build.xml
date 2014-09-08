@@ -7,12 +7,8 @@
 	<target name="clean" description="clean up">
 		<ant dir="tools/YartaGEN" target="clean" />
 		<ant dir="mselib/MSE-Middleware" target="clean" />
-		<ant dir="samples/desktop/YartaUI" target="clean" />
-		<ant dir="samples/desktop/YartaUIX" target="clean" />
 		
 		<ant dir="mselib/libapps/android/YartaLibrary" target="clean" />
-		<ant dir="samples/android/YartaUIAndroid" target="clean" />
-		<ant dir="samples/android/YartaUIXAndroid" target="clean" />
 		<ant dir="samples/android/BabyFoot" target="clean" />
 		<ant dir="samples/android/INRIADonations" target="clean" />
 	</target>
@@ -37,21 +33,10 @@
 			</fileset>
 		</copy>
 
-		<ant dir="samples/desktop/YartaUI" target="release" />
-		<ant dir="samples/desktop/YartaUIX" target="release" />
-
 		<!-- increment the version number -->
 		
 		<java jar="version.jar" fork="true">
 			<arg line="mselib/libapps/android/YartaLibrary/AndroidManifest.xml"/>
-		</java>
-		
-		<java jar="version.jar" fork="true">
-			<arg line="samples/android/YartaUIAndroid/AndroidManifest.xml"/>
-		</java>
-		
-		<java jar="version.jar" fork="true">
-			<arg line="samples/android/YartaUIXAndroid/AndroidManifest.xml"/>
 		</java>
 
 		<java jar="version.jar" fork="true">
@@ -63,7 +48,6 @@
 		</java>
 		
 		<!-- Android Library -->
-
 		<copy todir="mselib/libapps/android/YartaLibrary/libs" overwrite="true">
 			<fileset dir="${external}/android">
 				<include name="*.jar"/>
@@ -75,19 +59,6 @@
 		<ant dir="mselib/libapps/android/YartaLibrary" target="release" />
 		
 		<!-- Android Samples -->
-		
-		<copy todir="samples/android/YartaUIAndroid/libs" overwrite="true">
-			<fileset dir="mselib/MSE-Middleware/dist">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
-		
-		<copy todir="samples/android/YartaUIXAndroid/libs" overwrite="true">
-			<fileset dir="mselib/MSE-Middleware/dist">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
-
 		<copy todir="samples/android/BabyFoot/libs" overwrite="true">
 			<fileset dir="mselib/MSE-Middleware/dist">
 				<include name="*.jar"/>
@@ -99,17 +70,13 @@
 				<include name="*.jar"/>
 			</fileset>
 		</copy>
-		
-		<ant dir="samples/android/YartaUIAndroid" target="release" />
-		<ant dir="samples/android/YartaUIXAndroid" target="release" />
+
 		<ant dir="samples/android/BabyFoot" target="release" />
 		<ant dir="samples/android/INRIADonations" target="release" />
 
 		<!-- remove temporary mse-middleware.jar files from android applications -->
 		
 		<delete file="mselib/libapps/android/YartaLibrary/libs/mse-middleware.jar" />
-		<delete file="samples/android/YartaUIAndroid/libs/mse-middleware.jar" />
-		<delete file="samples/android/YartaUIXAndroid/libs/mse-middleware.jar" />
 		<delete file="samples/android/BabyFoot/libs/mse-middleware.jar" />
 		<delete file="samples/android/INRIADonations/libs/mse-middleware.jar" />
 
