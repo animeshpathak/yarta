@@ -61,7 +61,11 @@ public class CommPushConnection implements Connection {
 
 	private void onConnectionChanged() {
 		if (isNetworkConnected()) {
-			GCMRegistrar.checkDevice(context);
+			try {
+				GCMRegistrar.checkDevice(context);
+			} catch (Exception ex) {
+				System.err.println(ex.toString());
+			}
 			GCMRegistrar.checkManifest(context);
 
 			if (GCMRegistrar.isRegisteredOnServer(context)) {

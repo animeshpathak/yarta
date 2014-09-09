@@ -20,7 +20,9 @@
             android:id="@+id/title"
             android:layout_width="0sp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/time"
