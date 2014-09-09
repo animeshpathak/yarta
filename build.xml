@@ -1,10 +1,12 @@
 <project name="Yarta" basedir=".">
 	<property name="external" location="./external" />
+	<property name="dist" location="./dist" />
 	<presetdef name="javac">
 		<javac includeantruntime="false" />
 	</presetdef>
 	
 	<target name="clean" description="clean up">
+		<delete dir="${dist}" />
 		<ant dir="tools/YartaGEN" target="clean" />
 		<ant dir="mselib/MSE-Middleware" target="clean" />
 		
@@ -105,6 +107,13 @@
 		<delete file="samples/android/Callouts/libs/mse-middleware.jar" />
 
 		<!-- copy all generated binaries in downloadable -->
+		<copy file="mselib/libapps/android/YartaLibrary/bin/YartaLibrary-release.apk" tofile="${dist}/YartaLibrary.apk"/>
+		<copy file="samples/android/BabyFoot/bin/BabyFoot-release.apk" tofile="${dist}/BabyFoot.apk"/>
+		<copy file="samples/android/INRIADonations/bin/INRIADonations-release.apk" tofile="${dist}/INRIADonations.apk"/>
+		<copy file="samples/android/Callouts/bin/Callouts-release.apk" tofile="${dist}/Callouts.apk"/>
+		<copy file="mselib/libapps/desktop/YartaLibraryDesktop/dist/yarta.jar" tofile="${dist}/yarta.jar"/>
+		<copy file="samples/desktop/inria-agent/dist/inria-agent.zip" tofile="${dist}/inria-agent.zip"/>
+		<copy file="tools/YartaGEN/dist/YartaGen.zip" tofile="${dist}/YartaGEN.zip"/>
 
 	</target>
 </project>
