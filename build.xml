@@ -58,9 +58,8 @@
 		</java>
 		
 		<!-- Android Library -->
-
 		<!-- Copy Strings.java from misc -->
-		<copy todir="mselib/libapps/android/YartaLibrary/src/fr/inria/arles/iris/web" overwrite="true">
+		<copy todir="mselib/libapps/android/YartaLibrary/src/fr/inria/arles/iris/web" overwrite="false">
 			<fileset dir="misc">
 				<include name="Strings.java"/>
 			</fileset>
@@ -100,7 +99,6 @@
 		<ant dir="samples/android/Callouts" target="release" />
 
 		<!-- remove temporary mse-middleware.jar files from android applications -->
-		
 		<delete file="mselib/libapps/android/YartaLibrary/libs/mse-middleware.jar" />
 		<delete file="samples/android/BabyFoot/libs/mse-middleware.jar" />
 		<delete file="samples/android/INRIADonations/libs/mse-middleware.jar" />
