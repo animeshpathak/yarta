@@ -17,6 +17,8 @@
 		<ant dir="samples/android/INRIADonations" target="clean" />
 		<ant dir="samples/android/Callouts" target="clean" />
 		<ant dir="samples/desktop/inria-agent" target="clean" />
+
+		<delete dir="${binaries}"/>
 	</target>
 	
 	<target name="build">

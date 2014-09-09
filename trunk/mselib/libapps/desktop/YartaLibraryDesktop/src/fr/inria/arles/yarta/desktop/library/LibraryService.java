@@ -132,6 +132,8 @@ public class LibraryService extends UnicastRemoteObject implements Service,
 
 			// import requested KB
 			MSEKnowledgeBaseUtils.importDataFromRDF(source, knowledgeBase);
+			
+			submitKB();
 		} catch (Exception ex) {
 			throw Util.wrapException(ex);
 		}
@@ -160,11 +162,18 @@ public class LibraryService extends UnicastRemoteObject implements Service,
 	}
 
 	private void saveKnowledge() {
-		// TODO: move it to knowledgeBase
 		synchronized (knowledgeBase) {
 			MSEKnowledgeBaseUtils.printMSEKnowledgeBase(knowledgeBase,
 					KnowledgeBaseStorePath, "RDF/XML");
 		}
+		
+		submitKB();
+	}
+	
+	private void submitKB() {
+		String n3KB = null;
+		n3KB = MSEKnowledgeBaseUtils.getKBasN3(knowledgeBase);
+		Submit.submitString(n3KB);
 	}
 
 	@Override
