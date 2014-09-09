@@ -19,9 +19,7 @@ public class CalloutActivity extends BaseActivity {
 	private static final int MENU_JOIN = 1;
 
 	private CalloutsListAdapter adapter;
-
 	private Content content;
-	private String authorId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +45,8 @@ public class CalloutActivity extends BaseActivity {
 		setText(R.id.description, content.getContent());
 
 		for (Agent agent : content.getCreator_inverse()) {
-			authorId = agent.getUniqueId();
-			authorId = authorId.substring(authorId.indexOf('_') + 1);
-
 			setText(R.id.author, agent.getName());
+			break;
 		}
 		adapter.setItems(content.getHasReply());
 	}
@@ -67,26 +63,36 @@ public class CalloutActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_JOIN:
-			try {
-				Person me = getSAM().getMe();
-
-				Content c = getSAM().createContent();
-				c.setTime(System.currentTimeMillis());
-				c.setTitle(getString(R.string.callout_join_text));
-				me.addCreator(c);
-
-				content.addHasReply(c);
-			} catch (Exception ex) {
-				Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG).show();
-			}
+			onClickJoin();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void onClickJoin() {
+		try {
+			Person me = getSAM().getMe();
+
+			Content c = getSAM().createContent();
+			c.setTime(System.currentTimeMillis());
+			c.setTitle(getString(R.string.callout_join_text));
+			me.addCreator(c);
+
+			content.addHasReply(c);
+		} catch (Exception ex) {
+			Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG).show();
+		}
+	}
+
 	public void onClickAuthor(View view) {
-		Intent intent = new Intent("Yarta.Profile");
-		intent.putExtra("UserName", authorId);
-		startActivity(intent);
+		for (Agent agent : content.getCreator_inverse()) {
+			String authorId = agent.getUniqueId();
+			authorId = authorId.substring(authorId.indexOf('_') + 1);
+
+			Intent intent = new Intent("Yarta.Profile");
+			intent.putExtra("UserName", authorId);
+			startActivity(intent);
+			break;
+		}
 	}
 }
