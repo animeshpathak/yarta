@@ -1,5 +1,6 @@
 package fr.inria.arles.yarta.knowledgebase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -194,6 +195,32 @@ public class MSEKnowledgeBaseUtils {
 			logger.e("MSEKnowledgeBaseUtils.printMSEKnowledgeBase",
 					"Output file not found", e);
 		}
+	}
+
+	/**
+	 * Returns an N3 string representation of the KB
+	 * 
+	 * @param kb
+	 */
+	public static String getKBasN3(MSEKnowledgeBase kb) {
+		try {
+			Model model = kb.model;
+
+			String result = null;
+			synchronized (model) {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				model.write(baos, "N3");
+
+				result = new String(baos.toByteArray());
+				baos.close();
+			}
+			
+			return result;
+		} catch (Exception e) {
+			logger.e("MSEKnowledgeBaseUtils.getKBasN3",
+					"Output file not found", e);
+		}
+		return null;
 	}
 
 	/**

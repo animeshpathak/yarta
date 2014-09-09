@@ -26,9 +26,17 @@
 					<include name="icu4j-3.4.4.jar"/>
 					<include name="commons-collections-3.2.1.jar"/>
 					<include name="commons-lang-2.4.jar"/>
+					<include name="arq-2.8.1.jar"/>
+					<include name="signpost-core-1.2.1.1.jar"/>
+					<include name="sqlite-jdbc-3.7.2.jar"/>
 				</fileset>
 			</classpath>
 		</javac>
+		<copy todir="${bin}/fr/inria/arles/yarta/desktop/library/files" overwrite="true">
+			<fileset dir="${src}/fr/inria/arles/yarta/desktop/library/files">
+				<include name="*"/>
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="release" depends="compile">
@@ -46,7 +54,7 @@
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
 				<attribute name="Class-Path" value="." />
 				<attribute name="Rsrc-Main-Class" value="fr.inria.arles.yarta.desktop.library.Main"/>
-				<attribute name="Rsrc-Class-Path" value="./ commons-lang-2.4.jar commons-collections-3.2.1.jar icu4j-3.4.4.jar iri-0.7.jar jena-2.6.2.jar slf4j-api-1.5.6.jar slf4j-log4j12-1.5.6.jar log4j-1.2.13.jar xercesImpl-2.7.1.jar mse-middleware.jar twitter4j-core-3.0.3.jar linkedin-j.jar facebook4j-core-1.1.5.jar"/>
+				<attribute name="Rsrc-Class-Path" value="./ commons-lang-2.4.jar commons-collections-3.2.1.jar icu4j-3.4.4.jar iri-0.7.jar jena-2.6.2.jar slf4j-api-1.5.6.jar slf4j-log4j12-1.5.6.jar log4j-1.2.13.jar xercesImpl-2.7.1.jar mse-middleware.jar twitter4j-core-3.0.3.jar linkedin-j.jar facebook4j-core-1.1.5.jar arq-2.8.1.jar signpost-core-1.2.1.1.jar sqlite-jdbc-3.7.2.jar"/>
 			</manifest>
 			
 			<zipfileset src="${lib}/jar-in-jar-loader.zip"/>
@@ -59,11 +67,14 @@
 			<zipfileset dir="${lib}" includes="xercesImpl-2.7.1.jar"/>
 			<zipfileset dir="${lib}" includes="iri-0.7.jar"/>
 			<zipfileset dir="${lib}" includes="icu4j-3.4.4.jar"/>
+			<zipfileset dir="${lib}" includes="arq-2.8.1.jar"/>
 			<zipfileset dir="${lib}" includes="commons-collections-3.2.1.jar"/>
 			<zipfileset dir="${lib}" includes="commons-lang-2.4.jar"/>
 			<zipfileset dir="${lib}" includes="twitter4j-core-3.0.3.jar"/>
 			<zipfileset dir="${lib}" includes="linkedin-j.jar"/>
 			<zipfileset dir="${lib}" includes="facebook4j-core-1.1.5.jar"/>
+			<zipfileset dir="${lib}" includes="signpost-core-1.2.1.1.jar"/>
+			<zipfileset dir="${lib}" includes="sqlite-jdbc-3.7.2.jar"/>
 		</jar>
 	</target>
 	
