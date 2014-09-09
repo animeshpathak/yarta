@@ -35,6 +35,11 @@
 				<include name="*.vm"/>
 			</fileset>
 		</copy>
+		<copy todir="${dist}/res" overwrite="true">
+			<fileset dir="res">
+				<include name="*"/>
+			</fileset>
+		</copy>
 		
 		<!-- Generate Jar file -->
 		<jar jarfile="${dist}/YartaGen.jar" basedir="${bin}">
@@ -62,7 +67,7 @@
 
 		<!-- Zip Everything & Delete unused -->
 		<zip destfile="${dist}/YartaGen.zip" basedir="${dist}" excludes="YartaGen.zip" />
-		<delete>
+		<delete includeEmptyDirs="true">
 			<fileset dir="${dist}">
 				<include name="**/*"/>
 				<exclude name="YartaGen.zip"/>
