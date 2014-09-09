@@ -41,6 +41,15 @@
 			<fileset dir="${bin}"/>
 			<zipfileset dir="${lib}" includes="mse-middleware.jar"/>
 		</jar>
+
+		<!-- Zip Everything & Delete unused -->
+		<zip destfile="${dist}/inria-agent.zip" basedir="${dist}" excludes="inria-agent.zip" />
+		<delete includeEmptyDirs="true">
+			<fileset dir="${dist}">
+				<include name="**/*"/>
+				<exclude name="inria-agent.zip"/>
+			</fileset>
+		</delete>
 	</target>
 	
 	<target name="clean" description="clean up">

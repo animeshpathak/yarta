@@ -29,7 +29,6 @@
 	</target>
 	
 	<target name="release" depends="compile">
-		
 		<!-- Copy all templates to dist -->
 		<copy todir="${dist}" overwrite="true">
 			<fileset dir=".">
@@ -40,25 +39,35 @@
 		<!-- Generate Jar file -->
 		<jar jarfile="${dist}/YartaGen.jar" basedir="${bin}">
 			<manifest>
-                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
 				<attribute name="Class-Path" value="." />
-                <attribute name="Rsrc-Main-Class" value="fr.inria.arles.yarta.Main"/>
+				<attribute name="Rsrc-Main-Class" value="fr.inria.arles.yarta.Main"/>
 				<attribute name="Rsrc-Class-Path" value="./ commons-lang-2.4.jar commons-collections-3.2.1.jar icu4j-3.4.4.jar iri-0.7.jar jena-2.6.2.jar velocity-1.7.jar slf4j-api-1.5.6.jar slf4j-log4j12-1.5.6.jar log4j-1.2.13.jar xercesImpl-2.7.1.jar"/>
-            </manifest>
+			</manifest>
 			
 			<zipfileset src="${lib}/jar-in-jar-loader.zip"/>
 			<fileset dir="${bin}"/>
-            <zipfileset dir="${lib}" includes="jena-2.6.2.jar"/>
-            <zipfileset dir="${lib}" includes="velocity-1.7.jar"/>
-            <zipfileset dir="${lib}" includes="slf4j-api-1.5.6.jar"/>
-            <zipfileset dir="${lib}" includes="slf4j-log4j12-1.5.6.jar"/>
-            <zipfileset dir="${lib}" includes="log4j-1.2.13.jar"/>
-            <zipfileset dir="${lib}" includes="xercesImpl-2.7.1.jar"/>
-            <zipfileset dir="${lib}" includes="iri-0.7.jar"/>
-            <zipfileset dir="${lib}" includes="icu4j-3.4.4.jar"/>
-            <zipfileset dir="${lib}" includes="commons-collections-3.2.1.jar"/>
-            <zipfileset dir="${lib}" includes="commons-lang-2.4.jar"/>
+			<zipfileset dir="${lib}" includes="jena-2.6.2.jar"/>
+			<zipfileset dir="${lib}" includes="velocity-1.7.jar"/>
+			<zipfileset dir="${lib}" includes="slf4j-api-1.5.6.jar"/>
+			<zipfileset dir="${lib}" includes="slf4j-log4j12-1.5.6.jar"/>
+			<zipfileset dir="${lib}" includes="log4j-1.2.13.jar"/>
+			<zipfileset dir="${lib}" includes="xercesImpl-2.7.1.jar"/>
+			<zipfileset dir="${lib}" includes="iri-0.7.jar"/>
+			<zipfileset dir="${lib}" includes="icu4j-3.4.4.jar"/>
+			<zipfileset dir="${lib}" includes="commons-collections-3.2.1.jar"/>
+			<zipfileset dir="${lib}" includes="commons-lang-2.4.jar"/>
 		</jar>
+
+
+		<!-- Zip Everything & Delete unused -->
+		<zip destfile="${dist}/YartaGen.zip" basedir="${dist}" excludes="YartaGen.zip" />
+		<delete>
+			<fileset dir="${dist}">
+				<include name="**/*"/>
+				<exclude name="YartaGen.zip"/>
+			</fileset>
+		</delete>
 	</target>
 	
 	<target name="clean" description="clean up">
