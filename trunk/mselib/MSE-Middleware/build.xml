@@ -45,7 +45,8 @@
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/middleware/communication/*" />
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/knowledgebase/policy/*" />
 			<fileset dir="${bin}" includes="fr/inria/arles/yarta/knowledgebase/*" />
-			<fileset dir="${bin}" includes="fr/inria/arles/yarta/logging/*.*" />
+			<fileset dir="${bin}" includes="fr/inria/arles/yarta/logging/*" />
+			<fileset dir="${bin}" includes="org/kobjects/base64/*" />
 		</jar>
 	</target>
 	

@@ -197,6 +197,7 @@ public class ElggClient {
 
 	public static final int ACCESS_PUBLIC = 2;
 	public static final int ACCESS_LOGGED_USERS = 1;
+	public static final int ACCESS_GROUP_MEMBERS = 195;
 
 	public static final int RESULT_OK = 0;
 	public static final int RESULT_AUTH_FAILED = -20;
@@ -791,7 +792,7 @@ public class ElggClient {
 	public int addGroupPost(String groupId, String title, String text) {
 		JSONObject json = callMethod("group.forum.save_post", POST, "title",
 				encode(title), "desc", encode(text), "groupid", groupId,
-				"access_id", 1);
+				"access_id", ACCESS_GROUP_MEMBERS);
 		int result = checkErrors(json);
 		log("%s: result<%d>, lastError<%s>", "addGroupPost", result, lastError);
 		return result;
