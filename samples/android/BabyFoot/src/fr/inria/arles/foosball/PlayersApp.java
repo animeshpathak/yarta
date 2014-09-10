@@ -226,5 +226,5 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 		return this.getPackageName();
 	}
 
-	public static final String InriaID = "test";
+	public static final String InriaID = "inria";
 }
