@@ -169,14 +169,15 @@ public class IrisBridge implements WebCallback {
 				}
 
 				switch (result) {
-				case ElggClient.RESULT_OK:
-					resourceQueue.remove(0);
-					break;
 				case ElggClient.RESULT_AUTH_FAILED:
 					loggedin = false;
 					break;
 				case ElggClient.RESULT_NO_NET:
 					nointernet = true;
+					break;
+				case ElggClient.RESULT_OK:
+				case ElggClient.RESULT_ERROR:
+					resourceQueue.remove(0);
 					break;
 				}
 
@@ -191,6 +192,8 @@ public class IrisBridge implements WebCallback {
 
 	// TODO: friends, groups, etc.
 	private int processAddedTriple(Node s, Node p, Node o) throws Exception {
+		log("processAddedTriple(%s, %s, %s)", s.getName(), p.getName(),
+				o.getName());
 		int result = ElggClient.RESULT_OK;
 
 		if (p.getName().equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
@@ -223,6 +226,7 @@ public class IrisBridge implements WebCallback {
 	 */
 	private int processCreatedResource(String nodeURI, String typeURI)
 			throws Exception {
+		log("processCreatedResource(%s, %s)", nodeURI, typeURI);
 		int result = ElggClient.RESULT_OK;
 
 		if (typeURI.equals(Content.typeURI)) {
