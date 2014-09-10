@@ -8,11 +8,11 @@ import org.junit.Test;
 
 public class CommunicationTests implements Receiver {
 
-	private static final String UID = "test@test.com";
+	private static final String UID = "test";
 	private boolean received;
 	private Message message;
 	private String from;
-	
+
 	private CommPollConnection connection;
 
 	@Before
