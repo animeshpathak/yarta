@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
@@ -19,11 +18,10 @@ import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Content;
 
 public class GroupPostsFragment extends BaseFragment implements
-		PullToRefreshListView.OnRefreshListener, ContentListAdapter.Callback {
+		ContentListAdapter.Callback {
 
 	private ContentListAdapter adapter;
-	private PullToRefreshListView list;
-	private View emptyView;
+	private ListViewContainer list;
 
 	private Group group;
 
@@ -40,11 +38,9 @@ public class GroupPostsFragment extends BaseFragment implements
 		adapter = new ContentListAdapter(getSherlockActivity(), sam);
 		adapter.setCallback(this);
 
-		list = (PullToRefreshListView) root.findViewById(R.id.listPosts);
-		list.setAdapter(adapter);
-		list.setOnRefreshListener(this);
-
-		emptyView = root.findViewById(R.id.listEmpty);
+		list = new ListViewContainer(adapter,
+				(ViewGroup) root.findViewById(R.id.itemsContainer),
+				root.findViewById(R.id.listEmpty));
 
 		return root;
 	}
@@ -57,11 +53,6 @@ public class GroupPostsFragment extends BaseFragment implements
 
 	@Override
 	public void refreshUI() {
-		refreshPostsList();
-	}
-
-	@Override
-	public void onRefresh() {
 		refreshPostsList();
 	}
 
@@ -80,13 +71,7 @@ public class GroupPostsFragment extends BaseFragment implements
 			@Override
 			public void doUIAfter() {
 				adapter.setItems(items);
-				list.onRefreshComplete();
-				ContentActivity.setListViewHeightBasedOnChildren(list);
-
-				boolean noItems = items.size() == 0;
-
-				list.setVisibility(noItems ? View.GONE : View.VISIBLE);
-				emptyView.setVisibility(noItems ? View.VISIBLE : View.GONE);
+				list.update();
 			}
 		});
 	}
