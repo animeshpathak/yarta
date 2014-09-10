@@ -17,14 +17,10 @@ public class StorageAccessManagerEx extends StorageAccessManager {
 	 */
 	public StorageAccessManagerEx() {
 		super();
-
-			bindInterfacetoImplementation(fr.inria.arles.yarta.resources.Person.typeURI,
+		bindInterfacetoImplementation(fr.inria.arles.yarta.resources.Person.typeURI,
 				"fr.inria.arles.foosball.resources.PlayerImpl");
-		
 		bindInterfacetoImplementation(Player.typeURI,
 				"fr.inria.arles.foosball.resources.PlayerImpl");
-
-		
 		bindInterfacetoImplementation(Match.typeURI,
 				"fr.inria.arles.foosball.resources.MatchImpl");
 	}
