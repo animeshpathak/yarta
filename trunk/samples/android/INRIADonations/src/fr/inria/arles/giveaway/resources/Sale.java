@@ -12,11 +12,14 @@ import fr.inria.arles.giveaway.msemanagement.MSEManagerEx;
 public interface Sale extends Resource, Content, Announcement {
 	public static final String typeURI = MSEManagerEx.baseMSEURI + "#Sale";
 
+	/** the URI for property content */
+	public static final String PROPERTY_CONTENT_URI = baseMSEURI + "#content";
+
 	/** the URI for property title */
 	public static final String PROPERTY_TITLE_URI = baseMSEURI + "#title";
 
 	/** the URI for property time */
-	public static final String PROPERTY_TIME_URI = MSEManagerEx.baseMSEURI + "#time";
+	public static final String PROPERTY_TIME_URI = baseMSEURI + "#time";
 
 	/** the URI for property price */
 	public static final String PROPERTY_PRICE_URI = MSEManagerEx.baseMSEURI + "#price";
@@ -41,6 +44,9 @@ public interface Sale extends Resource, Content, Announcement {
 
 	/** the URI for property category */
 	public static final String PROPERTY_CATEGORY_URI = MSEManagerEx.baseMSEURI + "#category";
+
+	/** the URI for property hasReply */
+	public static final String PROPERTY_HASREPLY_URI = baseMSEURI + "#hasReply";
 
 	/** the URI for property hiddenBy */
 	public static final String PROPERTY_HIDDENBY_URI = MSEManagerEx.baseMSEURI + "#hiddenBy";

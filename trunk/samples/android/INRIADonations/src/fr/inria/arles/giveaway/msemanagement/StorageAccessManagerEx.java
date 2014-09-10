@@ -39,6 +39,8 @@ public class StorageAccessManagerEx extends StorageAccessManager {
 				"fr.inria.arles.giveaway.resources.SaleImpl");
 		bindInterfacetoImplementation(Announcement.typeURI,
 				"fr.inria.arles.giveaway.resources.AnnouncementImpl");
+		bindInterfacetoImplementation(fr.inria.arles.yarta.resources.Person.typeURI,
+				"fr.inria.arles.giveaway.resources.PersonImpl");
 		bindInterfacetoImplementation(Person.typeURI,
 				"fr.inria.arles.giveaway.resources.PersonImpl");
 	}
