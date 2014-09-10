@@ -17,7 +17,7 @@ import android.media.ExifInterface;
 
 public class Common {
 
-	public static final String InriaID = "test";
+	public static final String InriaID = "inria";
 
 	private static String[] categories;
 
