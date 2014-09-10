@@ -199,6 +199,7 @@ public class ElggClient {
 	public static final int ACCESS_LOGGED_USERS = 1;
 	public static final int ACCESS_GROUP_MEMBERS = 195;
 
+	public static final int RESULT_ERROR = -1;
 	public static final int RESULT_OK = 0;
 	public static final int RESULT_AUTH_FAILED = -20;
 	public static final int RESULT_NO_NET = -50;
@@ -803,7 +804,8 @@ public class ElggClient {
 		JSONObject json = callMethod("group.forum.save_reply", POST, "postid",
 				postId, "text", encode(content));
 		int result = checkErrors(json);
-		log("%s: result<%d>, lastError<%s>", "addComment", result, lastError);
+		log("addComment(%s): result<%d>, lastError<%s>", postId, result,
+				lastError);
 		return result;
 	}
 
