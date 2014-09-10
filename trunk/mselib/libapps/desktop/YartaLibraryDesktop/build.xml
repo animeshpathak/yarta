@@ -29,6 +29,7 @@
 					<include name="arq-2.8.1.jar"/>
 					<include name="signpost-core-1.2.1.1.jar"/>
 					<include name="sqlite-jdbc-3.7.2.jar"/>
+					<include name="json-simple-1.1.1.jar"/>
 				</fileset>
 			</classpath>
 		</javac>
@@ -54,7 +55,7 @@
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
 				<attribute name="Class-Path" value="." />
 				<attribute name="Rsrc-Main-Class" value="fr.inria.arles.yarta.desktop.library.Main"/>
-				<attribute name="Rsrc-Class-Path" value="./ commons-lang-2.4.jar commons-collections-3.2.1.jar icu4j-3.4.4.jar iri-0.7.jar jena-2.6.2.jar slf4j-api-1.5.6.jar slf4j-log4j12-1.5.6.jar log4j-1.2.13.jar xercesImpl-2.7.1.jar mse-middleware.jar twitter4j-core-3.0.3.jar linkedin-j.jar facebook4j-core-1.1.5.jar arq-2.8.1.jar signpost-core-1.2.1.1.jar sqlite-jdbc-3.7.2.jar"/>
+				<attribute name="Rsrc-Class-Path" value="./ commons-lang-2.4.jar commons-collections-3.2.1.jar icu4j-3.4.4.jar iri-0.7.jar jena-2.6.2.jar slf4j-api-1.5.6.jar slf4j-log4j12-1.5.6.jar log4j-1.2.13.jar xercesImpl-2.7.1.jar mse-middleware.jar twitter4j-core-3.0.3.jar linkedin-j.jar facebook4j-core-1.1.5.jar arq-2.8.1.jar signpost-core-1.2.1.1.jar sqlite-jdbc-3.7.2.jar json-simple-1.1.1.jar"/>
 			</manifest>
 			
 			<zipfileset src="${lib}/jar-in-jar-loader.zip"/>
@@ -75,6 +76,7 @@
 			<zipfileset dir="${lib}" includes="facebook4j-core-1.1.5.jar"/>
 			<zipfileset dir="${lib}" includes="signpost-core-1.2.1.1.jar"/>
 			<zipfileset dir="${lib}" includes="sqlite-jdbc-3.7.2.jar"/>
+			<zipfileset dir="${lib}" includes="json-simple-1.1.1.jar"/>
 		</jar>
 	</target>
 	
