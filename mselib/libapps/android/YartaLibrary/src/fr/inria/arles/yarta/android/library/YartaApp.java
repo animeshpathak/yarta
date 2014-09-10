@@ -77,13 +77,9 @@ public class YartaApp extends Application implements MSEApplication {
 				mse = null;
 			}
 		} else {
-			//if (observer != null) {
-			//	observer.updateInfo();
-			//} else {
-				// no observer, but initialized already
-				// so we might call it manually
-			//	handleKBReady(mse.getOwnerUID());
-			//}
+			comm = mse.getCommunicationManager();
+			sam = mse.getStorageAccessManagerEx();
+			sam.setOwnerID(mse.getOwnerUID());
 		}
 	}
 

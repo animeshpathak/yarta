@@ -104,14 +104,12 @@
                         android:textColor="@color/AppTextColorLow" />
                 </RelativeLayout>
 
-                <fr.inria.arles.util.PullToRefreshListView
-                    android:id="@+id/listComents"
+                <LinearLayout
+                    android:id="@+id/itemsContainer"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/container"
-                    android:divider="#00000000"
-                    android:dividerHeight="0sp"
-                    android:listSelector="@drawable/list_selector" />
+                    android:orientation="vertical" />
 
                 <LinearLayout
                     android:id="@+id/container"

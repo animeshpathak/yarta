@@ -14,13 +14,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
@@ -31,8 +27,7 @@ import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.ContentImpl;
 
 public class ContentActivity extends BaseActivity implements
-		PullToRefreshListView.OnRefreshListener, ContentListAdapter.Callback,
-		ContentCommentDialog.Callback {
+		ContentListAdapter.Callback, ContentCommentDialog.Callback {
 
 	public static final String PostGuid = "PostGuid";
 
@@ -41,7 +36,7 @@ public class ContentActivity extends BaseActivity implements
 	private Content post;
 
 	private ContentListAdapter adapter;
-	private PullToRefreshListView list;
+	private ListViewContainer list;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +56,8 @@ public class ContentActivity extends BaseActivity implements
 		adapter = new ContentListAdapter(this, getSAM());
 		adapter.setCallback(this);
 
-		list = (PullToRefreshListView) findViewById(R.id.listComents);
-		list.setAdapter(adapter);
-		list.setOnRefreshListener(this);
+		list = new ListViewContainer(adapter,
+				(ViewGroup) findViewById(R.id.itemsContainer), null);
 
 		trackUI("PostView");
 	}
@@ -117,38 +111,9 @@ public class ContentActivity extends BaseActivity implements
 			@Override
 			public void doUIAfter() {
 				adapter.setItems(items);
-				list.onRefreshComplete();
-				setListViewHeightBasedOnChildren(list);
-
-				boolean noItems = items.size() == 0;
-				list.setVisibility(noItems ? View.GONE : View.VISIBLE);
-				findViewById(R.id.listEmpty).setVisibility(
-						noItems ? View.VISIBLE : View.GONE);
+				list.update();
 			}
 		});
-	}
-
-	public static void setListViewHeightBasedOnChildren(ListView listView) {
-		ListAdapter listAdapter = listView.getAdapter();
-		if (listAdapter == null) {
-			return;
-		}
-
-		int totalHeight = 0;
-		int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(),
-				MeasureSpec.AT_MOST);
-		for (int i = 0; i < listAdapter.getCount(); i++) {
-			View listItem = listAdapter.getView(i, null, listView);
-			listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-			totalHeight += listItem.getMeasuredHeight();
-		}
-
-		ViewGroup.LayoutParams params = listView.getLayoutParams();
-		params.height = totalHeight
-				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-		listView.setLayoutParams(params);
-		listView.requestLayout();
-		listView.postInvalidate();
 	}
 
 	public void refreshUI() {
@@ -191,11 +156,6 @@ public class ContentActivity extends BaseActivity implements
 		} catch (Exception ex) {
 		}
 
-		refreshCommentsList();
-	}
-
-	@Override
-	public void onRefresh() {
 		refreshCommentsList();
 	}
 
