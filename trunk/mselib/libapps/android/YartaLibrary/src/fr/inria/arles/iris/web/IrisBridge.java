@@ -1,7 +1,9 @@
 package fr.inria.arles.iris.web;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import android.content.Context;
@@ -36,6 +38,7 @@ public class IrisBridge implements WebCallback {
 	private ContentClientPictures content;
 	private boolean loggedin = false;
 	private boolean nointernet = false;
+	private IrisBridgeUtils util;
 
 	public IrisBridge(Context context, MSEApplication app, KnowledgeBase kb,
 			ContentClientPictures content) {
@@ -43,6 +46,8 @@ public class IrisBridge implements WebCallback {
 		this.app = app;
 		this.kb = (MSEKnowledgeBase) kb;
 		this.content = content;
+
+		util = new IrisBridgeUtils(kb);
 
 		client.addCallback(this);
 
@@ -198,8 +203,8 @@ public class IrisBridge implements WebCallback {
 
 		if (p.getName().equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
 			// get the group
-			String userId = getUserId(s);
-			String groupId = getResourceId(o);
+			String userId = util.getResourceId(s);
+			String groupId = util.getResourceId(o);
 
 			// not owner, remove triple
 			if (!userId.equals(client.getUsername())) {
@@ -207,8 +212,16 @@ public class IrisBridge implements WebCallback {
 			} else {
 				result = client.joinGroup(groupId);
 
-				if (result == ElggClient.RESULT_OK) {
-					app.handleNotification("group joined");
+				switch (result) {
+				case ElggClient.RESULT_NO_NET:
+				case ElggClient.RESULT_AUTH_FAILED:
+					break;
+				case ElggClient.RESULT_OK:
+					app.handleNotification("group join sent.");
+					break;
+				default:
+					app.handleNotification("group join error.");
+					break;
 				}
 			}
 		}
@@ -230,9 +243,8 @@ public class IrisBridge implements WebCallback {
 		int result = ElggClient.RESULT_OK;
 
 		if (typeURI.equals(Content.typeURI)) {
-			Node hasReply = kb
-					.getResourceByURINoPolicies(Content.PROPERTY_HASREPLY_URI);
-			Node comment = kb.getResourceByURINoPolicies(nodeURI);
+			Node hasReply = util.getNode(Content.PROPERTY_HASREPLY_URI);
+			Node comment = util.getNode(nodeURI);
 			List<Triple> triples = kb.getPropertySubjectAsTriples(hasReply,
 					comment, client.getUsername());
 
@@ -243,7 +255,7 @@ public class IrisBridge implements WebCallback {
 				String postId = triples.get(0).getSubject().getName();
 				postId = postId.substring(postId.indexOf('_') + 1);
 
-				String title = getSimpleLiteral(comment,
+				String title = util.getSimpleLiteral(comment,
 						Content.PROPERTY_TITLE_URI);
 
 				result = client.addGroupPostComment(postId, title);
@@ -256,8 +268,7 @@ public class IrisBridge implements WebCallback {
 				}
 			} else {
 				// is a content in a group
-				Node hasContent = kb
-						.getResourceByURINoPolicies(Group.PROPERTY_HASCONTENT_URI);
+				Node hasContent = util.getNode(Group.PROPERTY_HASCONTENT_URI);
 				triples = kb.getPropertySubjectAsTriples(hasContent, comment,
 						client.getUsername());
 
@@ -267,9 +278,9 @@ public class IrisBridge implements WebCallback {
 					String groupId = triples.get(0).getSubject().getName();
 					groupId = groupId.substring(groupId.indexOf('_') + 1);
 
-					String title = getSimpleLiteral(comment,
+					String title = util.getSimpleLiteral(comment,
 							Content.PROPERTY_TITLE_URI);
-					String description = getSimpleLiteral(comment,
+					String description = util.getSimpleLiteral(comment,
 							Content.PROPERTY_CONTENT_URI);
 
 					result = client.addGroupPost(groupId, title, description);
@@ -277,7 +288,7 @@ public class IrisBridge implements WebCallback {
 					switch (result) {
 					case ElggClient.RESULT_OK:
 						kb.removeResource(nodeURI);
-						ensurePostComments(triples.get(0).getSubject());
+						app.handleNotification("post created.");
 						break;
 					}
 				}
@@ -340,7 +351,7 @@ public class IrisBridge implements WebCallback {
 				} else if (p.equals(Content.PROPERTY_HASREPLY_URI)) {
 					ensurePostComments(subject);
 				} else if (s.contains(Group.typeURI)) {
-					if (getSimpleLiteral(subject, p) == null) {
+					if (util.getSimpleLiteral(subject, p) == null) {
 						String groupId = s.substring(s.indexOf('_') + 1);
 
 						GroupItem group = client.getGroup(groupId);
@@ -350,7 +361,7 @@ public class IrisBridge implements WebCallback {
 						}
 					}
 				} else if (s.contains(Content.typeURI)) {
-					if (getSimpleLiteral(subject, p) == null) {
+					if (util.getSimpleLiteral(subject, p) == null) {
 						String postId = s.substring(s.indexOf('_') + 1);
 
 						PostItem post = client.getGroupPost(postId);
@@ -379,7 +390,7 @@ public class IrisBridge implements WebCallback {
 	}
 
 	private void ensureFriends(Node node) {
-		String userId = getUserId(node);
+		String userId = util.getResourceId(node);
 
 		List<UserItem> users = client.getFriends(userId, 0);
 
@@ -395,14 +406,41 @@ public class IrisBridge implements WebCallback {
 	}
 
 	private void ensureGroups(Node node) {
-		String userId = getUserId(node);
+		String userId = util.getResourceId(node);
 
+		Set<String> groupIds = new HashSet<String>();
 		List<GroupItem> groups = client.getGroups(userId);
 
 		boolean update = false;
 		for (GroupItem group : groups) {
 			update |= createGroup(group, false);
 			update |= addIsMemberOf(group);
+
+			// add for re-check
+			groupIds.add(group.getGuid());
+		}
+
+		// check if no longer member of existing groups
+		Node memberOf = util.getNode(Agent.PROPERTY_ISMEMBEROF_URI);
+		try {
+			List<Triple> triples = kb.getPropertyObjectAsTriples(node,
+					memberOf, client.getUsername());
+
+			for (Triple triple : triples) {
+				String groupId = util.getResourceId(triple.getObject());
+
+				// no longer or not yet a member
+				if (!groupIds.contains(groupId)) {
+					log("ensureGroups removed %s", groupId);
+
+					Node groupNode = util.getGroupNode(groupId);
+					kb.removeTriple(node, memberOf, groupNode,
+							client.getUsername());
+
+					update |= true;
+				}
+			}
+		} catch (Exception ex) {
 		}
 
 		if (update) {
@@ -416,14 +454,14 @@ public class IrisBridge implements WebCallback {
 	 * @param node
 	 */
 	private void ensurePosts(Node node) {
-		String groupId = getResourceId(node);
+		String groupId = util.getResourceId(node);
 
 		List<PostItem> posts = client.getGroupPosts(groupId);
 
 		boolean update = false;
 
 		// check if group does exist
-		if (kb.getResourceByURINoPolicies(node.getName()) == null) {
+		if (util.getNode(node.getName()) == null) {
 			GroupItem group = client.getGroup(groupId);
 			update |= createGroup(group, false);
 		}
@@ -441,9 +479,9 @@ public class IrisBridge implements WebCallback {
 	}
 
 	private boolean ensureTriple(String s, String p, String o) {
-		Node subject = kb.getResourceByURINoPolicies(s);
-		Node predicate = kb.getResourceByURINoPolicies(p);
-		Node object = kb.getResourceByURINoPolicies(o);
+		Node subject = util.getNode(s);
+		Node predicate = util.getNode(p);
+		Node object = util.getNode(o);
 
 		try {
 			if (kb.getTriple(subject, predicate, object, client.getUsername()) == null) {
@@ -457,7 +495,7 @@ public class IrisBridge implements WebCallback {
 	}
 
 	private void ensurePostComments(Node node) {
-		String postId = getResourceId(node);
+		String postId = util.getResourceId(node);
 
 		List<PostItem> posts = client.getGroupPostComments(postId);
 
@@ -474,155 +512,6 @@ public class IrisBridge implements WebCallback {
 		}
 	}
 
-	private boolean createConversation(List<MessageItem> messages) {
-		boolean update = false;
-
-		String reqId = client.getUsername();
-
-		// to be able to pass it as ref
-		Node conversation[] = new Node[1];
-		List<Node> peers = new ArrayList<Node>();
-
-		for (MessageItem item : messages) {
-			update |= createMessage(item, conversation);
-			peers.add(getNode(item.getFrom().getUsername()));
-		}
-
-		try {
-			if (conversation[0] == null) {
-				String conversationId = UUID.randomUUID().toString();
-				conversation[0] = kb.addResource(MSEManagerEx.baseMSEURI + '#'
-						+ conversationId, Conversation.typeURI, reqId);
-				update = true;
-			}
-
-			for (Node peer : peers) {
-				update |= ensureTriple(peer.getName(),
-						Person.PROPERTY_PARTICIPATESTO_URI,
-						conversation[0].getName());
-			}
-
-			for (MessageItem item : messages) {
-				String messageId = Message.typeURI + "_" + item.getGuid();
-				update |= ensureTriple(conversation[0].getName(),
-						Conversation.PROPERTY_CONTAINS_URI, messageId);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return update;
-	}
-
-	private boolean createPost(PostItem item) {
-		boolean update = false;
-
-		String reqId = client.getUsername();
-		String postId = Content.typeURI + "_" + item.getGuid();
-
-		try {
-			Node post = kb.getResourceByURINoPolicies(postId);
-			if (post == null) {
-				update = true;
-				post = kb.addResource(postId, Content.typeURI, reqId);
-				log("createPost<%s>", item.getGuid());
-			}
-
-			update |= ensureSimpleTriple(post, Content.PROPERTY_TITLE_URI,
-					item.getTitle());
-			update |= ensureSimpleTriple(post, Content.PROPERTY_CONTENT_URI,
-					item.getDescription());
-			update |= ensureSimpleTriple(post, Content.PROPERTY_TIME_URI,
-					String.valueOf(item.getTime()));
-
-			// set creator, make sure it exists
-			update |= createPerson(item.getOwner(), false);
-
-			String userId = Person.typeURI + "_"
-					+ item.getOwner().getUsername();
-			update |= ensureTriple(userId, Agent.PROPERTY_CREATOR_URI, postId);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return update;
-	}
-
-	private boolean createMessage(MessageItem item, Node conversation[]) {
-		boolean update = false;
-
-		Node contains = kb
-				.getResourceByURINoPolicies(Conversation.PROPERTY_CONTAINS_URI);
-
-		try {
-			String messageId = Message.typeURI + "_" + item.getGuid();
-			Node s = kb.getResourceByURINoPolicies(messageId);
-			if (s == null) {
-				update = true;
-				s = kb.addResource(messageId, Message.typeURI,
-						client.getUsername());
-				log("createMessage<%s>", item.getGuid());
-			}
-
-			update |= ensureSimpleTriple(s, Message.PROPERTY_TITLE_URI,
-					item.getSubject());
-			update |= ensureSimpleTriple(s, Message.PROPERTY_CONTENT_URI,
-					item.getDescription());
-			update |= ensureSimpleTriple(s, Message.PROPERTY_TIME_URI,
-					String.valueOf(item.getTimestamp()));
-			update |= createPerson(item.getFrom(), false);
-
-			String reqId = client.getUsername();
-
-			// set creator
-			String userId = Person.typeURI + "_"
-					+ (item.isSent() ? reqId : item.getFrom().getUsername());
-			update |= ensureTriple(userId, Agent.PROPERTY_CREATOR_URI,
-					messageId);
-
-			// get linked conversation
-			List<Triple> triples = kb.getPropertySubjectAsTriples(contains, s,
-					reqId);
-			for (Triple triple : triples) {
-				conversation[0] = triple.getSubject();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return update;
-	}
-
-	/**
-	 * Gets the username from a node's URI
-	 * 
-	 * @param node
-	 */
-	private String getUserId(Node node) {
-		String userId = node.getName();
-		userId = userId.substring(userId.indexOf('_') + 1);
-		return userId;
-	}
-
-	/**
-	 * Gets the group id from a node's URI
-	 */
-	private String getResourceId(Node node) {
-		String groupId = node.getName();
-		groupId = groupId.substring(groupId.indexOf('_') + 1);
-		return groupId;
-	}
-
-	/**
-	 * Gets the node from a userId.
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	private Node getNode(String userId) {
-		String ownerId = Person.typeURI + "_" + userId;
-		Node owner = kb.getResourceByURINoPolicies(ownerId);
-		return owner;
-	}
-
 	/**
 	 * Add a bi-directional knows link between owner and this user.
 	 * 
@@ -634,10 +523,10 @@ public class IrisBridge implements WebCallback {
 
 		String reqId = client.getUsername();
 
-		Node owner = getNode(reqId);
-		Node user = getNode(item.getUsername());
+		Node owner = util.getPersonNode(reqId);
+		Node user = util.getPersonNode(item.getUsername());
 
-		Node p = kb.getResourceByURINoPolicies(Person.PROPERTY_KNOWS_URI);
+		Node p = util.getNode(Person.PROPERTY_KNOWS_URI);
 
 		try {
 			if (kb.getTriple(owner, p, user, reqId) == null) {
@@ -666,16 +555,13 @@ public class IrisBridge implements WebCallback {
 
 		String reqId = client.getUsername();
 
-		Node owner = getNode(reqId);
-
-		String groupId = Group.typeURI + "_" + item.getGuid();
-		Node group = kb.getResourceByURINoPolicies(groupId);
-
-		Node p = kb.getResourceByURINoPolicies(Agent.PROPERTY_ISMEMBEROF_URI);
+		Node owner = util.getPersonNode(reqId);
+		Node group = util.getGroupNode(item.getGuid());
+		Node isMemberOf = util.getNode(Agent.PROPERTY_ISMEMBEROF_URI);
 
 		try {
-			if (kb.getTriple(owner, p, group, reqId) == null) {
-				kb.addTriple(owner, p, group, client.getUsername());
+			if (kb.getTriple(owner, isMemberOf, group, reqId) == null) {
+				kb.addTriple(owner, isMemberOf, group, client.getUsername());
 				update = true;
 			}
 		} catch (KBException ex) {
@@ -698,7 +584,7 @@ public class IrisBridge implements WebCallback {
 		boolean update = false;
 		try {
 			String userUniqueId = Person.typeURI + "_" + item.getUsername();
-			Node s = kb.getResourceByURINoPolicies(userUniqueId);
+			Node s = util.getNode(userUniqueId);
 			if (s == null) {
 				update = true;
 				s = kb.addResource(userUniqueId, Person.typeURI,
@@ -706,26 +592,25 @@ public class IrisBridge implements WebCallback {
 				log("createPerson<%s>", item.getUsername());
 			}
 
-			update |= ensureSimpleTriple(s, Person.PROPERTY_USERID_URI,
+			update |= util.ensureSimpleLiteral(s, Person.PROPERTY_USERID_URI,
 					item.getUsername());
-			update |= ensureSimpleTriple(s, Person.PROPERTY_NAME_URI,
+			update |= util.ensureSimpleLiteral(s, Person.PROPERTY_NAME_URI,
 					item.getName());
-			update |= ensureSimpleTriple(s, Person.PROPERTY_ROOM_URI,
+			update |= util.ensureSimpleLiteral(s, Person.PROPERTY_ROOM_URI,
 					item.getRoom());
-			update |= ensureSimpleTriple(s, Person.PROPERTY_PHONE_URI,
+			update |= util.ensureSimpleLiteral(s, Person.PROPERTY_PHONE_URI,
 					item.getPhone());
-			update |= ensureSimpleTriple(s, Person.PROPERTY_LOCATION_URI,
+			update |= util.ensureSimpleLiteral(s, Person.PROPERTY_LOCATION_URI,
 					item.getLocation());
 
-			String pictureId = getSimpleLiteral(s, Person.PROPERTY_PICTURE_URI);
+			String pictureId = util.getSimpleLiteral(s,
+					Person.PROPERTY_PICTURE_URI);
 			if (pictureId == null) {
 				pictureId = UUID.randomUUID().toString();
 				Node p = kb.addResource(MSEManagerEx.baseMSEURI + '#'
 						+ pictureId, Picture.typeURI, client.getUsername());
-				kb.addTriple(
-						s,
-						kb.getResourceByURINoPolicies(Person.PROPERTY_PICTURE_URI),
-						p, client.getUsername());
+				kb.addTriple(s, util.getNode(Person.PROPERTY_PICTURE_URI), p,
+						client.getUsername());
 				content.setBitmap(pictureId, item.getAvatarURL());
 				update = true;
 			} else {
@@ -760,29 +645,28 @@ public class IrisBridge implements WebCallback {
 		boolean update = false;
 		try {
 			String groupId = Group.typeURI + "_" + item.getGuid();
-			Node s = kb.getResourceByURINoPolicies(groupId);
+			Node s = util.getNode(groupId);
 			if (s == null) {
 				update = true;
 				s = kb.addResource(groupId, Group.typeURI, client.getUsername());
 				log("createGroup<%s>", item.getGuid());
 			}
 
-			update |= ensureSimpleTriple(s, Group.PROPERTY_NAME_URI,
+			update |= util.ensureSimpleLiteral(s, Group.PROPERTY_NAME_URI,
 					item.getName());
-			update |= ensureSimpleTriple(s, Group.PROPERTY_OWNERNAME_URI,
+			update |= util.ensureSimpleLiteral(s, Group.PROPERTY_OWNERNAME_URI,
 					item.getOwnerName());
-			update |= ensureSimpleTriple(s, Group.PROPERTY_MEMBERS_URI,
+			update |= util.ensureSimpleLiteral(s, Group.PROPERTY_MEMBERS_URI,
 					String.valueOf(item.getMembers()));
 
-			String pictureId = getSimpleLiteral(s, Group.PROPERTY_PICTURE_URI);
+			String pictureId = util.getSimpleLiteral(s,
+					Group.PROPERTY_PICTURE_URI);
 			if (pictureId == null) {
 				pictureId = UUID.randomUUID().toString();
 				Node p = kb.addResource(MSEManagerEx.baseMSEURI + '#'
 						+ pictureId, Picture.typeURI, client.getUsername());
-				kb.addTriple(
-						s,
-						kb.getResourceByURINoPolicies(Group.PROPERTY_PICTURE_URI),
-						p, client.getUsername());
+				kb.addTriple(s, util.getNode(Group.PROPERTY_PICTURE_URI), p,
+						client.getUsername());
 				content.setBitmap(pictureId, item.getAvatarURL());
 				update = true;
 			} else {
@@ -805,70 +689,123 @@ public class IrisBridge implements WebCallback {
 		return update;
 	}
 
-	/**
-	 * Makes sure the triple s p o exists in the KB.
-	 * 
-	 * Returns true if UI needs updates, false otherwise.
-	 * 
-	 * @throws KBException
-	 */
-	private boolean ensureSimpleTriple(Node s, String predicate, String object)
-			throws KBException {
-		if (object != null) {
-			String value = getSimpleLiteral(s, predicate);
+	private boolean createConversation(List<MessageItem> messages) {
+		boolean update = false;
 
-			if (!object.equals(value)) {
-				addSimpleTriple(s, predicate, object);
-				return true;
-			}
+		String reqId = client.getUsername();
+
+		// to be able to pass it as ref
+		Node conversation[] = new Node[1];
+		List<Node> peers = new ArrayList<Node>();
+
+		for (MessageItem item : messages) {
+			update |= createMessage(item, conversation);
+			peers.add(util.getPersonNode(item.getFrom().getUsername()));
 		}
-		return false;
-	}
 
-	/**
-	 * Returns a simple triple.
-	 * 
-	 * @param s
-	 * @param predicateURI
-	 * @return
-	 */
-	private String getSimpleLiteral(Node s, String predicateURI) {
-		String value = null;
 		try {
-			Node predicate = kb.getResourceByURINoPolicies(predicateURI);
-			// predicate might not be in the KB
-			if (predicate != null) {
-				List<Triple> triples = kb.getPropertyObjectAsTriples(s,
-						predicate, client.getUsername());
-				for (Triple t : triples) {
-					value = t.getObject().getName();
-				}
+			if (conversation[0] == null) {
+				String conversationId = UUID.randomUUID().toString();
+				conversation[0] = kb.addResource(MSEManagerEx.baseMSEURI + '#'
+						+ conversationId, Conversation.typeURI, reqId);
+				update = true;
 			}
-		} catch (KBException ex) {
+
+			for (Node peer : peers) {
+				update |= ensureTriple(peer.getName(),
+						Person.PROPERTY_PARTICIPATESTO_URI,
+						conversation[0].getName());
+			}
+
+			for (MessageItem item : messages) {
+				String messageId = Message.typeURI + "_" + item.getGuid();
+				update |= ensureTriple(conversation[0].getName(),
+						Conversation.PROPERTY_CONTAINS_URI, messageId);
+			}
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return value;
+		return update;
 	}
 
-	/**
-	 * Adds a s, p, o triple where the object is a string.
-	 * 
-	 * @param s
-	 * @param predicateURI
-	 * @param literal
-	 * @return
-	 * @throws KBException
-	 */
-	private Triple addSimpleTriple(Node s, String predicateURI, String literal)
-			throws KBException {
-		return kb.addTriple(s, kb.getResourceByURINoPolicies(predicateURI),
-				kb.addLiteral(literal, TYPE_STRING_URI, literal),
-				client.getUsername());
+	private boolean createPost(PostItem item) {
+		boolean update = false;
+
+		String reqId = client.getUsername();
+		String postId = Content.typeURI + "_" + item.getGuid();
+
+		try {
+			Node post = util.getNode(postId);
+			if (post == null) {
+				update = true;
+				post = kb.addResource(postId, Content.typeURI, reqId);
+				log("createPost<%s>", item.getGuid());
+			}
+
+			update |= util.ensureSimpleLiteral(post,
+					Content.PROPERTY_TITLE_URI, item.getTitle());
+			update |= util.ensureSimpleLiteral(post,
+					Content.PROPERTY_CONTENT_URI, item.getDescription());
+			update |= util.ensureSimpleLiteral(post, Content.PROPERTY_TIME_URI,
+					String.valueOf(item.getTime()));
+
+			// set creator, make sure it exists
+			update |= createPerson(item.getOwner(), false);
+
+			String userId = Person.typeURI + "_"
+					+ item.getOwner().getUsername();
+			update |= ensureTriple(userId, Agent.PROPERTY_CREATOR_URI, postId);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return update;
+	}
+
+	private boolean createMessage(MessageItem item, Node conversation[]) {
+		boolean update = false;
+
+		Node contains = util.getNode(Conversation.PROPERTY_CONTAINS_URI);
+
+		try {
+			String messageId = Message.typeURI + "_" + item.getGuid();
+			Node s = util.getNode(messageId);
+			if (s == null) {
+				update = true;
+				s = kb.addResource(messageId, Message.typeURI,
+						client.getUsername());
+				log("createMessage<%s>", item.getGuid());
+			}
+
+			update |= util.ensureSimpleLiteral(s, Message.PROPERTY_TITLE_URI,
+					item.getSubject());
+			update |= util.ensureSimpleLiteral(s, Message.PROPERTY_CONTENT_URI,
+					item.getDescription());
+			update |= util.ensureSimpleLiteral(s, Message.PROPERTY_TIME_URI,
+					String.valueOf(item.getTimestamp()));
+			update |= createPerson(item.getFrom(), false);
+
+			String reqId = client.getUsername();
+
+			// set creator
+			String userId = Person.typeURI + "_"
+					+ (item.isSent() ? reqId : item.getFrom().getUsername());
+			update |= ensureTriple(userId, Agent.PROPERTY_CREATOR_URI,
+					messageId);
+
+			// get linked conversation
+			List<Triple> triples = kb.getPropertySubjectAsTriples(contains, s,
+					reqId);
+			for (Triple triple : triples) {
+				conversation[0] = triple.getSubject();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return update;
 	}
 
 	private static void log(String format, Object... args) {
 		YLoggerFactory.getLogger().d("IrisBridge", String.format(format, args));
 	}
-
-	private static final String TYPE_STRING_URI = "http://www.w3.org/2001/XMLSchema#string";
 }

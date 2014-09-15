@@ -6,6 +6,7 @@
     <string name="callout_join">join callout</string>
     <string name="callout_save">save callout</string>
     <string name="callout_none">No callouts.\r\nTo create one tap \'+\'.</string>
+    <string name="callout_member">You are not a member of the group.\r\nTap to retry.</string>
     <string name="callout_comments_none">To join thumbs up!</string>
     <string name="app_callout">Callout</string>
     <string name="app_createcallout">Create callout</string>
