@@ -1,6 +1,5 @@
 package fr.inria.arles.yarta.android.library;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.actionbarsherlock.view.Window;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
-import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
 import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.android.library.util.JobRunner;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
@@ -46,12 +44,12 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app = (YartaApp) getApplication();
 		runner = new JobRunner(this);
 		tracker.start(this);
-		app.initMSE(this);
+		
+		initMSE();
 	}
 
 	@Override
 	protected void onDestroy() {
-		app.removeObserver(this);
 		tracker.stop();
 		super.onDestroy();
 	}
@@ -202,14 +200,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onAuthenticationFailed() {
-		runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				Intent intent = new Intent(BaseActivity.this, AuthenticatorActivity.class);
-				startActivity(intent);
-			}
-		});
+		// TODO: make it differently;
 	}
 
 	@Override
