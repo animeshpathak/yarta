@@ -49,6 +49,14 @@ public class AllCalloutsActivity extends BaseActivity implements
 	private Group group;
 	private Person me;
 
+	private boolean retryEnabled = true;
+
+	public void onClickRetry(View view) {
+		if (retryEnabled) {
+			refreshUI();
+		}
+	}
+
 	@Override
 	protected void refreshUI() {
 		if (getSAM() != null) {
@@ -65,8 +73,24 @@ public class AllCalloutsActivity extends BaseActivity implements
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+
 			if (group != null) {
 				adapter.setItems(group.getHasContent());
+
+				// currently no items
+				if (adapter.getCount() == 0) {
+					setText(R.id.none, getString(R.string.callout_none));
+				}
+			}
+
+			if (me != null) {
+				// currently not a member
+				if (!me.getIsMemberOf().contains(group)) {
+					setText(R.id.none, getString(R.string.callout_member));
+					retryEnabled = true;
+				} else {
+					retryEnabled = false;
+				}
 			}
 		}
 	}
