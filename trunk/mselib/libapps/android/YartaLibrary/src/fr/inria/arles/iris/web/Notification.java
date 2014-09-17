@@ -12,12 +12,18 @@ public class Notification {
 
 	private static final int NotificationLogin = 1988;
 
+	private Context context;
+
+	public Notification(Context context) {
+		this.context = context;
+	}
+
 	/**
 	 * Shows the login notification
 	 * 
 	 * @param context
 	 */
-	public static void showLogin(Context context) {
+	public void showLogin() {
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				context).setSmallIcon(R.drawable.icon_default)
 				.setContentTitle(context.getString(R.string.app_name))
@@ -32,7 +38,7 @@ public class Notification {
 		mNotificationManager.notify(NotificationLogin, mBuilder.build());
 	}
 
-	public static void hideLogin(Context context) {
+	public void hideLogin() {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.cancel(NotificationLogin);

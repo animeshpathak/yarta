@@ -3,7 +3,7 @@ package fr.inria.arles.yarta.android.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.arles.iris.web.IrisBridge;
+import fr.inria.arles.iris.bridge.IrisBridge;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
