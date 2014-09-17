@@ -10,6 +10,7 @@
         android:id="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:hint="@string/app_title_hint" />
 
     <LinearLayout
@@ -35,10 +36,11 @@
     </LinearLayout>
 
     <EditText
+        android:id="@+id/description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:id="@+id/description"
+        android:hint="@string/app_description_hint"
         android:inputType="textMultiLine"
         android:minLines="6" />
 

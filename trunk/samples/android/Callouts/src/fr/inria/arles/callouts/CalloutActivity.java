@@ -76,8 +76,8 @@ public class CalloutActivity extends BaseActivity {
 			Content c = getSAM().createContent();
 			c.setTime(System.currentTimeMillis());
 			c.setTitle(getString(R.string.callout_join_text));
+			
 			me.addCreator(c);
-
 			content.addHasReply(c);
 		} catch (Exception ex) {
 			Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG).show();
