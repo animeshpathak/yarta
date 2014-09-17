@@ -62,10 +62,16 @@
 		</java>
 		
 		<!-- Android Library -->
-		<!-- Copy Strings.java from misc -->
+		<!-- Copy Strings.java, keystore from misc -->
 		<copy todir="mselib/libapps/android/YartaLibrary/src/fr/inria/arles/iris/web" overwrite="false">
 			<fileset dir="misc">
 				<include name="Strings.java"/>
+			</fileset>
+		</copy>
+
+		<copy todir="." overwrite="false">
+			<fileset dir="misc">
+				<include name="keystore"/>
 			</fileset>
 		</copy>
 
