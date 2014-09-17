@@ -46,7 +46,8 @@ public class ContentActivity extends BaseActivity implements
 
 		String postId = getIntent().getStringExtra(PostGuid);
 
-		if (!postId.contains("_")) {
+		if (!postId.contains(Content.baseMSEURI)) {
+			// it's comming from river
 			postId = Content.typeURI + "_" + postId;
 		}
 
