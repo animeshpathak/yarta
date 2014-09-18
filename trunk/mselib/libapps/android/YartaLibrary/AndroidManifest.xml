@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.inria.arles.iris"
-    android:versionCode="72"
-    android:versionName="2.6.20" >
+    android:versionCode="73"
+    android:versionName="2.6.21" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -42,14 +42,14 @@
     <application
         android:name="fr.inria.arles.yarta.android.library.YartaApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:vmSafeMode="true"       
         android:allowClearUserData="true"
         android:hardwareAccelerated="true"
-        android:theme="@style/AppTheme" >
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:vmSafeMode="true" >
         <activity
-            android:name="fr.inria.arles.yarta.android.library.EulaActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.EulaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
@@ -60,20 +60,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="fr.inria.arles.yarta.android.library.MainActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.MessageActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.MessageActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/message_title" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.MessagesActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.MessagesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/message_title" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.ProfileActivity"
+            android:name="fr.inria.arles.yarta.android.library.ProfileActivitytation"
             android:configChanges="orientation|screenSize"
             android:label="@string/profile_title"
             android:windowSoftInputMode="stateHidden" >
@@ -84,11 +84,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="fr.inria.arles.yarta.android.library.GroupActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.GroupActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/group_title" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.ContentActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.ContentActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/post_title" />
 
@@ -135,11 +135,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="fr.inria.arles.yarta.android.library.BlogActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.BlogActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/topic_title" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.FileActivity"
+            android:name="fr.inria.arles.yarta.android.library.ui.FileActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/file_title" />
 
