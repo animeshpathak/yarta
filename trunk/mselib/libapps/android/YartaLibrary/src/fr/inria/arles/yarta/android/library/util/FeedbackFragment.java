@@ -11,6 +11,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,8 +84,7 @@ public class FeedbackFragment extends BaseFragment implements
 
 			@Override
 			public void doWork() {
-				success = sendFeedback("fr.inria.arles.iris",
-						client.getUsername(), content);
+				success = submitFeedback(content);
 			}
 
 			@Override
@@ -100,10 +100,17 @@ public class FeedbackFragment extends BaseFragment implements
 		});
 	}
 
-	public boolean sendFeedback(String appId, String from, String content) {
+	public boolean submitFeedback(String content) {
+		PackageManager packMgr = getSherlockActivity().getPackageManager();
+
 		String feedbackURL = "http://arles.rocq.inria.fr/yarta/feedback/?";
 
 		try {
+			String appId = getSherlockActivity().getPackageName();
+			String from = client.getUsername();
+			
+			content += " " + packMgr.getPackageInfo(appId, 0).versionName;
+
 			feedbackURL += "from=" + URLEncoder.encode(from, "UTF-8");
 			feedbackURL += "&appid=" + URLEncoder.encode(appId, "UTF-8");
 			feedbackURL += "&content=" + URLEncoder.encode(content, "UTF-8");
