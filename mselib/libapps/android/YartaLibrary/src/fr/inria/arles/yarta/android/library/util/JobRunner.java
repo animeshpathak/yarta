@@ -1,6 +1,6 @@
 package fr.inria.arles.yarta.android.library.util;
 
-import fr.inria.arles.yarta.android.library.BaseActivity;
+import fr.inria.arles.yarta.android.library.ui.BaseActivity;
 import android.os.AsyncTask;
 
 public class JobRunner {

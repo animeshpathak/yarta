@@ -14,7 +14,7 @@ import java.util.Locale;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import fr.inria.arles.util.Base64;
+import fr.inria.arles.yarta.android.library.util.Base64;
 
 public class HttpClient {
 

@@ -20,7 +20,7 @@
             android:textColor="@color/AppTextColorLow" />
     </RelativeLayout>
 
-    <fr.inria.arles.util.PullToRefreshListView
+    <fr.inria.arles.yarta.android.library.util.PullToRefreshListView
         android:id="@+id/listInbox"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
