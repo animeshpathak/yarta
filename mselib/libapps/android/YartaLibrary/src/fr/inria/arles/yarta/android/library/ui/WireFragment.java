@@ -36,6 +36,8 @@ public class WireFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_wire, container, false);
 
+		setViews(container, root);
+		
 		adapter = new WireListAdapter(getSherlockActivity());
 		adapter.setCallback(this);
 
