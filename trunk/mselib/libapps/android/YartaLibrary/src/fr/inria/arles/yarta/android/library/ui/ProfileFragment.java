@@ -178,7 +178,7 @@ public class ProfileFragment extends BaseFragment {
 
 	private void onCompose() {
 		Intent intent = new Intent(getSherlockActivity(), MessageActivity.class);
-		// intent.putExtra(MessageActivity.User, user);
+		intent.putExtra(MessageActivity.UserId, user.getUserId());
 		startActivity(intent);
 	}
 
@@ -189,7 +189,7 @@ public class ProfileFragment extends BaseFragment {
 
 			@Override
 			public void doWork() {
-				// result = client.addFriend(user.getUsername());
+				result = client.addFriend(user.getUserId());
 			}
 
 			@Override

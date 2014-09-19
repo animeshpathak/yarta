@@ -47,6 +47,11 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		runner = new JobRunner(this);
 		tracker.start(this);
 
+		// set credentials
+		client.setUsername(settings.getString(Settings.USER_NAME));
+		client.setUserGuid(settings.getString(Settings.USER_GUID));
+		client.setToken(settings.getString(Settings.USER_TOKEN));
+
 		initMSE();
 	}
 

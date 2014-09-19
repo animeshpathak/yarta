@@ -211,10 +211,15 @@ public class RiverFragment extends BaseFragment implements
 	}
 
 	private boolean loadingMore = false;
+	private boolean bottomReached = false;
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, final int totalItemCount) {
+
+		if (bottomReached) {
+			return;
+		}
 
 		// user & group activity is not infinite scrollable
 		if (username != null || groupGuid != null) {
@@ -240,7 +245,12 @@ public class RiverFragment extends BaseFragment implements
 						adapter.appendItems(moreItems);
 						list.onRefreshComplete();
 						new Thread(lazyImageLoader).start();
+
+						if (moreItems.size() == 0) {
+							bottomReached = true;
+						}
 					}
+
 					loadingMore = false;
 				}
 			});

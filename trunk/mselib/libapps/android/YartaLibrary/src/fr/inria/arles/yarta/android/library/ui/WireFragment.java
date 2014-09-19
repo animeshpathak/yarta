@@ -185,10 +185,16 @@ public class WireFragment extends BaseFragment implements
 	}
 
 	private boolean loadingMore = false;
+	private boolean bottomReached = false;
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, final int totalItemCount) {
+		
+		if (bottomReached) {
+			return;
+		}
+		
 		if (firstVisibleItem + visibleItemCount == totalItemCount
 				&& totalItemCount > 1 && !loadingMore) {
 			loadingMore = true;
@@ -208,6 +214,10 @@ public class WireFragment extends BaseFragment implements
 						adapter.appendItems(moreItems);
 						list.onRefreshComplete();
 						new Thread(lazyImageLoader).start();
+
+						if (moreItems.size() == 0) {
+							bottomReached = true;
+						}
 					}
 					loadingMore = false;
 				}
