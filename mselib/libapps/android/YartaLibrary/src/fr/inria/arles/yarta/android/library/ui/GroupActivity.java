@@ -38,6 +38,8 @@ public class GroupActivity extends BaseActivity implements
 	private GenericPageAdapter adapter;
 	private TabHost tabHost;
 
+	private GroupPostsFragment fragmentPosts;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,8 +50,6 @@ public class GroupActivity extends BaseActivity implements
 		}
 
 		groupGuid = getIntent().getStringExtra(GroupGuid);
-		group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
-				Group.typeURI));
 
 		adapter = new GenericPageAdapter(getSupportFragmentManager(), this);
 
@@ -58,7 +58,7 @@ public class GroupActivity extends BaseActivity implements
 		fragmentActivity.setGroupGuid(groupGuid);
 		adapter.addFragment(fragmentActivity, R.string.group_activity);
 
-		GroupPostsFragment fragmentPosts = new GroupPostsFragment();
+		fragmentPosts = new GroupPostsFragment();
 		fragmentPosts.setRunner(runner);
 		fragmentPosts.setSAM(getSAM());
 		fragmentPosts.setGroupGuid(groupGuid);
@@ -114,9 +114,15 @@ public class GroupActivity extends BaseActivity implements
 	}
 
 	public void refreshUI() {
-		if (group == null) {
+		if (getSAM() == null) {
 			return;
 		}
+
+		fragmentPosts.setSAM(getSAM());
+		fragmentPosts.setGroupGuid(groupGuid);
+
+		group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
+				Group.typeURI));
 
 		if (group.getName() != null) {
 			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
@@ -170,7 +176,7 @@ public class GroupActivity extends BaseActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!isMemberOf(group)) {
+		if (group != null && !isMemberOf(group)) {
 			MenuItem item = menu.add(0, MENU_JOIN, 0, R.string.group_title);
 			item.setIcon(R.drawable.icon_join_group);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -188,11 +194,12 @@ public class GroupActivity extends BaseActivity implements
 		switch (item.getItemId()) {
 		case MENU_JOIN:
 			try {
-				Person person = getSAM().getMe();
-				person.addIsMemberOf(group);
-
-				Toast.makeText(this, R.string.group_join_sent,
-						Toast.LENGTH_SHORT).show();
+				if (group != null) {
+					Person person = getSAM().getMe();
+					person.addIsMemberOf(group);
+					Toast.makeText(this, R.string.group_join_sent,
+							Toast.LENGTH_SHORT).show();
+				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

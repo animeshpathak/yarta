@@ -64,8 +64,11 @@ public class GroupPostsFragment extends BaseFragment implements
 			@Override
 			public void doWork() {
 				items = new ArrayList<Content>();
-				items.addAll(group.getHasContent());
-				MessagesActivity.sort(items, false);
+
+				if (sam != null) {
+					items.addAll(group.getHasContent());
+					MessagesActivity.sort(items, false);
+				}
 			}
 
 			@Override
