@@ -28,7 +28,6 @@ public class RiverFragment extends BaseFragment implements
 
 	private RiverListAdapter adapter;
 	private PullToRefreshListView list;
-	private View emptyView;
 
 	private String groupGuid;
 	private String username;
@@ -54,8 +53,9 @@ public class RiverFragment extends BaseFragment implements
 		list.setAdapter(adapter);
 		list.setOnRefreshListener(this);
 		list.setOnScrollListener(this);
+		list.setEmptyView(root.findViewById(R.id.listEmpty));
 
-		emptyView = root.findViewById(R.id.listEmpty);
+		setViews(container, root);
 
 		return root;
 	}
@@ -102,7 +102,6 @@ public class RiverFragment extends BaseFragment implements
 
 					boolean noItems = items.size() == 0;
 					list.setVisibility(noItems ? View.GONE : View.VISIBLE);
-					emptyView.setVisibility(noItems ? View.VISIBLE : View.GONE);
 				}
 				new Thread(lazyImageLoader).start();
 			}

@@ -73,7 +73,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/message_title" />
         <activity
-            android:name="fr.inria.arles.yarta.android.library.ProfileActivitytation"
+            android:name="fr.inria.arles.yarta.android.library.ui.ProfileActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/profile_title"
             android:windowSoftInputMode="stateHidden" >

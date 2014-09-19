@@ -100,12 +100,18 @@ public class MessageActivity extends BaseActivity {
 								replyId, Message.typeURI));
 
 						peer = getPeer(reply, me);
-						friends.add(peer);
+
+						if (!friends.contains(peer)) {
+							friends.add(peer);
+						}
 					} else if (getIntent().hasExtra(UserId)) {
 						String userId = getIntent().getStringExtra(UserId);
 
 						try {
 							Person person = getSAM().getPersonByUserId(userId);
+							if (!friends.contains(peer)) {
+								friends.add(peer);
+							}
 							friends.add(person);
 						} catch (Exception ex) {
 							ex.printStackTrace();
@@ -224,15 +230,19 @@ public class MessageActivity extends BaseActivity {
 
 			@Override
 			public void doUIAfter() {
-				if (result != ElggClient.RESULT_OK) {
-					Toast.makeText(getApplicationContext(),
-							client.getLastError(), Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(getApplicationContext(),
-							R.string.message_sent_ok, Toast.LENGTH_SHORT)
-							.show();
-					finish();
+				String message = client.getLastError();
+
+				switch (result) {
+				case ElggClient.RESULT_OK:
+					message = getString(R.string.message_sent_ok);
+					break;
+				case ElggClient.RESULT_AUTH_FAILED:
+					message = getString(R.string.app_login_required);
+					break;
 				}
+
+				Toast.makeText(getApplicationContext(), message,
+						Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
