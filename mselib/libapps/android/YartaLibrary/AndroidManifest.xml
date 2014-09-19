@@ -86,7 +86,13 @@
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.GroupActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/group_title" />
+            android:label="@string/group_title" >
+            <intent-filter>
+                <action android:name="Yarta.Group" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.ContentActivity"
             android:configChanges="orientation|screenSize"
