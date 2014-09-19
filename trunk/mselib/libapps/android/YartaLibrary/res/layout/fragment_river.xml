@@ -33,4 +33,11 @@
         android:dividerHeight="0sp"
         android:listSelector="@drawable/list_selector_none" />
 
+    <LinearLayout
+        android:id="@+id/itemsContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
 </LinearLayout>

@@ -26,6 +26,7 @@ public abstract class BaseFragment extends SherlockFragment implements
 	protected ViewGroup container;
 	protected View content;
 	protected ElggClient client = ElggClient.getInstance();
+	private boolean loginState = false;
 
 	public void setRunner(JobRunner runner) {
 		this.runner = runner;
@@ -90,8 +91,9 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 	@Override
 	public void onDestroy() {
-		client.removeCallback(this);
 		super.onDestroy();
+		client.removeCallback(this);
+		loginState = false;
 	}
 
 	/**
@@ -112,6 +114,7 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 			@Override
 			public void run() {
+				loginState = false;
 				showLogin(false);
 			}
 		});
@@ -123,6 +126,7 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 			@Override
 			public void run() {
+				loginState = true;
 				showLogin(true);
 			}
 		});
@@ -161,6 +165,18 @@ public abstract class BaseFragment extends SherlockFragment implements
 			login.setVisibility(show ? View.VISIBLE : View.GONE);
 			content.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		showLogin(false);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		showLogin(loginState);
 	}
 
 	@Override

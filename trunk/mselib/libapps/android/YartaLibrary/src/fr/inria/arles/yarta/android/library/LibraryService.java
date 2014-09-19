@@ -8,7 +8,6 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
 import fr.inria.arles.yarta.android.library.auth.FakeActivity;
-import fr.inria.arles.yarta.android.library.sync.SyncAdapter;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
@@ -474,9 +473,6 @@ public class LibraryService extends Service implements MSEApplication,
 		for (Account account : accounts) {
 			if (account.type.equals(AuthenticatorActivity.ACCOUNT_TYPE)) {
 				found = true;
-
-				// set auto sync
-				SyncAdapter.setAutoSync(account);
 			}
 		}
 

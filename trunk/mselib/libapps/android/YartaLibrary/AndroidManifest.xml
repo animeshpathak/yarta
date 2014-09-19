@@ -101,17 +101,6 @@
                 </action>
             </intent-filter>
         </service>
-        <service
-            android:name="fr.inria.arles.yarta.android.library.sync.SyncService"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/sync" />
-        </service>
 
         <activity
             android:name="fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity"

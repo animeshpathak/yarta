@@ -460,7 +460,8 @@ public class IrisBridge implements WebCallback {
 			groupIds.add(group.getGuid());
 		}
 
-		update |= util.removeIsMemberOf(node, groupIds);
+		// TODO: when auth fails, this removes all;
+		// update |= util.removeIsMemberOf(node, groupIds);
 
 		if (update) {
 			notifyApp("group list updated");
