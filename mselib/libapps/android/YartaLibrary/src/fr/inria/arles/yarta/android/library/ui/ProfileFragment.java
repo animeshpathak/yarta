@@ -44,7 +44,6 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		if (sam != null) {
 			refreshUI();
 		}
@@ -54,16 +53,19 @@ public class ProfileFragment extends BaseFragment {
 		this.username = username;
 	}
 
-	private boolean isEditable() {
-		if (username == null || client.getUsername() == null) {
-			return false;
-		}
-		return username.equals(client.getUsername());
+	/**
+	 * Returns true if its current user displayed.
+	 * 
+	 * @return
+	 */
+	private boolean isCurrentUser() {
+		return username == null || client.getUsername() == null
+				|| client.getUsername().equals(username);
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (!isEditable()) {
+		if (!isCurrentUser()) {
 			if (!isFriend(getUser())) {
 				MenuItem item = menu.add(0, MENU_ADD, 0,
 						R.string.profile_add_friend);
@@ -195,6 +197,8 @@ public class ProfileFragment extends BaseFragment {
 		} else {
 			activityFragment.refreshUI();
 		}
+
+		getSherlockActivity().supportInvalidateOptionsMenu();
 	}
 
 	private void onCompose() {
