@@ -109,10 +109,9 @@ public class MessageActivity extends BaseActivity {
 
 						try {
 							Person person = getSAM().getPersonByUserId(userId);
-							if (!friends.contains(peer)) {
-								friends.add(peer);
+							if (!friends.contains(person) && person != null) {
+								friends.add(person);
 							}
-							friends.add(person);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
@@ -206,10 +205,14 @@ public class MessageActivity extends BaseActivity {
 		final String subject = Html.toHtml(getCtrlHtml(R.id.subject));
 		final String body = Html.toHtml(getCtrlHtml(R.id.content));
 
-		String guid = reply.getUniqueId();
-		guid = guid.substring(guid.indexOf('_') + 1);
+		String guid = "0";
 
-		final String replyTo = reply == null ? "0" : guid;
+		if (reply != null) {
+			guid = reply.getUniqueId();
+			guid = guid.substring(guid.indexOf('_') + 1);
+		}
+
+		final String replyTo = guid;
 
 		if (body.length() == 0 || replyTo.length() == 0) {
 			Toast.makeText(this, R.string.message_empty_content_not_allowed,
@@ -243,6 +246,10 @@ public class MessageActivity extends BaseActivity {
 
 				Toast.makeText(getApplicationContext(), message,
 						Toast.LENGTH_SHORT).show();
+
+				if (result == ElggClient.RESULT_OK) {
+					finish();
+				}
 			}
 		});
 	}
