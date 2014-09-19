@@ -64,16 +64,27 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		if (!isEditable()) {
-			MenuItem item = menu.add(0, MENU_ADD, 0,
-					R.string.profile_add_friend);
-			item.setIcon(R.drawable.icon_add_user);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			if (!isFriend(getUser())) {
+				MenuItem item = menu.add(0, MENU_ADD, 0,
+						R.string.profile_add_friend);
+				item.setIcon(R.drawable.icon_add_user);
+				item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			}
 
-			item = menu.add(0, MENU_COMPOSE, 0, R.string.profile_compose);
+			MenuItem item = menu.add(0, MENU_COMPOSE, 0,
+					R.string.profile_compose);
 			item.setIcon(R.drawable.icon_compose);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	private boolean isFriend(Person person) {
+		try {
+			return sam.getMe().getKnows_inverse().contains(person);
+		} catch (Exception ex) {
+		}
+		return false;
 	}
 
 	@Override
@@ -107,18 +118,28 @@ public class ProfileFragment extends BaseFragment {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Returns the User;
+	 * 
+	 * @return
+	 */
+	private Person getUser() {
+		if (user == null) {
+			try {
+				if (username == null) {
+					username = ElggClient.getInstance().getUsername();
+				}
+				user = sam.getPersonByUserId(username);
+			} catch (KBException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return user;
+	}
+
 	@Override
 	public void refreshUI() {
-		try {
-			if (username == null) {
-				username = ElggClient.getInstance().getUsername();
-			}
-			user = sam.getPersonByUserId(username);
-			if (user == null) {
-				return;
-			}
-		} catch (KBException ex) {
-			ex.printStackTrace();
+		if (getUser() == null) {
 			return;
 		}
 

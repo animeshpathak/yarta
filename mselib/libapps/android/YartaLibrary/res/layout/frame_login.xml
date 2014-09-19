@@ -13,6 +13,7 @@
         android:layout_centerVertical="true"
         android:clickable="true"
         android:drawableTop="@drawable/icon_tap"
+        android:padding="10dp"
         android:text="@string/app_login_required"
         android:textColor="@color/AppTextColorLow" />
 
