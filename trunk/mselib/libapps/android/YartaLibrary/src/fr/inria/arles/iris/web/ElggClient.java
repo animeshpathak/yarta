@@ -30,6 +30,7 @@ public class ElggClient {
 
 	private HttpClient client;
 	private String lastError;
+	private int lastErrorCode;
 
 	private List<WebCallback> callbacks = new ArrayList<WebCallback>();
 
@@ -146,11 +147,11 @@ public class ElggClient {
 	 * @return
 	 */
 	private int checkErrors(JSONObject json) {
-		int result = -1;
+		lastErrorCode = -1;
 		try {
 			if (json != null) {
 				if (json.has("status")) {
-					result = json.getInt("status");
+					lastErrorCode = json.getInt("status");
 				}
 
 				if (json.has("message")) {
@@ -161,15 +162,15 @@ public class ElggClient {
 			lastError = ex.toString();
 			ex.printStackTrace();
 		}
-		if (result == RESULT_AUTH_FAILED) {
+		if (lastErrorCode == RESULT_AUTH_FAILED) {
 			notifiyAuthenticatioFailure();
 		}
 
 		if (noInternet()) {
-			result = RESULT_NO_NET;
+			lastErrorCode = RESULT_NO_NET;
 			notifyNetworkFailure();
 		}
-		return result;
+		return lastErrorCode;
 	}
 
 	/**
@@ -232,6 +233,10 @@ public class ElggClient {
 
 	public String getLastError() {
 		return lastError;
+	}
+
+	public int getLastErrorCode() {
+		return lastErrorCode;
 	}
 
 	public void setToken(String token) {
@@ -788,7 +793,7 @@ public class ElggClient {
 		log("%s: result<%d>, lastError<%s>", "addGroupPost", result, lastError);
 		return result;
 	}
-	
+
 	public int addGroupPost(String groupId, String title, String text) {
 		JSONObject json = callMethod("group.forum.save_post", POST, "title",
 				encode(title), "desc", encode(text), "groupid", groupId,

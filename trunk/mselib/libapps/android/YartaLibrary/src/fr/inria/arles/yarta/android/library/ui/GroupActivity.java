@@ -147,15 +147,33 @@ public class GroupActivity extends BaseActivity implements
 		int position = tabHost.getCurrentTab();
 		BaseFragment fragment = (BaseFragment) adapter.getItem(position);
 		fragment.refreshUI();
+
+		supportInvalidateOptionsMenu();
+	}
+
+	/**
+	 * Checks if current user is member of this group.
+	 * 
+	 * @param group
+	 * @return
+	 */
+	private boolean isMemberOf(Group group) {
+		try {
+			return getSAM().getMe().getIsMemberOf().contains(group);
+		} catch (Exception ex) {
+		}
+		return false;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem item = menu.add(0, MENU_JOIN, 0, R.string.group_title);
-		item.setIcon(R.drawable.icon_join_group);
-		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		if (!isMemberOf(group)) {
+			MenuItem item = menu.add(0, MENU_JOIN, 0, R.string.group_title);
+			item.setIcon(R.drawable.icon_join_group);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
 
-		item = menu.add(0, MENU_ADD, 0, R.string.group_title);
+		MenuItem item = menu.add(0, MENU_ADD, 0, R.string.group_title);
 		item.setIcon(R.drawable.icon_add);
 		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 

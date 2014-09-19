@@ -108,9 +108,9 @@ public class MessageActivity extends BaseActivity {
 						String userId = getIntent().getStringExtra(UserId);
 
 						try {
-							Person person = getSAM().getPersonByUserId(userId);
-							if (!friends.contains(person) && person != null) {
-								friends.add(person);
+							peer = getSAM().getPersonByUserId(userId);
+							if (!friends.contains(peer) && peer != null) {
+								friends.add(peer);
 							}
 						} catch (Exception ex) {
 							ex.printStackTrace();
@@ -133,6 +133,9 @@ public class MessageActivity extends BaseActivity {
 					if (reply != null) {
 						setCtrlText(R.id.subject,
 								Html.fromHtml(reply.getTitle()));
+					}
+
+					if (peer != null) {
 						setSelectedUser(peer);
 					}
 				}

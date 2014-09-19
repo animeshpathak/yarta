@@ -460,8 +460,9 @@ public class IrisBridge implements WebCallback {
 			groupIds.add(group.getGuid());
 		}
 
-		// TODO: when auth fails, this removes all;
-		// update |= util.removeIsMemberOf(node, groupIds);
+		if (client.getLastErrorCode() == ElggClient.RESULT_OK) {
+			update |= util.removeIsMemberOf(node, groupIds);
+		}
 
 		if (update) {
 			notifyApp("group list updated");
