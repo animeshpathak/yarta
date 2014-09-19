@@ -42,7 +42,10 @@ public class GroupActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		if (!getIntent().hasExtra("Standalone")) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
 
 		groupGuid = getIntent().getStringExtra(GroupGuid);
 		group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
