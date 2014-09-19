@@ -2,7 +2,6 @@ package fr.inria.arles.yarta.android.library.ui;
 
 import android.os.Bundle;
 import android.text.Spanned;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -10,7 +9,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.AnalyticsTracker;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
@@ -48,7 +46,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app = (YartaApp) getApplication();
 		runner = new JobRunner(this);
 		tracker.start(this);
-		
+
 		initMSE();
 	}
 
@@ -158,12 +156,6 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected void refreshUI() {
 	}
 
-	public void onClickRetry(View view) {
-		findViewById(R.id.nonet_frame).setVisibility(View.GONE);
-		findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
-		refreshUI();
-	}
-
 	protected void setCtrlText(int resId, String text) {
 		TextView txt = (TextView) findViewById(resId);
 		if (txt != null) {
@@ -204,7 +196,6 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onAuthenticationFailed() {
-		// TODO: make it differently;
 	}
 
 	@Override
@@ -213,14 +204,6 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onNetworkFailed() {
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				findViewById(R.id.content_frame).setVisibility(View.GONE);
-				findViewById(R.id.nonet_frame).setVisibility(View.VISIBLE);
-			}
-		});
 	}
 
 	@Override

@@ -2,17 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/frame_login"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:visibility="gone" >
 
     <TextView
-        android:id="@+id/internet"
+        android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:clickable="true"
         android:drawableTop="@drawable/icon_tap"
-        android:text="@string/main_no_internet"
+        android:text="@string/app_login_required"
         android:textColor="@color/AppTextColorLow" />
 
 </RelativeLayout>
