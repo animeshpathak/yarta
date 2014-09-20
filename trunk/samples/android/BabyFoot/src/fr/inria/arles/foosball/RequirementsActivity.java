@@ -2,7 +2,6 @@ package fr.inria.arles.foosball;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
-import fr.inria.arles.foosball.PlayersApp.Observer;
 import fr.inria.arles.yarta.android.library.DependencyCheck;
 import android.content.Intent;
 import android.net.Uri;
