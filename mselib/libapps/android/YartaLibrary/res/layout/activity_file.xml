@@ -19,14 +19,6 @@
                 android:background="@drawable/card"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/titlecard"
-                    android:padding="5dp"
-                    android:text="@string/file_information"
-                    android:textColor="#33334b" />
-
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -79,7 +71,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="10dp"
+                    android:autoLink="web"
+                    android:textColorLink="@color/AppTextColorStrong" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"

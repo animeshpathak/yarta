@@ -29,7 +29,7 @@ public class FileActivity extends BaseActivity {
 	private String fileGuid;
 	private FileItem item;
 	private String fileName;
-	private SimpleDateFormat sdf = new SimpleDateFormat("DD/MM, HH:mm",
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM, HH:mm",
 			Locale.getDefault());
 
 	@Override

@@ -932,7 +932,7 @@ public class ElggClient {
 			fileName = fileName.substring(fileName.indexOf('/') + 1);
 
 			long size = json.getLong("size");
-			long time = json.getLong("time_created");
+			long time = json.getLong("time_created") * 1000;
 			String title = getString(json, "title");
 			String description = getString(json, "description");
 
