@@ -131,7 +131,7 @@ public class FileActivity extends BaseActivity {
 			if (ext.indexOf("/") > -1) {
 				ext = ext.substring(0, ext.indexOf("/"));
 			}
-			return ext.toLowerCase();
+			return ext.toLowerCase(Locale.US);
 		}
 	}
 
