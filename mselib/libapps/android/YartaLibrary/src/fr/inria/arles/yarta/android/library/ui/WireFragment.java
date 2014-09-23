@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.iris.web.WireItem;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
@@ -37,7 +37,7 @@ public class WireFragment extends BaseFragment implements
 		View root = inflater.inflate(R.layout.fragment_wire, container, false);
 
 		setViews(container, root);
-		
+
 		adapter = new WireListAdapter(getSherlockActivity());
 		adapter.setCallback(this);
 
@@ -111,15 +111,9 @@ public class WireFragment extends BaseFragment implements
 					if (item.getAuthor() == null) {
 						continue;
 					}
-					String url = item.getAuthor().getAvatarURL();
-					if (ImageCache.getDrawable(url) == null) {
-						try {
-							ImageCache.setDrawable(url,
-									ImageCache.drawableFromUrl(url));
-							handler.post(refreshListAdapter);
-						} catch (Exception ex) {
-						}
-					}
+
+					ImageCache.getBitmap(item.getAuthor());
+					handler.post(refreshListAdapter);
 				}
 			} catch (Exception ex) {
 				// concurrent over wire items;
@@ -192,11 +186,11 @@ public class WireFragment extends BaseFragment implements
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, final int totalItemCount) {
-		
+
 		if (bottomReached) {
 			return;
 		}
-		
+
 		if (firstVisibleItem + visibleItemCount == totalItemCount
 				&& totalItemCount > 1 && !loadingMore) {
 			loadingMore = true;

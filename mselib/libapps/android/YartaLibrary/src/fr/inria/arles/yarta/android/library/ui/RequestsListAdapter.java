@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.RequestItem;
 import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,8 +106,8 @@ public class RequestsListAdapter extends BaseAdapter implements
 					.getName()));
 		}
 
-		Drawable drawable = ImageCache.getDrawable(user.getAvatarURL());
-		holder.icon.setImageDrawable(drawable);
+		Bitmap bitmap = ImageCache.getBitmap(user);
+		holder.icon.setImageBitmap(bitmap);
 
 		holder.accept.setTag(position);
 		holder.ignore.setTag(position);

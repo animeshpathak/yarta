@@ -56,9 +56,8 @@ public class ElggClient {
 	}
 
 	/**
-	 * HTML received does not contains <br/>
-	 * s so we will insert them automatically when punctuation signs are not
-	 * followed by space.
+	 * HTML received does not contain br's so we will insert them automatically
+	 * when punctuation signs are not followed by space.
 	 * 
 	 * @param text
 	 * @return
@@ -76,6 +75,7 @@ public class ElggClient {
 			}
 		}
 		result += ch[ch.length - 1];
+		result = result.replace("\r\n", "<br />");
 		return result;
 	}
 
@@ -710,12 +710,16 @@ public class ElggClient {
 
 			String name = getString(res, "name");
 			String avatarURL = getString(res, "avatar_url");
+			String description = correctText(getString(res,
+					"fields/description/value"));
+
 			int members = res.getInt("members_count");
 
 			String ownerName = getString(res, "owner_name");
 
 			group = new GroupItem(name, avatarURL, members, ownerName);
 			group.setGuid(guid);
+			group.setDescription(description);
 		} catch (Exception ex) {
 			lastError = ex.toString();
 		}

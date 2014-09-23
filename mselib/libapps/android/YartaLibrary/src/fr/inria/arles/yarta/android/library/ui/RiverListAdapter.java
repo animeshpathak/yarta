@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Locale;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.ObjectItem;
 import fr.inria.arles.iris.web.RiverItem;
 import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,9 +100,8 @@ public class RiverListAdapter extends BaseAdapter implements
 			holder.subject.setOnClickListener(this);
 			holder.subject.setTag(position);
 
-			Drawable drawable = ImageCache.getDrawable(item.getSubject()
-					.getAvatarURL());
-			holder.icon.setImageDrawable(drawable);
+			Bitmap bitmap = ImageCache.getBitmap(item.getSubject());
+			holder.icon.setImageBitmap(bitmap);
 		}
 
 		holder.predicate.setText(Html.fromHtml(item.getPredicate()));

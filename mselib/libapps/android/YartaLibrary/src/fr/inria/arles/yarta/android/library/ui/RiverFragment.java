@@ -3,12 +3,12 @@ package fr.inria.arles.yarta.android.library.ui;
 import java.util.List;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.ObjectItem;
 import fr.inria.arles.iris.web.RiverItem;
 import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import android.content.Intent;
@@ -17,10 +17,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.MeasureSpec;
 import android.widget.AbsListView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 public class RiverFragment extends BaseFragment implements
 		PullToRefreshListView.OnRefreshListener, RiverListAdapter.Callback,
@@ -102,36 +99,13 @@ public class RiverFragment extends BaseFragment implements
 			public void doUIAfter() {
 				adapter.setItems(items);
 				list.onRefreshComplete();
-				if (groupGuid != null || username != null) {
+				if (username != null) {
 					list.setVisibility(View.GONE);
 					fakeList.update();
 				}
 				new Thread(lazyImageLoader).start();
 			}
 		});
-	}
-
-	public void setListViewHeightBasedOnChildren(ListView listView) {
-		ListAdapter listAdapter = listView.getAdapter();
-		if (listAdapter == null) {
-			return;
-		}
-
-		int totalHeight = 0;
-		int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(),
-				MeasureSpec.AT_MOST);
-		for (int i = 0; i < listAdapter.getCount(); i++) {
-			View listItem = listAdapter.getView(i, null, listView);
-			listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-			totalHeight += listItem.getMeasuredHeight();
-		}
-
-		ViewGroup.LayoutParams params = listView.getLayoutParams();
-		params.height = totalHeight
-				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-		listView.setLayoutParams(params);
-		listView.requestLayout();
-		listView.postInvalidate();
 	}
 
 	private Runnable lazyImageLoader = new Runnable() {
@@ -144,15 +118,8 @@ public class RiverFragment extends BaseFragment implements
 						continue;
 					}
 
-					String url = item.getSubject().getAvatarURL();
-					if (ImageCache.getDrawable(url) == null) {
-						try {
-							ImageCache.setDrawable(url,
-									ImageCache.drawableFromUrl(url));
-							handler.post(refreshListAdapter);
-						} catch (Exception ex) {
-						}
-					}
+					ImageCache.getBitmap(item.getSubject());
+					handler.post(refreshListAdapter);
 				}
 			} catch (Exception ex) {
 				// concurrent over river items;

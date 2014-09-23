@@ -85,25 +85,6 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * @return the email. Null if value is not set.
-	 */
-	public String getEmail() {
-		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the email.
-	 * 
-	 * @param	string
-	 *			the email to be set
-	 */
-	public void setEmail(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
-				string);
-	}
-
-	/**
 	 * @return the location. Null if value is not set.
 	 */
 	public String getLocation() {
@@ -119,6 +100,25 @@ public class PersonImpl extends YartaResource implements Person {
 	 */
 	public void setLocation(String string) {
 		sam.setDataProperty(kbNode, PROPERTY_LOCATION_URI, String.class,
+				string);
+	}
+
+	/**
+	 * @return the email. Null if value is not set.
+	 */
+	public String getEmail() {
+		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
+				String.class);
+	}
+	
+	/**
+	 * Sets the email.
+	 * 
+	 * @param	string
+	 *			the email to be set
+	 */
+	public void setEmail(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
 				string);
 	}
 
@@ -218,6 +218,42 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
+	 * Creates a "picture" edge between this person and picture
+	 * 
+	 * @param	picture
+	 *			the Picture
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addPicture(Picture picture) {
+		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * deletes the "picture" link between this person and picture
+	 * 
+	 * @param	picture
+	 * 			the Picture
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deletePicture(Picture picture) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "picture" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Picture> getPicture() {
+		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
+	}
+
+	/**
 	 * Creates a "knows" edge between this person and agent
 	 * 
 	 * @param	agent
@@ -287,42 +323,6 @@ public class PersonImpl extends YartaResource implements Person {
 	@Override
 	public Set<Topic> getIsTagged() {
 		return sam.getObjectProperty(kbNode, PROPERTY_ISTAGGED_URI);
-	}
-
-	/**
-	 * Creates a "picture" edge between this person and picture
-	 * 
-	 * @param	picture
-	 *			the Picture
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addPicture(Picture picture) {
-		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * deletes the "picture" link between this person and picture
-	 * 
-	 * @param	picture
-	 * 			the Picture
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deletePicture(Picture picture) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "picture" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<Picture> getPicture() {
-		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
 	}
 
 	/**

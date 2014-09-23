@@ -134,5 +134,6 @@
     <string name="notification_accept">Accept</string>
     <string name="topic_time">""Time: "</string>
     <string name="main_no_requests">No notifications.</string>
+    <string name="group_description">Description</string>
 
 </resources>

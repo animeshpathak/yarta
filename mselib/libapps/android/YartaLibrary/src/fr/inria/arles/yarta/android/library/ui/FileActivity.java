@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,8 +18,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.FileItem;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.yarta.android.library.util.Base64;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class FileActivity extends BaseActivity {
@@ -48,14 +48,8 @@ public class FileActivity extends BaseActivity {
 
 				if (item != null) {
 					if (item.getOwner() != null) {
-						String avatarURL = item.getOwner().getAvatarURL();
-						if (ImageCache.getDrawable(avatarURL) == null) {
-							try {
-								ImageCache.setDrawable(avatarURL,
-										ImageCache.drawableFromUrl(avatarURL));
-							} catch (Exception ex) {
-							}
-						}
+						// ensure bitmap cached
+						ImageCache.getBitmap(item.getOwner());
 					}
 				}
 			}
@@ -71,10 +65,10 @@ public class FileActivity extends BaseActivity {
 				setCtrlText(R.id.title, Html.fromHtml(item.getTitle()));
 				setCtrlText(R.id.content, Html.fromHtml(item.getDescription()));
 				ImageView image = (ImageView) findViewById(R.id.icon);
-				Drawable drawable = ImageCache.getDrawable(item.getOwner()
-						.getAvatarURL());
-				if (drawable != null) {
-					image.setImageDrawable(drawable);
+
+				Bitmap bitmap = ImageCache.getBitmap(item.getOwner());
+				if (bitmap != null) {
+					image.setImageBitmap(bitmap);
 				} else {
 					image.setVisibility(View.GONE);
 				}

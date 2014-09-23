@@ -3,14 +3,12 @@ package fr.inria.arles.yarta.android.library.ui;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +17,6 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
-import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.GenericPageAdapter;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
@@ -39,6 +36,7 @@ public class GroupActivity extends BaseActivity implements
 	private TabHost tabHost;
 
 	private GroupPostsFragment fragmentPosts;
+	private GroupDescriptionFragment fragmentDescription;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,27 +51,39 @@ public class GroupActivity extends BaseActivity implements
 
 		adapter = new GenericPageAdapter(getSupportFragmentManager(), this);
 
-		RiverFragment fragmentActivity = new RiverFragment();
-		fragmentActivity.setRunner(runner);
-		fragmentActivity.setGroupGuid(groupGuid);
-		adapter.addFragment(fragmentActivity, R.string.group_activity);
+		fragmentDescription = new GroupDescriptionFragment();
+		fragmentDescription.setRunner(runner);
+		fragmentDescription.setSAM(getSAM());
+		fragmentDescription.setGroupGuid(groupGuid);
+		fragmentDescription.setContentClient(contentClient);
+		adapter.addFragment(fragmentDescription, R.string.group_description);
 
 		fragmentPosts = new GroupPostsFragment();
 		fragmentPosts.setRunner(runner);
 		fragmentPosts.setSAM(getSAM());
 		fragmentPosts.setGroupGuid(groupGuid);
 		adapter.addFragment(fragmentPosts, R.string.group_posts);
+		
+		RiverFragment fragmentActivity = new RiverFragment();
+		fragmentActivity.setRunner(runner);
+		fragmentActivity.setGroupGuid(groupGuid);
+		adapter.addFragment(fragmentActivity, R.string.group_activity);
 
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
+		
 		TabSpec tab1 = tabHost.newTabSpec("0");
 		TabSpec tab2 = tabHost.newTabSpec("1");
+		TabSpec tab3 = tabHost.newTabSpec("2");
 
-		tab1.setIndicator(createTabView(R.string.group_activity));
+		tab1.setIndicator(createTabView(R.string.group_description));
 		tab1.setContent(R.id.container);
 
 		tab2.setIndicator(createTabView(R.string.group_posts));
 		tab2.setContent(R.id.container);
+
+		tab3.setIndicator(createTabView(R.string.group_activity));
+		tab3.setContent(R.id.container);
 
 		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 
@@ -93,9 +103,7 @@ public class GroupActivity extends BaseActivity implements
 
 		tabHost.addTab(tab1);
 		tabHost.addTab(tab2);
-
-		// ViewPager pager = (ViewPager) findViewById(R.id.pager);
-		// pager.setAdapter(adapter);
+		tabHost.addTab(tab3);
 	}
 
 	private View createTabView(int textId) {
@@ -117,41 +125,17 @@ public class GroupActivity extends BaseActivity implements
 		if (getSAM() == null) {
 			return;
 		}
+		group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
+				Group.typeURI));
+		if (group.getName() != null) {
+			setTitle(Html.fromHtml(group.getName()));
+		}
 
 		fragmentPosts.setSAM(getSAM());
 		fragmentPosts.setGroupGuid(groupGuid);
 
-		group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
-				Group.typeURI));
-
-		if (group.getName() != null) {
-			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
-		}
-
-		try {
-			String members = String.format(getString(R.string.group_members),
-					group.getMembers());
-			setCtrlText(R.id.members, members);
-		} catch (NumberFormatException ex) {
-			// TODO: we should not throw!
-		}
-
-		if (group.getOwnerName() != null) {
-			String owner = String.format(getString(R.string.group_owner),
-					group.getOwnerName());
-			setCtrlText(R.id.owner, Html.fromHtml(owner));
-		}
-
-		Bitmap bitmap = null;
-		for (Picture picture : group.getPicture()) {
-			bitmap = contentClient.getBitmap(picture);
-		}
-		ImageView image = (ImageView) findViewById(R.id.icon);
-		if (bitmap != null) {
-			image.setImageBitmap(bitmap);
-		} else {
-			image.setImageResource(R.drawable.group_default);
-		}
+		fragmentDescription.setSAM(getSAM());
+		fragmentDescription.setGroupGuid(groupGuid);
 
 		int position = tabHost.getCurrentTab();
 		BaseFragment fragment = (BaseFragment) adapter.getItem(position);

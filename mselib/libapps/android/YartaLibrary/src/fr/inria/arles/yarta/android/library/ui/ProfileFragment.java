@@ -149,7 +149,7 @@ public class ProfileFragment extends BaseFragment {
 			setCtrlText(R.id.name, Html.fromHtml(user.getName()));
 		}
 		if (user.getHomepage() != null) {
-			setCtrlVisibility(R.id.website, View.VISIBLE);
+			setVisible(R.id.website, true);
 			setCtrlText(R.id.website, user.getHomepage());
 		}
 

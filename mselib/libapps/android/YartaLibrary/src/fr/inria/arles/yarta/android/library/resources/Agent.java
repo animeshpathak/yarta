@@ -20,14 +20,14 @@ public interface Agent extends Resource, fr.inria.arles.yarta.resources.Agent {
 	/** the URI for property homepage */
 	public static final String PROPERTY_HOMEPAGE_URI = baseMSEURI + "#homepage";
 
+	/** the URI for property picture */
+	public static final String PROPERTY_PICTURE_URI = MSEManagerEx.baseMSEURI + "#picture";
+
 	/** the URI for property knows */
 	public static final String PROPERTY_KNOWS_URI = baseMSEURI + "#knows";
 
 	/** the URI for property isTagged */
 	public static final String PROPERTY_ISTAGGED_URI = baseMSEURI + "#isTagged";
-
-	/** the URI for property picture */
-	public static final String PROPERTY_PICTURE_URI = MSEManagerEx.baseMSEURI + "#picture";
 
 	/** the URI for property isAttending */
 	public static final String PROPERTY_ISATTENDING_URI = baseMSEURI + "#isAttending";

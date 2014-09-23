@@ -276,6 +276,8 @@ public class YartaContentProxy {
 					item.getOwnerName());
 			update |= ensureSimpleLiteral(s, Group.PROPERTY_MEMBERS_URI,
 					String.valueOf(item.getMembers()));
+			update |= ensureSimpleLiteral(s, Group.PROPERTY_DESCRIPTION_URI,
+					item.getDescription());
 
 			String pictureId = getSimpleLiteral(s, Group.PROPERTY_PICTURE_URI);
 			if (pictureId == null) {

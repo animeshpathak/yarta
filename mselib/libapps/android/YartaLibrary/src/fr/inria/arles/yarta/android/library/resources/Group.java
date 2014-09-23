@@ -10,6 +10,7 @@ import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
  */
 public interface Group extends Resource, Agent, fr.inria.arles.yarta.resources.Group {
 
+	/** The unique "type" URI */
 	public static final String typeURI = baseMSEURI + "#Group";
 	
 	/** the URI for property ownerName */
@@ -17,6 +18,9 @@ public interface Group extends Resource, Agent, fr.inria.arles.yarta.resources.G
 
 	/** the URI for property email */
 	public static final String PROPERTY_EMAIL_URI = baseMSEURI + "#email";
+
+	/** the URI for property description */
+	public static final String PROPERTY_DESCRIPTION_URI = MSEManagerEx.baseMSEURI + "#description";
 
 	/** the URI for property name */
 	public static final String PROPERTY_NAME_URI = baseMSEURI + "#name";
@@ -27,14 +31,14 @@ public interface Group extends Resource, Agent, fr.inria.arles.yarta.resources.G
 	/** the URI for property members */
 	public static final String PROPERTY_MEMBERS_URI = MSEManagerEx.baseMSEURI + "#members";
 
+	/** the URI for property picture */
+	public static final String PROPERTY_PICTURE_URI = MSEManagerEx.baseMSEURI + "#picture";
+
 	/** the URI for property knows */
 	public static final String PROPERTY_KNOWS_URI = baseMSEURI + "#knows";
 
 	/** the URI for property isTagged */
 	public static final String PROPERTY_ISTAGGED_URI = baseMSEURI + "#isTagged";
-
-	/** the URI for property picture */
-	public static final String PROPERTY_PICTURE_URI = MSEManagerEx.baseMSEURI + "#picture";
 
 	/** the URI for property isAttending */
 	public static final String PROPERTY_ISATTENDING_URI = baseMSEURI + "#isAttending";
@@ -51,6 +55,9 @@ public interface Group extends Resource, Agent, fr.inria.arles.yarta.resources.G
 	/** the URI for property isLocated */
 	public static final String PROPERTY_ISLOCATED_URI = baseMSEURI + "#isLocated";
 
+	/** the URI for property hasContent */
+	public static final String PROPERTY_HASCONTENT_URI = baseMSEURI + "#hasContent";
+
 	/** the URI for property creator */
 	public static final String PROPERTY_CREATOR_URI = baseMSEURI + "#creator";
 
@@ -64,6 +71,17 @@ public interface Group extends Resource, Agent, fr.inria.arles.yarta.resources.G
 	 * 			the ownername to set
 	 */
 	public void setOwnerName(String ownername);
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription();
+
+	/**
+	 * @param	description
+	 * 			the description to set
+	 */
+	public void setDescription(String description);
 
 	/**
 	 * @return the members
