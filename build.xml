@@ -55,11 +55,15 @@
 		</java>
 
 		<java jar="version.jar" fork="true">
+			<arg line="samples/android/INRIADonations/AndroidManifest.xml"/>
+		</java>
+
+		<java jar="version.jar" fork="true">
 			<arg line="samples/android/Callouts/AndroidManifest.xml"/>
 		</java>
 
 		<java jar="version.jar" fork="true">
-			<arg line="samples/android/INRIADonations/AndroidManifest.xml"/>
+			<arg line="samples/android/Vie@Sophia/AndroidManifest.xml"/>
 		</java>
 		
 		<!-- Android Library -->
