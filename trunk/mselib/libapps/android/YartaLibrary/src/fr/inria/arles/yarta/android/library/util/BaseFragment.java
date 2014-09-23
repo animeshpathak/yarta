@@ -36,6 +36,10 @@ public abstract class BaseFragment extends SherlockFragment implements
 		this.sam = sam;
 	}
 
+	public void setGroupGuid(String groupId) {
+		// does nothing;
+	}
+
 	public void setContentClient(ContentClientPictures contentClient) {
 		this.contentClient = contentClient;
 	}

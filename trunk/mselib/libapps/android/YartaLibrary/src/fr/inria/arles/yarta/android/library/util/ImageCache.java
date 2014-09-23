@@ -62,7 +62,6 @@ public class ImageCache {
 
 			return BitmapFactory.decodeStream(input);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 		return null;
 	}
