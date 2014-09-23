@@ -904,7 +904,7 @@ public class ElggClient {
 
 				String guid = getString(item, "guid");
 				String title = getString(item, "description");
-				long time = item.getLong("time_created");
+				long time = item.getLong("time_created") * 1000;
 
 				String name = getString(item, "owner/name");
 				String username = getString(item, "owner/username");

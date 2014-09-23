@@ -24,5 +24,6 @@
     <color name="AppGrayBgStart">#C0B9C0</color>
     <color name="AppGrayBgEnd">#B9B2B9</color>
     <color name="AppGrayStroke">#C0B9C0</color>
+    <color name="AppTabSelected">#732b4a</color>
 
 </resources>

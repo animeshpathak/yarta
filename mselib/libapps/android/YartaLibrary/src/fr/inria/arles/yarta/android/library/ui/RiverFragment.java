@@ -121,6 +121,14 @@ public class RiverFragment extends BaseFragment implements
 					ImageCache.getBitmap(item.getSubject());
 					handler.post(refreshListAdapter);
 				}
+
+				if (username != null) {
+					runner.runBackground(new Job() {
+						public void doUIAfter() {
+							fakeList.update();
+						}
+					});
+				}
 			} catch (Exception ex) {
 				// concurrent over river items;
 			}
