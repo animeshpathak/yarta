@@ -167,41 +167,6 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 	}
 
 	/**
-	 * Sends PUSH to a peer containing a list of triples describing a resource.
-	 * 
-	 * @param peerId
-	 *            the id of the peer where the data needs to be sent to
-	 * @param uniqueId
-	 *            the id of the resource which is going to be sent
-	 * @return connection id; -1 if unsuccessful
-	 */
-	@Override
-	public int sendResource(String peerId, String uniqueId) {
-		log.d(LOGTAG, "send PUSH to " + peerId + " about " + uniqueId);
-
-		List<Triple> triples = new ArrayList<Triple>();
-		try {
-			triples.addAll(knowledgeBase.getAllPropertiesAsTriples(
-					knowledgeBase.getResourceByURINoPolicies(uniqueId), userId));
-		} catch (KBException ex) {
-			log.e(LOGTAG, "sendResource exception!");
-			ex.printStackTrace();
-		}
-
-		if (triples.size() > 0) {
-			Message message = new Message(Message.TYPE_PUSH,
-					YCommunicationManagerUtils.toBytes(new TriplesMessage(
-							triples)));
-			synchronized (connection) {
-				return connection.postMessage(peerId, message);
-			}
-		} else {
-			log.d(LOGTAG, "0 triples about the requested resource.");
-		}
-		return -1;
-	}
-
-	/**
 	 * Ask a peer to retrieve his triples
 	 * 
 	 * @param partnerUID
@@ -283,11 +248,6 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 			break;
 		}
 
-		case Message.TYPE_PUSH: {
-			handlePushMessage(id, message);
-			break;
-		}
-
 		case Message.TYPE_NOTIFY: {
 			handleNotify(id, message);
 			break;
@@ -364,48 +324,6 @@ public class YCommunicationManager implements CommunicationManager, Receiver {
 	public Message handleRequest(String id, Message message) {
 		log.d(LOGTAG, "handleRequest from " + id);
 		return null;
-	}
-
-	/**
-	 * Handles a PUSH message from a remote peer.
-	 * 
-	 * @param id
-	 * @param message
-	 */
-	private void handlePushMessage(String id, Message message) {
-		log.d(LOGTAG, "handlePushMessage from " + id);
-
-		TriplesMessage msgTriples = (TriplesMessage) YCommunicationManagerUtils
-				.toObject(message.getData());
-		List<Triple> triples = msgTriples.getTriples();
-
-		for (Triple triple : triples) {
-			try {
-				if (knowledgeBase.getTriple(triple.getSubject(),
-						triple.getProperty(), triple.getObject(), userId) == null) {
-					/**
-					 * if literal, remove previous props;
-					 */
-					if (triple.getObject().whichNode() == Node.RDF_LITERAL) {
-						List<Triple> prevProps = knowledgeBase
-								.getPropertyObjectAsTriples(
-										triple.getSubject(),
-										triple.getProperty(), id);
-						for (Triple t : prevProps) {
-							knowledgeBase.removeTriple(t.getSubject(),
-									t.getProperty(), t.getObject(), id);
-						}
-					}
-					knowledgeBase.addTriple(triple.getSubject(),
-							triple.getProperty(), triple.getObject(), id);
-				}
-			} catch (KBException ex) {
-				log.d(LOGTAG,
-						"handlePushMessage: addTriple error: "
-								+ ex.getMessage());
-				ex.printStackTrace();
-			}
-		}
 	}
 
 	private void handleNotify(String peerId, Message message) {

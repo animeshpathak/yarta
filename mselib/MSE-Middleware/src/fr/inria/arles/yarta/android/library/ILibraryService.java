@@ -610,18 +610,6 @@ reply.writeNoException();
 reply.writeInt(_result);
 return true;
 }
-case TRANSACTION_sendResource:
-{
-data.enforceInterface(DESCRIPTOR);
-java.lang.String _arg0;
-_arg0 = data.readString();
-java.lang.String _arg1;
-_arg1 = data.readString();
-int _result = this.sendResource(_arg0, _arg1);
-reply.writeNoException();
-reply.writeInt(_result);
-return true;
-}
 case TRANSACTION_sendMessage:
 {
 data.enforceInterface(DESCRIPTOR);
@@ -1476,25 +1464,6 @@ _data.recycle();
 }
 return _result;
 }
-@Override public int sendResource(java.lang.String peerId, java.lang.String resId) throws android.os.RemoteException
-{
-android.os.Parcel _data = android.os.Parcel.obtain();
-android.os.Parcel _reply = android.os.Parcel.obtain();
-int _result;
-try {
-_data.writeInterfaceToken(DESCRIPTOR);
-_data.writeString(peerId);
-_data.writeString(resId);
-mRemote.transact(Stub.TRANSACTION_sendResource, _data, _reply, 0);
-_reply.readException();
-_result = _reply.readInt();
-}
-finally {
-_reply.recycle();
-_data.recycle();
-}
-return _result;
-}
 @Override public int sendMessage(java.lang.String peerId, android.os.Bundle message) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
@@ -1623,12 +1592,11 @@ static final int TRANSACTION_getPolicyManager = (android.os.IBinder.FIRST_CALL_T
 static final int TRANSACTION_sendUpdateRequest = (android.os.IBinder.FIRST_CALL_TRANSACTION + 26);
 static final int TRANSACTION_sendHello = (android.os.IBinder.FIRST_CALL_TRANSACTION + 27);
 static final int TRANSACTION_sendNotify = (android.os.IBinder.FIRST_CALL_TRANSACTION + 28);
-static final int TRANSACTION_sendResource = (android.os.IBinder.FIRST_CALL_TRANSACTION + 29);
-static final int TRANSACTION_sendMessage = (android.os.IBinder.FIRST_CALL_TRANSACTION + 30);
-static final int TRANSACTION_registerReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 31);
-static final int TRANSACTION_unregisterReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 32);
-static final int TRANSACTION_registerCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 33);
-static final int TRANSACTION_unregisterCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 34);
+static final int TRANSACTION_sendMessage = (android.os.IBinder.FIRST_CALL_TRANSACTION + 29);
+static final int TRANSACTION_registerReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 30);
+static final int TRANSACTION_unregisterReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 31);
+static final int TRANSACTION_registerCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 32);
+static final int TRANSACTION_unregisterCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 33);
 }
 public java.lang.String getUserId() throws android.os.RemoteException;
 public boolean clear() throws android.os.RemoteException;
@@ -1661,7 +1629,6 @@ public fr.inria.arles.yarta.android.library.IPolicyManager getPolicyManager() th
 public int sendUpdateRequest(java.lang.String peerId) throws android.os.RemoteException;
 public int sendHello(java.lang.String peerId) throws android.os.RemoteException;
 public int sendNotify(java.lang.String peerId) throws android.os.RemoteException;
-public int sendResource(java.lang.String peerId, java.lang.String resId) throws android.os.RemoteException;
 public int sendMessage(java.lang.String peerId, android.os.Bundle message) throws android.os.RemoteException;
 public boolean registerReceiver(fr.inria.arles.yarta.android.library.IReceiver receiver) throws android.os.RemoteException;
 public boolean unregisterReceiver(fr.inria.arles.yarta.android.library.IReceiver receiver) throws android.os.RemoteException;

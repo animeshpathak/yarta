@@ -150,20 +150,6 @@ public class CMClient implements CommunicationManager {
 	}
 
 	@Override
-	public int sendResource(String peerId, String uniqueId) {
-		log("sendResource(%s, %s)", peerId, uniqueId);
-		try {
-			return mIRemoteService.sendResource(peerId, uniqueId);
-		} catch (DeadObjectException ex) {
-			rebind();
-		} catch (Exception ex) {
-			logError("sendMessage ex: %s", ex);
-			ex.printStackTrace();
-		}
-		return -1;
-	}
-
-	@Override
 	public int sendNotify(String peerId) {
 		log("sendNotify(%s)", peerId);
 		try {

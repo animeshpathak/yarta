@@ -7,15 +7,12 @@ public class Message implements Serializable {
 	public static final int TYPE_HELLO = 1;
 	public static final int TYPE_HELLO_REPLY = 2;
 
-	// TODO: make hello/reply update/reply classes
 	public static final int TYPE_UPDATE = 3;
 	public static final int TYPE_UPDATE_REPLY = 4;
 
-	public static final int TYPE_PUSH = 5;
+	public static final int TYPE_NOTIFY = 5;
 
-	public static final int TYPE_NOTIFY = 6;
-
-	public static final int TYPE_UPDATE_REPLY_MULTIPART = 7;
+	public static final int TYPE_UPDATE_REPLY_MULTIPART = 6;
 
 	public static final int TYPE_USER_MESSAGE = 21;
 

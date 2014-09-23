@@ -294,13 +294,13 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		List<Bundle> lstResult = new ArrayList<Bundle>();
 		tracker.beforeAPIUsage();
 		try {
-			log("AidlService.getPropertySubjectAsTriples[knowledgeBase = %s]",
-					knowledgeBase);
+			// log("AidlService.getPropertySubjectAsTriples[knowledgeBase = %s]",
+			// knowledgeBase);
 
 			Node predicate = Conversion.toNode(p);
 			Node object = Conversion.toNode(o);
 			List<Triple> triples = knowledgeBase.getPropertySubjectAsTriples(
-					Conversion.toNode(p), Conversion.toNode(o), requestorId);
+					predicate, object, requestorId);
 
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
@@ -537,21 +537,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			logError("AidlService.sendMessage ex: %s", ex);
 		}
 		tracker.sendAPIUsage("CommunicationManager.sendMessage");
-		return result;
-	}
-
-	@Override
-	public int sendResource(String partnerID, String resourceID)
-			throws RemoteException {
-		int result = -1;
-		tracker.beforeAPIUsage();
-		log("AidlService.sendResource(%s, %s)", partnerID, resourceID);
-		try {
-			result = communicationMgr.sendResource(partnerID, resourceID);
-		} catch (Exception ex) {
-			logError("AidlService.sendResource ex: %s", ex);
-		}
-		tracker.sendAPIUsage("CommunicationManager.sendResource");
 		return result;
 	}
 

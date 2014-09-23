@@ -162,16 +162,6 @@ public class CMClient implements CommunicationManager {
 	}
 
 	@Override
-	public int sendResource(String peerId, String uniqueId) {
-		try {
-			return service.sendResource(peerId, uniqueId);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return -1;
-	}
-
-	@Override
 	public int sendNotify(String peerId) {
 		try {
 			return service.sendNotify(peerId);

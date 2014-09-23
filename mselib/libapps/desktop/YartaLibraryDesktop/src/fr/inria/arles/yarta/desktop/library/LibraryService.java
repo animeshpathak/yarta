@@ -415,16 +415,6 @@ public class LibraryService extends UnicastRemoteObject implements Service,
 	}
 
 	@Override
-	public int sendResource(String peerId, String uniqueResId)
-			throws RemoteException {
-		try {
-			return commMgr.sendResource(peerId, uniqueResId);
-		} catch (Exception ex) {
-			throw Util.wrapException(ex);
-		}
-	}
-
-	@Override
 	public int sendNotify(String peerId) throws RemoteException {
 		try {
 			return commMgr.sendNotify(peerId);
