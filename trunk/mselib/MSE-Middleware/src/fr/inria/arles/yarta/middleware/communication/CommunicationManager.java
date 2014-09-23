@@ -28,13 +28,20 @@ public interface CommunicationManager {
 	 * @return int
 	 */
 	public int uninitialize();
-	
+
 	/**
 	 * Clears the current user token and resets the communication;
 	 * 
 	 * @return int
 	 */
 	public int clear();
+
+	/**
+	 * Sets a receiver to receive messages.
+	 * 
+	 * @param receiver
+	 */
+	public void setMessageReceiver(Receiver receiver);
 
 	/**
 	 * Sends a HELLO request to a remote peer.
@@ -59,13 +66,6 @@ public interface CommunicationManager {
 	public int sendUpdateRequest(String partnerID) throws KBException;
 
 	/**
-	 * Sets a receiver to receive messages.
-	 * 
-	 * @param receiver
-	 */
-	public void setMessageReceiver(Receiver receiver);
-
-	/**
 	 * Sends a message to a remote peer.
 	 * 
 	 * @param peerId
@@ -76,15 +76,7 @@ public interface CommunicationManager {
 	public int sendMessage(String peerId, Message message);
 
 	/**
-	 * Sends all info about a resource to peer.
-	 * 
-	 * @param peerId
-	 * @param uniqueId
-	 */
-	public int sendResource(String peerId, String uniqueId);
-
-	/**
-	 * Send a Notify New Data message to force an update.
+	 * Sends a Notify message to force an update.
 	 * 
 	 * @param peerId
 	 * @return

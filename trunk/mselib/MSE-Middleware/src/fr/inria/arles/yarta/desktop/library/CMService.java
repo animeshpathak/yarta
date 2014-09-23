@@ -17,8 +17,6 @@ public interface CMService extends Remote {
 
 	int sendHello(String peerId) throws RemoteException;
 
-	int sendResource(String peerId, String uniqueResId) throws RemoteException;
-
 	int sendNotify(String peerId) throws RemoteException;
 
 	int sendMessage(String peerId, Message message) throws RemoteException;

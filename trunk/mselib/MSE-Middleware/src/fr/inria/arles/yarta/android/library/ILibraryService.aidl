@@ -47,7 +47,6 @@ interface ILibraryService {
 	int sendUpdateRequest(String peerId);
 	int sendHello(String peerId);
 	int sendNotify(String peerId);
-	int sendResource(String peerId, String resId);
 	int sendMessage(in String peerId, in Bundle message);
 	boolean registerReceiver(IReceiver receiver);
 	boolean unregisterReceiver(IReceiver receiver);

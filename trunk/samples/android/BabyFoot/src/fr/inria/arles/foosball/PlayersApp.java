@@ -81,10 +81,6 @@ public class PlayersApp extends Application implements MSEApplication, Receiver 
 		case Message.TYPE_UPDATE_REPLY:
 			notifyUpdateInfo();
 			break;
-
-		case Message.TYPE_PUSH:
-			notifyUpdateInfo();
-			break;
 		}
 		return false;
 	}
