@@ -49,6 +49,10 @@
 		<rdfs:domain rdf:resource="&mse;Group" />
 		<rdfs:range rdf:resource="&xsd;string"/>
 	</owl:DatatypeProperty>
+	<owl:DatatypeProperty rdf:about="#description">
+		<rdfs:domain rdf:resource="&mse;Group" />
+		<rdfs:range rdf:resource="&xsd;string"/>
+	</owl:DatatypeProperty>
 
 	<!-- Object type properties -->
 	<owl:ObjectProperty rdf:about="#picture"

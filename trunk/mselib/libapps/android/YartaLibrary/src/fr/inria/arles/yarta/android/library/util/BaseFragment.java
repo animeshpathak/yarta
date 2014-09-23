@@ -74,11 +74,11 @@ public abstract class BaseFragment extends SherlockFragment implements
 		}
 	}
 
-	protected void setCtrlVisibility(int ctrlId, int visibility) {
+	protected void setVisible(int ctrlId, boolean visible) {
 		if (getView() != null) {
 			View v = getView().findViewById(ctrlId);
 			if (v != null) {
-				v.setVisibility(visibility);
+				v.setVisibility(visible ? View.VISIBLE : View.GONE);
 			}
 		}
 	}

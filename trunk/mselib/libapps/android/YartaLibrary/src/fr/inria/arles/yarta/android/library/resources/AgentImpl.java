@@ -88,6 +88,42 @@ public class AgentImpl extends YartaResource implements Agent {
 	}
 
 	/**
+	 * Creates a "picture" edge between this agent and picture
+	 * 
+	 * @param	picture
+	 *			the Picture
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addPicture(Picture picture) {
+		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * deletes the "picture" link between this agent and picture
+	 * 
+	 * @param	picture
+	 * 			the Picture
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deletePicture(Picture picture) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "picture" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Picture> getPicture() {
+		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
+	}
+
+	/**
 	 * Creates a "knows" edge between this agent and agent
 	 * 
 	 * @param	agent
@@ -157,42 +193,6 @@ public class AgentImpl extends YartaResource implements Agent {
 	@Override
 	public Set<Topic> getIsTagged() {
 		return sam.getObjectProperty(kbNode, PROPERTY_ISTAGGED_URI);
-	}
-
-	/**
-	 * Creates a "picture" edge between this agent and picture
-	 * 
-	 * @param	picture
-	 *			the Picture
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addPicture(Picture picture) {
-		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * deletes the "picture" link between this agent and picture
-	 * 
-	 * @param	picture
-	 * 			the Picture
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deletePicture(Picture picture) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "picture" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<Picture> getPicture() {
-		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
 	}
 
 	/**

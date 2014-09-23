@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -21,9 +21,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.PostItem;
 import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
@@ -148,16 +148,8 @@ public class BlogActivity extends BaseActivity implements
 		@Override
 		public void run() {
 			for (PostItem item : items) {
-				String url = item.getOwner().getAvatarURL();
-				if (ImageCache.getDrawable(url) == null) {
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-						handler.post(refreshListAdapter);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
+				ImageCache.getBitmap(item.getOwner());
+				handler.post(refreshListAdapter);
 			}
 		}
 	};
@@ -182,14 +174,7 @@ public class BlogActivity extends BaseActivity implements
 
 				if (item != null) {
 					if (item.getOwner() != null) {
-						String avatarURL = item.getOwner().getAvatarURL();
-						if (ImageCache.getDrawable(avatarURL) == null) {
-							try {
-								ImageCache.setDrawable(avatarURL,
-										ImageCache.drawableFromUrl(avatarURL));
-							} catch (Exception ex) {
-							}
-						}
+						ImageCache.getBitmap(item.getOwner());
 					}
 				}
 			}
@@ -211,10 +196,9 @@ public class BlogActivity extends BaseActivity implements
 								+ sdf.format(new Date(item.getTime())));
 
 				ImageView image = (ImageView) findViewById(R.id.icon);
-				Drawable drawable = ImageCache.getDrawable(item.getOwner()
-						.getAvatarURL());
-				if (drawable != null) {
-					image.setImageDrawable(drawable);
+				Bitmap bitmap = ImageCache.getBitmap(item.getOwner());
+				if (bitmap != null) {
+					image.setImageBitmap(bitmap);
 				} else {
 					image.setVisibility(View.GONE);
 				}

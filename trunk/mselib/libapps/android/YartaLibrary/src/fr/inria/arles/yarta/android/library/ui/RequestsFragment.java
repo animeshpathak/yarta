@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.RequestItem;
 import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
@@ -99,18 +99,8 @@ public class RequestsFragment extends BaseFragment implements
 		@Override
 		public void run() {
 			for (RequestItem item : items) {
-				UserItem user = item.getUser();
-
-				String url = user.getAvatarURL();
-				if (ImageCache.getDrawable(url) == null) {
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-						handler.post(refreshListAdapter);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
+				ImageCache.getBitmap(item.getUser());
+				handler.post(refreshListAdapter);
 			}
 		}
 	};

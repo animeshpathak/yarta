@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.ObjectItem;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 
 public class SearchResultsFragment extends BaseFragment implements
 		AdapterView.OnItemClickListener {
@@ -38,16 +38,8 @@ public class SearchResultsFragment extends BaseFragment implements
 		@Override
 		public void run() {
 			for (ObjectItem item : items) {
-				String url = item.getDescription();
-				if (ImageCache.getDrawable(url) == null) {
-					try {
-						ImageCache.setDrawable(url,
-								ImageCache.drawableFromUrl(url));
-						handler.post(refreshListAdapter);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
+				ImageCache.getBitmap(item);
+				handler.post(refreshListAdapter);
 			}
 		}
 	};

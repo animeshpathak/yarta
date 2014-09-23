@@ -10,11 +10,11 @@ import java.util.Locale;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.UserItem;
 import fr.inria.arles.iris.web.WireItem;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,9 +105,8 @@ public class WireListAdapter extends BaseAdapter implements
 		holder.content.setText(Html.fromHtml(item.getContent()));
 		holder.time.setText(sdf.format(new Date(item.getTime() * 1000)));
 
-		Drawable drawable = ImageCache.getDrawable(item.getAuthor()
-				.getAvatarURL());
-		holder.image.setImageDrawable(drawable);
+		Bitmap bitmap = ImageCache.getBitmap(item.getAuthor());
+		holder.image.setImageBitmap(bitmap);
 
 		boolean isLast = position == getCount() - 1;
 		holder.bottomSeparator.setVisibility(isLast ? View.VISIBLE : View.GONE);

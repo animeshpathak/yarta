@@ -7,6 +7,7 @@ public class GroupItem {
 	private String avatarURL;
 	private int members;
 	private String ownerName;
+	private String description;
 
 	public GroupItem(String name, String avatarURL, int members,
 			String ownerName) {
@@ -30,6 +31,10 @@ public class GroupItem {
 	public void setGuid(String guid) {
 		this.guid = guid;
 	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getAvatarURL() {
 		return avatarURL;
@@ -45,5 +50,9 @@ public class GroupItem {
 
 	public String getOwnerName() {
 		return ownerName;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 }

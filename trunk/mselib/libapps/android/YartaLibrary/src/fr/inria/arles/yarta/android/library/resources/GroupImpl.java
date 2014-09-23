@@ -5,9 +5,7 @@ import fr.inria.arles.yarta.resources.Event;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Place;
 import fr.inria.arles.yarta.resources.YartaResource;
-
 import java.util.Set;
-
 import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
@@ -71,6 +69,25 @@ public class GroupImpl extends YartaResource implements Group {
 	}
 
 	/**
+	 * @return the description. Null if value is not set.
+	 */
+	public String getDescription() {
+		return sam.getDataProperty(kbNode, PROPERTY_DESCRIPTION_URI,
+				String.class);
+	}
+	
+	/**
+	 * Sets the description.
+	 * 
+	 * @param	string
+	 *			the description to be set
+	 */
+	public void setDescription(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_DESCRIPTION_URI, String.class,
+				string);
+	}
+
+	/**
 	 * @return the name. Null if value is not set.
 	 */
 	public String getName() {
@@ -125,6 +142,42 @@ public class GroupImpl extends YartaResource implements Group {
 	public void setMembers(Long members) {
 		sam.setDataProperty(kbNode, PROPERTY_MEMBERS_URI, String.class,
 				String.valueOf(members));
+	}
+
+	/**
+	 * Creates a "picture" edge between this group and picture
+	 * 
+	 * @param	picture
+	 *			the Picture
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addPicture(Picture picture) {
+		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * deletes the "picture" link between this group and picture
+	 * 
+	 * @param	picture
+	 * 			the Picture
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deletePicture(Picture picture) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "picture" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Picture> getPicture() {
+		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
 	}
 
 	/**
@@ -197,42 +250,6 @@ public class GroupImpl extends YartaResource implements Group {
 	@Override
 	public Set<Topic> getIsTagged() {
 		return sam.getObjectProperty(kbNode, PROPERTY_ISTAGGED_URI);
-	}
-
-	/**
-	 * Creates a "picture" edge between this group and picture
-	 * 
-	 * @param	picture
-	 *			the Picture
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addPicture(Picture picture) {
-		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * deletes the "picture" link between this group and picture
-	 * 
-	 * @param	picture
-	 * 			the Picture
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deletePicture(Picture picture) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "picture" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<Picture> getPicture() {
-		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
 	}
 
 	/**
@@ -416,6 +433,42 @@ public class GroupImpl extends YartaResource implements Group {
 	}
 
 	/**
+	 * Creates a "hascontent" edge between this group and content
+	 * 
+	 * @param	content
+	 *			the Content
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addHasContent(Content content) {
+		return sam.setObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, content);
+	}
+
+	/**
+	 * deletes the "hascontent" link between this group and content
+	 * 
+	 * @param	content
+	 * 			the Content
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteHasContent(Content content) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, content);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "hascontent" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Content> getHasContent() {
+		return sam.getObjectProperty(kbNode, PROPERTY_HASCONTENT_URI);
+	}
+
+	/**
 	 * Creates a "creator" edge between this group and content
 	 * 
 	 * @param	content
@@ -473,20 +526,5 @@ public class GroupImpl extends YartaResource implements Group {
 	@Override
 	public Set<fr.inria.arles.yarta.resources.Agent> getIsMemberOf_inverse() {
 		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_ISMEMBEROF_URI);
-	}
-
-	@Override
-	public boolean addHasContent(Content c) {
-		return sam.setObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, c);
-	}
-
-	@Override
-	public Set<Content> getHasContent() {
-		return sam.getObjectProperty(kbNode, PROPERTY_HASCONTENT_URI);
-	}
-
-	@Override
-	public boolean deleteHasContent(Content c) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_HASCONTENT_URI, c);
 	}
 }

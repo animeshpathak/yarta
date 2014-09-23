@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +16,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.PostItem;
 import fr.inria.arles.iris.web.UserItem;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 
 public class BlogListAdapter extends BaseAdapter implements
 		View.OnClickListener {
@@ -100,9 +100,8 @@ public class BlogListAdapter extends BaseAdapter implements
 		holder.content.setText(Html.fromHtml(item.getTitle()));
 		holder.time.setText(sdf.format(new Date(item.getTime())));
 
-		Drawable drawable = ImageCache.getDrawable(item.getOwner()
-				.getAvatarURL());
-		holder.image.setImageDrawable(drawable);
+		Bitmap bitmap = ImageCache.getBitmap(item.getOwner());
+		holder.image.setImageBitmap(bitmap);
 
 		boolean isLast = position == getCount() - 1;
 		holder.bottomSeparator.setVisibility(isLast ? View.VISIBLE : View.GONE);

@@ -13,8 +13,14 @@ import fr.inria.arles.yarta.android.library.msemanagement.MSEManagerEx;
 public interface Picture extends Resource, Content {
 	public static final String typeURI = MSEManagerEx.baseMSEURI + "#Picture";
 
+	/** the URI for property content */
+	public static final String PROPERTY_CONTENT_URI = baseMSEURI + "#content";
+
 	/** the URI for property title */
 	public static final String PROPERTY_TITLE_URI = baseMSEURI + "#title";
+
+	/** the URI for property time */
+	public static final String PROPERTY_TIME_URI = baseMSEURI + "#time";
 
 	/** the URI for property source */
 	public static final String PROPERTY_SOURCE_URI = baseMSEURI + "#source";
@@ -27,6 +33,9 @@ public interface Picture extends Resource, Content {
 
 	/** the URI for property isTagged */
 	public static final String PROPERTY_ISTAGGED_URI = baseMSEURI + "#isTagged";
+
+	/** the URI for property hasReply */
+	public static final String PROPERTY_HASREPLY_URI = baseMSEURI + "#hasReply";
 
 	/**
 	 * inverse of {@link #getPicture()}

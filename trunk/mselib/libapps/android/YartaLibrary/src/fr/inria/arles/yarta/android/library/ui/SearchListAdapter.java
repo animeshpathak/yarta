@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ImageCache;
 import fr.inria.arles.iris.web.ObjectItem;
+import fr.inria.arles.yarta.android.library.util.ImageCache;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,8 +73,8 @@ public class SearchListAdapter extends BaseAdapter {
 
 		holder.info.setVisibility(View.GONE);
 
-		Drawable drawable = ImageCache.getDrawable(item.getDescription());
-		holder.icon.setImageDrawable(drawable);
+		Bitmap bitmap = ImageCache.getBitmap(item);
+		holder.icon.setImageBitmap(bitmap);
 
 		return convertView;
 	}
