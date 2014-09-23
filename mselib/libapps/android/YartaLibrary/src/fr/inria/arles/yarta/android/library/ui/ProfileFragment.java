@@ -29,8 +29,8 @@ public class ProfileFragment extends BaseFragment {
 	private static final int MENU_ADD = 3;
 
 	private String username;
-	private RiverFragment activityFragment;
 	private Person user;
+	private RiverFragment fragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -185,20 +185,27 @@ public class ProfileFragment extends BaseFragment {
 			image.setVisibility(View.GONE);
 		}
 
-		// load activity fragment
-		if (activityFragment == null) {
+		if (fragment != null) {
+			fragment.refreshUI();
+		} else {
 			FragmentTransaction ft = getSherlockActivity()
 					.getSupportFragmentManager().beginTransaction();
-			activityFragment = new RiverFragment();
-			activityFragment.setRunner(runner);
-			activityFragment.setUsername(username);
-			ft.replace(R.id.userActivity, activityFragment);
+
+			fragment = new RiverFragment();
+			fragment.setRunner(runner);
+			fragment.setUsername(username);
+
+			ft.replace(R.id.userActivity, fragment);
 			ft.commit();
-		} else {
-			activityFragment.refreshUI();
 		}
 
 		getSherlockActivity().supportInvalidateOptionsMenu();
+	}
+
+	@Override
+	public void onDestroyView() {
+		fragment = null;
+		super.onDestroyView();
 	}
 
 	private void onCompose() {
