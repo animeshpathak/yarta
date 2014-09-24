@@ -34,8 +34,9 @@ public class GroupDescriptionFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		refreshUI();
+		if (sam != null) {
+			refreshUI();
+		}
 	}
 
 	@Override

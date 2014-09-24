@@ -54,7 +54,7 @@ public class ContentActivity extends BaseActivity implements
 		post = new ContentImpl(getSAM(), new MSEResource(postId,
 				Content.typeURI));
 
-		adapter = new ContentListAdapter(this, getSAM());
+		adapter = new ContentListAdapter(this);
 		adapter.setCallback(this);
 
 		list = new ListViewContainer(adapter,

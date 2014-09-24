@@ -13,15 +13,16 @@ import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
+import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Content;
 
 public class GroupPostsFragment extends BaseFragment implements
-		ContentListAdapter.Callback {
+		ContentListAdapter.Callback, PullToRefreshListView.OnRefreshListener {
 
 	private ContentListAdapter adapter;
-	private ListViewContainer list;
+	private PullToRefreshListView list;
 
 	private Group group;
 
@@ -35,12 +36,13 @@ public class GroupPostsFragment extends BaseFragment implements
 		View root = inflater.inflate(R.layout.fragment_group_posts, container,
 				false);
 
-		adapter = new ContentListAdapter(getSherlockActivity(), sam);
+		adapter = new ContentListAdapter(getSherlockActivity());
 		adapter.setCallback(this);
 
-		list = new ListViewContainer(adapter,
-				(ViewGroup) root.findViewById(R.id.itemsContainer),
-				root.findViewById(R.id.listEmpty));
+		list = (PullToRefreshListView) root.findViewById(R.id.listDiscussions);
+		list.setAdapter(adapter);
+		list.setOnRefreshListener(this);
+		list.setEmptyView(root.findViewById(R.id.listEmpty));
 
 		return root;
 	}
@@ -48,6 +50,11 @@ public class GroupPostsFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		refreshUI();
+	}
+
+	@Override
+	public void onRefresh() {
 		refreshUI();
 	}
 
@@ -74,7 +81,7 @@ public class GroupPostsFragment extends BaseFragment implements
 			@Override
 			public void doUIAfter() {
 				adapter.setItems(items);
-				list.update();
+				list.onRefreshComplete();
 			}
 		});
 	}

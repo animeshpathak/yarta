@@ -8,11 +8,9 @@ import java.util.Locale;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
-import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Content;
 import android.content.Context;
@@ -49,11 +47,9 @@ public class ContentListAdapter extends BaseAdapter implements
 
 	private LayoutInflater inflater;
 	private Callback callback;
-	private StorageAccessManagerEx sam;
 	private ContentClientPictures content;
 
-	public ContentListAdapter(Context context, StorageAccessManagerEx sam) {
-		this.sam = sam;
+	public ContentListAdapter(Context context) {
 		this.content = new ContentClientPictures(context);
 		inflater = LayoutInflater.from(context);
 	}
@@ -138,8 +134,7 @@ public class ContentListAdapter extends BaseAdapter implements
 	private Person getAuthor(Content content) {
 		Person person = null;
 		for (Agent agent : content.getCreator_inverse()) {
-			person = new PersonImpl(sam, new MSEResource(agent.getUniqueId(),
-					Person.typeURI));
+			person = (PersonImpl) agent;
 		}
 		return person;
 	}
