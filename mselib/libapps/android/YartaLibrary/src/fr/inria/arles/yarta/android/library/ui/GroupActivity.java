@@ -37,10 +37,6 @@ public class GroupActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group);
 
-		if (!getIntent().hasExtra("Standalone")) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-
 		groupGuid = getIntent().getStringExtra(GroupGuid);
 
 		adapter = new GenericPageAdapter(getSupportFragmentManager(), this);
@@ -52,6 +48,13 @@ public class GroupActivity extends BaseActivity implements
 
 		pager.setAdapter(adapter);
 		tabs.setViewPager(pager);
+
+		if (!getIntent().hasExtra("Standalone")) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		} else {
+			// discussions
+			pager.setCurrentItem(1);
+		}
 	}
 
 	/**

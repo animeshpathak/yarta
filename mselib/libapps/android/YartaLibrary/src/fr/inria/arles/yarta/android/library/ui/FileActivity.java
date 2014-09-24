@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,50 +45,69 @@ public class FileActivity extends BaseActivity {
 
 			@Override
 			public void doWork() {
-				item = client.getFileInfo(fileGuid);
-
-				if (item != null) {
-					if (item.getOwner() != null) {
-						// ensure bitmap cached
-						ImageCache.getBitmap(item.getOwner());
-					}
-				}
+				fetchItem();
 			}
 
 			@Override
 			public void doUIAfter() {
-				if (item == null) {
-					return;
-				} else if (item.getOwner() == null) {
-					return;
-				}
-				setCtrlText(R.id.name, Html.fromHtml(item.getOwner().getName()));
-				setCtrlText(R.id.title, Html.fromHtml(item.getTitle()));
-				setCtrlText(R.id.content, Html.fromHtml(item.getDescription()));
-				ImageView image = (ImageView) findViewById(R.id.icon);
-
-				Bitmap bitmap = ImageCache.getBitmap(item.getOwner());
-				if (bitmap != null) {
-					image.setImageBitmap(bitmap);
-				} else {
-					image.setVisibility(View.GONE);
-				}
-
-				// name, time, size
-				String fname = getString(R.string.file_name) + item.getName();
-				setCtrlText(R.id.fname, fname);
-
-				String time = getString(R.string.file_time)
-						+ sdf.format(new Date(item.getTime()));
-				setCtrlText(R.id.time, time);
-				setCtrlText(R.id.size, String.format(
-						getString(R.string.file_size_fmt),
-						(float) item.getSize() / 1048576.0));
-
-				refreshActionButton();
+				displayItem();
 			}
 		});
 	}
+
+	private void fetchItem() {
+		item = client.getFileInfo(fileGuid);
+
+		if (item != null) {
+			if (item.getOwner() != null) {
+				// ensure bitmap cached
+				ImageCache.getBitmap(item.getOwner());
+			}
+		}
+	}
+
+	private void displayItem() {
+		if (item == null) {
+			return;
+		} else if (item.getOwner() == null) {
+			return;
+		}
+		setCtrlText(R.id.name, Html.fromHtml(item.getOwner().getName()));
+		setCtrlText(R.id.title, Html.fromHtml(item.getTitle()));
+
+		System.out.println(item.getTitle());
+		System.out.println(item.getDescription());
+
+		if (item.getDescription() != null) {
+			setCtrlText(R.id.content, Html.fromHtml(item.getDescription()));
+		} else {
+			setCtrlVisible(R.id.content, false);
+		}
+		ImageView image = (ImageView) findViewById(R.id.icon);
+
+		Bitmap bitmap = ImageCache.getBitmap(item.getOwner());
+		if (bitmap != null) {
+			image.setImageBitmap(bitmap);
+		} else {
+			image.setVisibility(View.GONE);
+		}
+
+		// name, time, size
+		String fname = getString(R.string.file_name) + item.getName();
+		setCtrlText(R.id.fname, fname);
+
+		String time = getString(R.string.file_time)
+				+ sdf.format(new Date(item.getTime()));
+		setCtrlText(R.id.time, time);
+		setCtrlText(
+				R.id.size,
+				String.format(getString(R.string.file_size_fmt),
+						(float) item.getSize() / 1048576.0));
+
+		refreshActionArea();
+	}
+
+	// jpg, png auto-download & display
 
 	private String getFilename(FileItem item) {
 		File downloads = Environment
@@ -102,12 +122,48 @@ public class FileActivity extends BaseActivity {
 		return fileName;
 	}
 
-	private void refreshActionButton() {
+	/**
+	 * Returns true if current file is an image.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	private boolean isFileImage(FileItem item) {
+		String name = item.getName();
+		return name.endsWith(".png") || name.endsWith("jpg");
+	}
+
+	private void refreshActionArea() {
 		// if file exists download = open
 		fileName = getFilename(item);
+		final boolean downloaded = new File(fileName).exists();
 
-		if (fileName != null && new File(fileName).exists()) {
-			setCtrlText(R.id.download, getString(R.string.file_open));
+		if (!isFileImage(item)) {
+			setCtrlVisible(R.id.loading, false);
+			setCtrlVisible(R.id.actions, true);
+
+			if (downloaded) {
+				setCtrlText(R.id.download, getString(R.string.file_open));
+			}
+		} else {
+			execute(new Job() {
+				@Override
+				public void doWork() {
+					if (!downloaded) {
+						downloadFile();
+					}
+				}
+
+				@Override
+				public void doUIAfter() {
+					setCtrlVisible(R.id.loading, false);
+
+					ImageView image = (ImageView) findViewById(R.id.preview);
+					image.setImageBitmap(BitmapFactory.decodeFile(fileName));
+
+					setCtrlVisible(R.id.preview, true);
+				}
+			});
 		}
 	}
 
@@ -147,6 +203,23 @@ public class FileActivity extends BaseActivity {
 		}
 	}
 
+	private void downloadFile() {
+		String content = client.getFileContent(fileGuid);
+		byte[] binaryContent = Base64.decode(content);
+		File downloads = Environment
+				.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		fileName = downloads.getAbsolutePath() + "/" + item.getName();
+
+		try {
+			downloads.mkdirs();
+			FileOutputStream out = new FileOutputStream(fileName);
+			out.write(binaryContent);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	public void onClickDownload(View view) {
 		// in case it was downloaded, just open it
 		if (fileName != null && new File(fileName).exists()) {
@@ -155,24 +228,9 @@ public class FileActivity extends BaseActivity {
 		}
 		executeWithMessage(R.string.file_downloading, new Job() {
 
-			String fileName;
-
 			@Override
 			public void doWork() {
-				String content = client.getFileContent(fileGuid);
-				byte[] binaryContent = Base64.decode(content);
-				File downloads = Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-				fileName = downloads.getAbsolutePath() + "/" + item.getName();
-
-				try {
-					downloads.mkdirs();
-					FileOutputStream out = new FileOutputStream(fileName);
-					out.write(binaryContent);
-					out.close();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				downloadFile();
 			}
 
 			@Override
@@ -184,7 +242,7 @@ public class FileActivity extends BaseActivity {
 								+ Environment
 										.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
 						Toast.LENGTH_LONG).show();
-				refreshActionButton();
+				refreshActionArea();
 			}
 		});
 	}

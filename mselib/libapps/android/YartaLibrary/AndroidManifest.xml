@@ -67,15 +67,18 @@
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.MessageActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/message_title" />
+            android:label="@string/message_title"
+            android:screenOrientation="portrait" />
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.MessagesActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/message_title" />
+            android:label="@string/message_title"
+            android:screenOrientation="portrait" />
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.ProfileActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/profile_title"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="Yarta.Profile" />
@@ -86,7 +89,8 @@
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.GroupActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/group_title" >
+            android:label="@string/group_title"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="Yarta.Group" />
 
@@ -96,7 +100,8 @@
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.ContentActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/post_title" />
+            android:label="@string/post_title"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="fr.inria.arles.yarta.android.library.LibraryService"
@@ -113,6 +118,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoTitlebar"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
@@ -132,11 +138,13 @@
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.BlogActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/topic_title" />
+            android:label="@string/topic_title"
+            android:screenOrientation="portrait" />
         <activity
             android:name="fr.inria.arles.yarta.android.library.ui.FileActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/file_title" />
+            android:label="@string/file_title"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="fr.inria.arles.yarta.android.library.auth.AuthenticatorService"
