@@ -2,17 +2,12 @@ package fr.inria.arles.yarta.android.library.ui;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.astuetz.PagerSlidingTabStrip;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TabHost.TabSpec;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.GroupImpl;
@@ -33,10 +28,9 @@ public class GroupActivity extends BaseActivity implements
 	private Group group;
 
 	private GenericPageAdapter adapter;
-	private TabHost tabHost;
 
-	private GroupPostsFragment fragmentPosts;
-	private GroupDescriptionFragment fragmentDescription;
+	private PagerSlidingTabStrip tabs;
+	private ViewPager pager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,67 +45,39 @@ public class GroupActivity extends BaseActivity implements
 
 		adapter = new GenericPageAdapter(getSupportFragmentManager(), this);
 
-		fragmentDescription = new GroupDescriptionFragment();
-		fragmentDescription.setRunner(runner);
-		fragmentDescription.setSAM(getSAM());
-		fragmentDescription.setGroupGuid(groupGuid);
-		fragmentDescription.setContentClient(contentClient);
-		adapter.addFragment(fragmentDescription, R.string.group_description);
+		initFragments();
 
-		fragmentPosts = new GroupPostsFragment();
-		fragmentPosts.setRunner(runner);
-		fragmentPosts.setSAM(getSAM());
-		fragmentPosts.setGroupGuid(groupGuid);
-		adapter.addFragment(fragmentPosts, R.string.group_posts);
-		
-		RiverFragment fragmentActivity = new RiverFragment();
-		fragmentActivity.setRunner(runner);
-		fragmentActivity.setGroupGuid(groupGuid);
-		adapter.addFragment(fragmentActivity, R.string.group_activity);
+		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		pager = (ViewPager) findViewById(R.id.pager);
 
-		tabHost = (TabHost) findViewById(android.R.id.tabhost);
-		tabHost.setup();
-		
-		TabSpec tab1 = tabHost.newTabSpec("0");
-		TabSpec tab2 = tabHost.newTabSpec("1");
-		TabSpec tab3 = tabHost.newTabSpec("2");
-
-		tab1.setIndicator(createTabView(R.string.group_description));
-		tab1.setContent(R.id.container);
-
-		tab2.setIndicator(createTabView(R.string.group_posts));
-		tab2.setContent(R.id.container);
-
-		tab3.setIndicator(createTabView(R.string.group_activity));
-		tab3.setContent(R.id.container);
-
-		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-
-			@Override
-			public void onTabChanged(String tabId) {
-				tabHost.clearFocus();
-				int position = tabHost.getCurrentTab();
-				Fragment fragment = adapter.getItem(position);
-				FragmentTransaction ft = getSupportFragmentManager()
-						.beginTransaction();
-				if (!fragment.isAdded()) {
-					ft.replace(R.id.container, fragment);
-					ft.commit();
-				}
-			}
-		});
-
-		tabHost.addTab(tab1);
-		tabHost.addTab(tab2);
-		tabHost.addTab(tab3);
+		pager.setAdapter(adapter);
+		tabs.setViewPager(pager);
 	}
 
-	private View createTabView(int textId) {
-		LayoutInflater inflater = getLayoutInflater();
-		View view = inflater.inflate(R.layout.item_tab, null);
-		TextView tv = (TextView) view.findViewById(R.id.tabsText);
-		tv.setText(textId);
-		return view;
+	/**
+	 * Fills the adapter with Fragments;
+	 */
+	private void initFragments() {
+		adapter.addFragment(new GroupDescriptionFragment(),
+				R.string.group_description);
+		adapter.addFragment(new GroupPostsFragment(), R.string.group_posts);
+		adapter.addFragment(new RiverFragment(), R.string.group_activity);
+
+		setFragmentsData();
+	}
+
+	/**
+	 * Sets the needed data to Fragments. Information such as JobRunner,
+	 * StorageAccessManager, Group Id, Content Client.
+	 */
+	private void setFragmentsData() {
+		for (int i = 0; i < adapter.getCount(); i++) {
+			BaseFragment fragment = (BaseFragment) adapter.getItem(i);
+			fragment.setRunner(runner);
+			fragment.setSAM(getSAM());
+			fragment.setGroupGuid(groupGuid);
+			fragment.setContentClient(contentClient);
+		}
 	}
 
 	@Override
@@ -131,15 +97,14 @@ public class GroupActivity extends BaseActivity implements
 			setTitle(Html.fromHtml(group.getName()));
 		}
 
-		fragmentPosts.setSAM(getSAM());
-		fragmentPosts.setGroupGuid(groupGuid);
+		setFragmentsData();
 
-		fragmentDescription.setSAM(getSAM());
-		fragmentDescription.setGroupGuid(groupGuid);
-
-		int position = tabHost.getCurrentTab();
-		BaseFragment fragment = (BaseFragment) adapter.getItem(position);
-		fragment.refreshUI();
+		for (int i = 0; i < adapter.getCount(); i++) {
+			BaseFragment fragment = (BaseFragment) adapter.getItem(i);
+			if (fragment.isAdded()) {
+				fragment.refreshUI();
+			}
+		}
 
 		supportInvalidateOptionsMenu();
 	}
