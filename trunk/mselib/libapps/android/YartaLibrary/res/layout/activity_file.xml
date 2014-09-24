@@ -15,6 +15,7 @@
 
             <LinearLayout
                 style="@style/AppContainer"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/card"
                 android:orientation="vertical" >
@@ -75,12 +76,35 @@
                     android:autoLink="web"
                     android:textColorLink="@color/AppTextColorStrong" />
 
+                <ProgressBar
+                    android:id="@+id/loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp" >
+                </ProgressBar>
+
+                <ImageView
+                    android:id="@+id/preview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="true"
+                    android:clickable="true"
+                    android:onClick="onClickDownload"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+
                 <RelativeLayout
+                    android:id="@+id/actions"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp" >
+                    android:layout_marginRight="10dp"
+                    android:visibility="gone" >
 
                     <Button
                         android:id="@+id/download"

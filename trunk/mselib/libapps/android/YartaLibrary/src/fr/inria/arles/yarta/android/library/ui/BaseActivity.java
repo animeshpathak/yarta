@@ -2,6 +2,7 @@ package fr.inria.arles.yarta.android.library.ui;
 
 import android.os.Bundle;
 import android.text.Spanned;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -181,6 +182,13 @@ public class BaseActivity extends SherlockFragmentActivity implements
 			return txt.getText().toString();
 		}
 		return null;
+	}
+
+	protected void setCtrlVisible(int ctrlId, boolean visible) {
+		View v = findViewById(ctrlId);
+		if (v != null) {
+			v.setVisibility(visible ? View.VISIBLE : View.GONE);
+		}
 	}
 
 	protected Spanned getCtrlHtml(int txtId) {
