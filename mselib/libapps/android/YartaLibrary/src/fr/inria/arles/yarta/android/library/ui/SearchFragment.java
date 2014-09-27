@@ -1,163 +1,97 @@
 package fr.inria.arles.yarta.android.library.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
+import com.astuetz.PagerSlidingTabStrip;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.TabHost.TabSpec;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ObjectItem;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
-import fr.inria.arles.yarta.android.library.util.GenericPageAdapter;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
-public class SearchFragment extends BaseFragment implements
-		View.OnClickListener, TextView.OnEditorActionListener {
+public class SearchFragment extends BaseFragment {
 
-	private GenericPageAdapter adapter;
-	private TabHost tabHost;
+	private class SearchResultsAdapter extends FragmentPagerAdapter {
+
+		private int[] PageTitles = new int[] { R.string.search_users,
+				R.string.search_groups, R.string.search_blogs };
+		private String[] PageTypes = new String[] { ObjectItem.User,
+				ObjectItem.Group, ObjectItem.Blog };
+
+		public SearchResultsAdapter(FragmentManager fm) {
+			super(fm);
+			fragments = new ArrayList<SearchResultsFragment>();
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			SearchResultsFragment fragment = new SearchResultsFragment();
+			fragment.setRunner(runner);
+			fragment.setType(PageTypes[position]);
+			fragment.setData(items);
+			fragments.add(fragment);
+			return fragment;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return getString(PageTitles[position]);
+		}
+
+		@Override
+		public int getCount() {
+			return PageTitles.length;
+		}
+	}
+
+	private PagerSlidingTabStrip tabs;
+	private ViewPager pager;
+	private List<ObjectItem> items;
+	private List<SearchResultsFragment> fragments;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View root = inflater
-				.inflate(R.layout.fragment_search, container, false);
-
-		adapter = new GenericPageAdapter(getSherlockActivity()
-				.getSupportFragmentManager(), getSherlockActivity());
-
-		SearchResultsFragment fragmentResults = new SearchResultsFragment();
-		fragmentResults.setRunner(runner);
-		fragmentResults.setType(ObjectItem.User);
-		adapter.addFragment(fragmentResults, R.string.search_users);
-
-		fragmentResults = new SearchResultsFragment();
-		fragmentResults.setRunner(runner);
-		fragmentResults.setType(ObjectItem.Group);
-		adapter.addFragment(fragmentResults, R.string.search_groups);
-
-		fragmentResults = new SearchResultsFragment();
-		fragmentResults.setRunner(runner);
-		fragmentResults.setType(ObjectItem.Blog);
-		adapter.addFragment(fragmentResults, R.string.search_blogs);
-
-		tabHost = (TabHost) root.findViewById(android.R.id.tabhost);
-		tabHost.setup();
-		TabSpec tab1 = tabHost.newTabSpec("0");
-		TabSpec tab2 = tabHost.newTabSpec("1");
-		TabSpec tab3 = tabHost.newTabSpec("2");
-
-		tab1.setIndicator(createTabView(R.string.search_users));
-		tab1.setContent(R.id.container);
-
-		tab2.setIndicator(createTabView(R.string.search_groups));
-		tab2.setContent(R.id.container);
-
-		tab3.setIndicator(createTabView(R.string.search_blogs));
-		tab3.setContent(R.id.container);
-
-		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-
-			@Override
-			public void onTabChanged(String tabId) {
-				tabHost.clearFocus();
-				int position = tabHost.getCurrentTab();
-				Fragment fragment = adapter.getItem(position);
-				FragmentTransaction ft = getSherlockActivity()
-						.getSupportFragmentManager().beginTransaction();
-				if (!fragment.isAdded()) {
-					ft.replace(R.id.container, fragment);
-					ft.commit();
-				}
-			}
-		});
-
-		tabHost.addTab(tab1);
-		tabHost.addTab(tab2);
-		tabHost.addTab(tab3);
-
-		// ViewPager pager = (ViewPager) root.findViewById(R.id.pager);
-		// pager.setAdapter(adapter);
-
-		root.findViewById(R.id.search).setOnClickListener(this);
-
-		EditText edit = (EditText) root.findViewById(R.id.query);
-		edit.setOnEditorActionListener(this);
-		return root;
+		return inflater.inflate(R.layout.fragment_search, container, false);
 	}
 
 	@Override
-	public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-		if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-			onClickSearch();
-		}
-		return false;
-	}
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
+		pager = (ViewPager) view.findViewById(R.id.pager);
 
-	private View createTabView(int textId) {
-		LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
-		View view = inflater.inflate(R.layout.item_tab, null);
-		TextView tv = (TextView) view.findViewById(R.id.tabsText);
-		tv.setText(textId);
-		return view;
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.search:
-			onClickSearch();
-			break;
-		}
+		pager.setAdapter(new SearchResultsAdapter(getChildFragmentManager()));
+		tabs.setViewPager(pager);
+		tabs.clearFocus();
 	}
 
 	@Override
 	public void refreshUI() {
+		for (SearchResultsFragment fragment : fragments) {
+			fragment.setData(items);
+		}
 	}
 
-	private void onClickSearch() {
-		final String query = getCtrlText(R.id.query);
+	public void search(final String query) {
+		runner.runBackground(new Job() {
+			@Override
+			public void doWork() {
+				items = client.search(query);
+			}
 
-		if (query.length() == 0) {
-			Toast.makeText(getSherlockActivity(),
-					R.string.search_empty_content, Toast.LENGTH_LONG).show();
-		} else {
-			runner.runBackground(new Job() {
-
-				List<ObjectItem> items;
-
-				@Override
-				public void doWork() {
-					items = client.search(query);
-				}
-
-				@Override
-				public void doUIAfter() {
-					View query = getView().findViewById(R.id.query);
-
-					InputMethodManager imm = (InputMethodManager) getSherlockActivity()
-							.getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(query.getWindowToken(), 0);
-
-					for (int i = 0; i < adapter.getCount(); i++) {
-						SearchResultsFragment srf = (SearchResultsFragment) adapter
-								.getItem(i);
-						srf.setData(items);
-					}
-				}
-			});
-		}
+			@Override
+			public void doUIAfter() {
+				refreshUI();
+			}
+		});
 	}
 }

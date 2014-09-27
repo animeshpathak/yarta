@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.RequestItem;
@@ -13,6 +14,7 @@ import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.FeedbackFragment;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.android.library.util.Settings;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -21,12 +23,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener, RequestsFragment.Callback {
+		AdapterView.OnItemClickListener, RequestsFragment.Callback,
+		TextView.OnEditorActionListener {
 
 	private static final int MENU_NOTIFICATIONS = 1;
 
@@ -57,9 +64,65 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-
 		getSherlock().getMenuInflater().inflate(R.menu.main, menu);
+		showNotifications(menu);
+		showSearchMenu(menu);
+		return true;
+	}
 
+	private void showSearchMenu(Menu menu) {
+		final EditText edit = (EditText) menu.findItem(R.id.main_search)
+				.getActionView().findViewById(R.id.search);
+
+		edit.setOnEditorActionListener(this);
+
+		MenuItem menuSearch = menu.findItem(R.id.main_search);
+		menuSearch.setOnActionExpandListener(new OnActionExpandListener() {
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				edit.setText("");
+				edit.clearFocus();
+				hideSoftKeyboard(edit);
+				refreshUI();
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				edit.requestFocus();
+
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+				return true;
+			}
+		});
+	}
+
+	private void hideSoftKeyboard(View view) {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+
+	@Override
+	public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+		if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+			if (view.getText().toString().length() == 0) {
+				Toast.makeText(this, R.string.search_empty_content,
+						Toast.LENGTH_LONG).show();
+			} else {
+				displayFragment(searchFragment);
+				searchFragment.search(view.getText().toString());
+				hideSoftKeyboard(view);
+			}
+		}
+		return false;
+	}
+
+	private void showNotifications(Menu menu) {
+		if (requests.size() == 0) {
+			return;
+		}
 		MenuItem item = menu.add(0, MENU_NOTIFICATIONS, 0,
 				R.string.main_menu_notifications);
 		item.setIcon(R.drawable.shape_notification);
@@ -69,8 +132,7 @@ public class MainActivity extends BaseActivity implements
 		View count = item.getActionView();
 		TextView notifCount = (TextView) count.findViewById(R.id.notif_count);
 		notifCount.setText(String.valueOf(requests.size()));
-		notifCount.setVisibility(requests.size() == 0 ? View.GONE
-				: View.VISIBLE);
+		notifCount.setVisibility(View.VISIBLE);
 
 		count.setOnClickListener(new View.OnClickListener() {
 
@@ -83,7 +145,6 @@ public class MainActivity extends BaseActivity implements
 				}
 			}
 		});
-		return true;
 	}
 
 	@Override
@@ -192,6 +253,7 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public void onBackPressed() {
+		// TODO: if in requests come back to previous?
 		if (currentPosition != 0 || inRequests) {
 			onDrawerItem(0);
 		} else {
@@ -212,11 +274,20 @@ public class MainActivity extends BaseActivity implements
 			currentPosition = position;
 			drawerList.setItemChecked(currentPosition, true);
 		}
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-		BaseFragment fragment = sideMenuItems.get(position).getFragment();
 		setTitle(sideMenuItems.get(position).getText());
+		displayFragment(sideMenuItems.get(position).getFragment());
+
+		drawerLayout.closeDrawer(drawerList);
+		inRequests = false;
+	}
+
+	/**
+	 * Replaces the window content with the specified fragment.
+	 * 
+	 * @param fragment
+	 */
+	private void displayFragment(BaseFragment fragment) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
 		fragment.setRunner(runner);
 		fragment.setSAM(getSAM());
@@ -228,10 +299,6 @@ public class MainActivity extends BaseActivity implements
 			fragment.refreshUI();
 		}
 		ft.commit();
-
-		// setTitle(sideMenuItems.get(position).getText());
-		drawerLayout.closeDrawer(drawerList);
-		inRequests = false;
 	}
 
 	private void initSideMenu() {
@@ -247,8 +314,6 @@ public class MainActivity extends BaseActivity implements
 				R.drawable.drawer_groups, new GroupsFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_message),
 				R.drawable.drawer_messages, new ThreadsFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_search),
-				R.drawable.drawer_search, new SearchFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.feedback_title),
 				R.drawable.drawer_feedback, new FeedbackFragment()));
 		sideMenuItems.add(new SideMenuItem(getString(R.string.main_logout),
@@ -256,24 +321,9 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	private void onNotificationsClick() {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-		requestsFragment.setRunner(runner);
-		requestsFragment.setCallback(this);
-
 		setTitle(getString(R.string.main_menu_notifications));
-
-		if (!requestsFragment.isAdded()) {
-			ft.replace(R.id.content_frame, requestsFragment);
-		} else {
-			requestsFragment.refreshUI();
-		}
-		ft.commit();
+		displayFragment(requestsFragment);
 		inRequests = true;
-	}
-
-	private void refreshNotificationsMenu() {
-		supportInvalidateOptionsMenu();
 	}
 
 	private void refreshRequests() {
@@ -286,7 +336,7 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void doUIAfter() {
-				refreshNotificationsMenu();
+				supportInvalidateOptionsMenu();
 			}
 		});
 	}
@@ -294,11 +344,12 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onRefresh(List<RequestItem> requests) {
 		this.requests = requests;
-		refreshNotificationsMenu();
+		supportInvalidateOptionsMenu();
 	}
 
 	private boolean inRequests;
 	private RequestsFragment requestsFragment = new RequestsFragment();
+	private SearchFragment searchFragment = new SearchFragment();
 	private List<RequestItem> requests = new ArrayList<RequestItem>();
 
 	private ActionBarDrawerToggle drawerToggle;
