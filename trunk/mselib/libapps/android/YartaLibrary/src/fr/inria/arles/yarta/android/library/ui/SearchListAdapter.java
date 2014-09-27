@@ -74,7 +74,12 @@ public class SearchListAdapter extends BaseAdapter {
 		holder.info.setVisibility(View.GONE);
 
 		Bitmap bitmap = ImageCache.getBitmap(item);
-		holder.icon.setImageBitmap(bitmap);
+
+		if (bitmap == null) {
+			holder.icon.setImageResource(R.drawable.group_default);
+		} else {
+			holder.icon.setImageBitmap(bitmap);
+		}
 
 		return convertView;
 	}

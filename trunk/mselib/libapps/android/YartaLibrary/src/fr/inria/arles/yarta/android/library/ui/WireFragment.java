@@ -71,7 +71,6 @@ public class WireFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		refreshUI();
 	}
 

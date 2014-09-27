@@ -74,7 +74,10 @@ public class ElggClient {
 				result += "<br/>";
 			}
 		}
-		result += ch[ch.length - 1];
+
+		if (ch.length > 0) {
+			result += ch[ch.length - 1];
+		}
 		result = result.replace("\r\n", "<br />");
 		return result;
 	}

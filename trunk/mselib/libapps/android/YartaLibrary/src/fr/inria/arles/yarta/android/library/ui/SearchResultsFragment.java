@@ -73,16 +73,17 @@ public class SearchResultsFragment extends BaseFragment implements
 
 	// sets the raw data which will be filtered
 	public void setData(List<ObjectItem> items) {
-
-		// filter items
-		this.items.clear();
-		for (ObjectItem item : items) {
-			if (item.getType().equals(type)) {
-				this.items.add(item);
+		if (items != null) {
+			// filter items
+			this.items.clear();
+			for (ObjectItem item : items) {
+				if (item.getType().equals(type)) {
+					this.items.add(item);
+				}
 			}
-		}
 
-		fillAdapter();
+			fillAdapter();
+		}
 	}
 
 	public void fillAdapter() {

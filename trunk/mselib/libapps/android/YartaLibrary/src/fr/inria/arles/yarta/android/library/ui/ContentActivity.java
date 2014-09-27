@@ -58,7 +58,7 @@ public class ContentActivity extends BaseActivity implements
 		adapter.setCallback(this);
 
 		list = new ListViewContainer(adapter,
-				(ViewGroup) findViewById(R.id.itemsContainer), null);
+				(ViewGroup) findViewById(R.id.itemsContainer), findViewById(R.id.listEmpty));
 
 		trackUI("PostView");
 	}

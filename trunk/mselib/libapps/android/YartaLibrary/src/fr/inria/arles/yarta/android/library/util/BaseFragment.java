@@ -1,7 +1,10 @@
 package fr.inria.arles.yarta.android.library.util;
 
+import java.lang.reflect.Field;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -209,4 +212,34 @@ public abstract class BaseFragment extends SherlockFragment implements
 			}
 		}
 	};
+
+	/**
+	 * Android BUG http://stackoverflow.com/questions/14929907/causing-a-java-
+	 * illegalstateexception-error-no-activity-only-when-navigating-to
+	 */
+	private static final Field sChildFragmentManagerField;
+
+	static {
+		Field f = null;
+		try {
+			f = Fragment.class.getDeclaredField("mChildFragmentManager");
+			f.setAccessible(true);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+		sChildFragmentManagerField = f;
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+
+		if (sChildFragmentManagerField != null) {
+			try {
+				sChildFragmentManagerField.set(this, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
