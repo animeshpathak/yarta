@@ -1003,11 +1003,19 @@ public class ElggClient {
 					if (type.equals("object")) {
 						type = getString(item, "subtype");
 					}
+
+					if (type.equals(ObjectItem.Blog)
+							|| type.equals(ObjectItem.Page)
+							|| type.equals(ObjectItem.PageTop)) {
+						type = ObjectItem.Blog;
+					}
 					String avatarURL = getString(item, "avatar_url");
 
 					if (type.equals(ObjectItem.User)
 							|| type.equals(ObjectItem.Group)
-							|| type.equals(ObjectItem.Blog)) {
+							|| type.equals(ObjectItem.Topic)
+							|| type.equals(ObjectItem.Blog)
+							|| type.equals(ObjectItem.File)) {
 						ObjectItem object = new ObjectItem(guid, title,
 								avatarURL, type);
 						items.add(object);

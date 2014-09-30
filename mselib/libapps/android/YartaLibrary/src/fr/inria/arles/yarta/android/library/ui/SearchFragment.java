@@ -23,9 +23,11 @@ public class SearchFragment extends BaseFragment {
 	private class SearchResultsAdapter extends FragmentPagerAdapter {
 
 		private int[] PageTitles = new int[] { R.string.search_users,
-				R.string.search_groups, R.string.search_blogs };
+				R.string.search_groups, R.string.search_discussions,
+				R.string.search_blogs, R.string.search_files };
 		private String[] PageTypes = new String[] { ObjectItem.User,
-				ObjectItem.Group, ObjectItem.Blog };
+				ObjectItem.Group, ObjectItem.Topic, ObjectItem.Blog,
+				ObjectItem.File };
 
 		public SearchResultsAdapter(FragmentManager fm) {
 			super(fm);

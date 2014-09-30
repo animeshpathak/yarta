@@ -52,10 +52,7 @@ public class SearchListAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 
 		if (convertView == null) {
-
-			// TODO: use a different profile
-			convertView = inflater
-					.inflate(R.layout.item_profile, parent, false);
+			convertView = inflater.inflate(R.layout.item_search, parent, false);
 
 			holder = new ViewHolder();
 			holder.icon = (ImageView) convertView.findViewById(R.id.icon);

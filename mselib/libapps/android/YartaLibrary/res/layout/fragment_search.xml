@@ -12,7 +12,6 @@
         android:layout_height="48dip"
         android:background="@color/AppBackground"
         app:pstsIndicatorColor="@color/AppTabSelected"
-        app:pstsShouldExpand="true"
         app:pstsTabPaddingLeftRight="10dp"
         app:pstsTextAllCaps="false" />
 
