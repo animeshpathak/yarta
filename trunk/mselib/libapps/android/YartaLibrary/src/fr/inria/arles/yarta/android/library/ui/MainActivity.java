@@ -90,10 +90,15 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
-				edit.requestFocus();
+				drawerLayout.closeDrawer(drawerList);
 
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+				if (edit.getText().length() == 0) {
+					// no search was made
+					edit.requestFocus();
+
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+				}
 				return true;
 			}
 		});
@@ -219,11 +224,9 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onDrawerClosed(View drawerView) {
-				supportInvalidateOptionsMenu();
 			}
 
 			public void onDrawerOpened(View drawerView) {
-				supportInvalidateOptionsMenu();
 			}
 		};
 

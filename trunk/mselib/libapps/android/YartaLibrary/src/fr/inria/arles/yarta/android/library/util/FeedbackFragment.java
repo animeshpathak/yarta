@@ -11,11 +11,14 @@ import com.actionbarsherlock.view.MenuItem;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class FeedbackFragment extends BaseFragment implements
@@ -89,13 +92,20 @@ public class FeedbackFragment extends BaseFragment implements
 
 			@Override
 			public void doUIAfter() {
+				if (success) {
+					setCtrlText(R.id.content, "");
+
+					EditText content = (EditText) getView().findViewById(
+							R.id.content);
+					InputMethodManager imm = (InputMethodManager) getSherlockActivity()
+							.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(content.getWindowToken(), 0);
+				}
 				Toast.makeText(
 						getSherlockActivity(),
 						success ? R.string.feedback_sent_ok
 								: R.string.feedback_sent_error,
 						Toast.LENGTH_LONG).show();
-
-				setCtrlText(R.id.content, "");
 			}
 		});
 	}
@@ -108,7 +118,7 @@ public class FeedbackFragment extends BaseFragment implements
 		try {
 			String appId = getSherlockActivity().getPackageName();
 			String from = client.getUsername();
-			
+
 			content += " " + packMgr.getPackageInfo(appId, 0).versionName;
 
 			feedbackURL += "from=" + URLEncoder.encode(from, "UTF-8");

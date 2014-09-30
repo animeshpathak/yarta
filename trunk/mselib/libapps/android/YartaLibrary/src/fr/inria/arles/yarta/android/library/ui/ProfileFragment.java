@@ -198,8 +198,6 @@ public class ProfileFragment extends BaseFragment {
 			ft.replace(R.id.userActivity, fragment);
 			ft.commit();
 		}
-
-		getSherlockActivity().supportInvalidateOptionsMenu();
 	}
 
 	@Override
