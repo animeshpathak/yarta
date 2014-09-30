@@ -108,7 +108,9 @@
     <string name="search_empty_content">Please input the search query and try again!</string>
     <string name="search_users">People</string>
     <string name="search_groups">Groups</string>
-    <string name="search_blogs">Blogs</string>
+    <string name="search_blogs">Articles</string>
+    <string name="search_discussions">Discussions</string>
+    <string name="search_files">Files</string>
     <string name="wire_remove_title">Confirm delete</string>
     <string name="wire_remove_message">Are you sure you want to remove this message?</string>
     <string name="wire_remove_cancel">Cancel</string>

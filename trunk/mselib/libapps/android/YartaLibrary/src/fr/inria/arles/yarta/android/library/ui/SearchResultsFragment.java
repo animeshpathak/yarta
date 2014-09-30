@@ -111,8 +111,14 @@ public class SearchResultsFragment extends BaseFragment implements
 			String groupId = Group.typeURI + "_" + item.getGuid();
 			intent.putExtra(GroupActivity.GroupGuid, groupId);
 		} else if (type.equals(ObjectItem.Blog)) {
+			intent = new Intent(getSherlockActivity(), BlogActivity.class);
+			intent.putExtra(BlogActivity.BlogGuid, item.getGuid());
+		} else if (type.equals(ObjectItem.Topic)) {
 			intent = new Intent(getSherlockActivity(), ContentActivity.class);
 			intent.putExtra(ContentActivity.PostGuid, item.getGuid());
+		} else if (type.equals(ObjectItem.File)) {
+			intent = new Intent(getSherlockActivity(), FileActivity.class);
+			intent.putExtra(FileActivity.FileGuid, item.getGuid());
 		}
 
 		if (intent != null) {

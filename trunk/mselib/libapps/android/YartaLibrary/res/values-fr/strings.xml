@@ -70,11 +70,12 @@
     <string name="search_users">Utilisateurs</string>
     <string name="search_groups">Groupes</string>
     <string name="search_blogs">Articles</string>
+    <string name="search_discussions">Discussions</string>
     <string name="feedback_content">vos précieux commentaires</string>
     <string name="feedback_cancel">Annuler</string>
     <string name="feedback_send">Envoyer</string>
     <string name="feedback_content_empty">Contenu vide non autorisé.</string>
-    <string name="feedback_title">Suggestion</string>
+    <string name="feedback_title">Suggestions</string>
     <string name="feedback_app_nice">Bon travail, continuez !</string>
     <string name="feedback_app_slow">L\'application est lente !</string>
     <string name="feedback_app_bug">L\'application est buggée !</string>

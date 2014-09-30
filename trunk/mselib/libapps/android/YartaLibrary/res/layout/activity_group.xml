@@ -13,7 +13,7 @@
         android:background="@color/AppBackground"
         app:pstsIndicatorColor="@color/AppTabSelected"
         app:pstsShouldExpand="true"
-        app:pstsTabPaddingLeftRight="10dp"
+        app:pstsTabPaddingLeftRight="5dp"
         app:pstsTextAllCaps="false" />
 
     <android.support.v4.view.ViewPager
