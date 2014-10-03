@@ -28,7 +28,7 @@ import fr.inria.arles.yarta.middleware.msemanagement.MSEManager;
  * Base activity containing common functionality.
  */
 public class BaseActivity extends SherlockFragmentActivity implements
-		YartaApp.Observer, ElggClient.WebCallback {
+		YartaApp.Observer {
 
 	private YartaApp app;
 	protected JobRunner runner;
@@ -145,12 +145,10 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		app.addObserver(this);
-		client.addCallback(this);
 	}
 
 	@Override
 	protected void onPause() {
-		client.removeCallback(this);
 		app.removeObserver(this);
 		super.onPause();
 	}
@@ -205,18 +203,6 @@ public class BaseActivity extends SherlockFragmentActivity implements
 
 	protected void sendNotify(String peerId) {
 		app.sendNotify(peerId);
-	}
-
-	@Override
-	public void onAuthenticationFailed() {
-	}
-
-	@Override
-	public void onAuthentication() {
-	}
-
-	@Override
-	public void onNetworkFailed() {
 	}
 
 	@Override

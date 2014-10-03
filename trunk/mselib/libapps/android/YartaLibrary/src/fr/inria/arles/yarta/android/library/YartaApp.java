@@ -61,9 +61,13 @@ public class YartaApp extends Application implements MSEApplication {
 		return outPath;
 	}
 
+	// temp fix for first login canceled issue
+	private Observer loginObserver;
+
 	public void initMSE(Observer observer) {
 		if (observer != null) {
 			addObserver(observer);
+			loginObserver = observer;
 		}
 
 		if (mse == null) {
@@ -112,6 +116,9 @@ public class YartaApp extends Application implements MSEApplication {
 
 			notifyAllObservers();
 		} else {
+			if (loginObserver != null && observers.size() == 0) {
+				loginObserver.onLogout();
+			}
 			for (Observer observer : observers) {
 				observer.onLogout();
 			}
