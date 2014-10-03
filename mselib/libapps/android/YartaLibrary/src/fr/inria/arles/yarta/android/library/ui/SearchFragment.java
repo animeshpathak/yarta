@@ -57,7 +57,7 @@ public class SearchFragment extends BaseFragment {
 
 	private PagerSlidingTabStrip tabs;
 	private ViewPager pager;
-	private List<ObjectItem> items;
+	private List<ObjectItem> items = new ArrayList<ObjectItem>();
 	private List<SearchResultsFragment> fragments;
 
 	@Override
@@ -79,7 +79,9 @@ public class SearchFragment extends BaseFragment {
 	@Override
 	public void refreshUI() {
 		for (SearchResultsFragment fragment : fragments) {
-			fragment.setData(items);
+			synchronized (items) {
+				fragment.setData(items);
+			}
 		}
 	}
 
@@ -87,7 +89,12 @@ public class SearchFragment extends BaseFragment {
 		runner.runBackground(new Job() {
 			@Override
 			public void doWork() {
-				items = client.search(query);
+				List<ObjectItem> results = client.search(query);
+
+				synchronized (items) {
+					items.clear();
+					items.addAll(results);
+				}
 			}
 
 			@Override

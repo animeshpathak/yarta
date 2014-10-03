@@ -74,7 +74,7 @@ public class SearchResultsFragment extends BaseFragment implements
 	// sets the raw data which will be filtered
 	public void setData(List<ObjectItem> items) {
 		if (items != null) {
-			synchronized (items) {
+			synchronized (this.items) {
 				this.items.clear();
 				for (ObjectItem item : items) {
 					if (item.getType().equals(type)) {
