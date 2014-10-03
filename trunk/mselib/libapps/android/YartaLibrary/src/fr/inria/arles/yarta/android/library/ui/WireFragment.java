@@ -85,7 +85,7 @@ public class WireFragment extends BaseFragment implements
 
 	@Override
 	public void refreshUI() {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 
 			@Override
 			public void doWork() {
@@ -153,7 +153,7 @@ public class WireFragment extends BaseFragment implements
 	}
 
 	private void removeWire(final String guid) {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 			@Override
 			public void doWork() {
 				client.removeWire(guid);
@@ -168,7 +168,7 @@ public class WireFragment extends BaseFragment implements
 
 	private void onAddWire() {
 		WireAddDialog dlg = new WireAddDialog(getSherlockActivity());
-		dlg.setRunner(runner);
+		dlg.setRunner(getRunner());
 		dlg.setCallback(new WireAddDialog.Callback() {
 
 			@Override
@@ -193,7 +193,7 @@ public class WireFragment extends BaseFragment implements
 		if (firstVisibleItem + visibleItemCount == totalItemCount
 				&& totalItemCount > 1 && !loadingMore) {
 			loadingMore = true;
-			runner.runBackground(new Job() {
+			execute(new Job() {
 
 				List<WireItem> moreItems;
 

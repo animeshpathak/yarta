@@ -81,7 +81,7 @@ public class FeedbackFragment extends BaseFragment implements
 	}
 
 	private void sendFeedback(final String content) {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 
 			private boolean success = false;
 

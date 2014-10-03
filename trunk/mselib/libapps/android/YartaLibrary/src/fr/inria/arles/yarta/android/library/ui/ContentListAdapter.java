@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
@@ -131,10 +133,17 @@ public class ContentListAdapter extends BaseAdapter implements
 		notifyDataSetChanged();
 	}
 
+	private Map<Content, Person> authorCache = new ConcurrentHashMap<Content, Person>();
+
 	private Person getAuthor(Content content) {
-		Person person = null;
-		for (Agent agent : content.getCreator_inverse()) {
-			person = (PersonImpl) agent;
+		Person person = authorCache.get(content);
+
+		if (person == null) {
+			for (Agent agent : content.getCreator_inverse()) {
+				person = (PersonImpl) agent;
+				authorCache.put(content, person);
+				break;
+			}
 		}
 		return person;
 	}

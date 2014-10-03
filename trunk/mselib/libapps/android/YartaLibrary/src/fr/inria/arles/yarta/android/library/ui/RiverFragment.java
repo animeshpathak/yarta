@@ -79,10 +79,7 @@ public class RiverFragment extends BaseFragment implements
 
 	@Override
 	public void refreshUI() {
-		if (runner == null) {
-			return;
-		}
-		runner.runBackground(new Job() {
+		execute(new Job() {
 
 			@Override
 			public void doWork() {
@@ -123,7 +120,7 @@ public class RiverFragment extends BaseFragment implements
 				}
 
 				if (username != null) {
-					runner.runBackground(new Job() {
+					execute(new Job() {
 						public void doUIAfter() {
 							fakeList.update();
 						}
@@ -207,7 +204,7 @@ public class RiverFragment extends BaseFragment implements
 		if (firstVisibleItem + visibleItemCount == totalItemCount
 				&& totalItemCount > 1 && !loadingMore) {
 			loadingMore = true;
-			runner.runBackground(new Job() {
+			execute(new Job() {
 
 				List<RiverItem> moreItems;
 

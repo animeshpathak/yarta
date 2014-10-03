@@ -37,7 +37,7 @@ public class SearchFragment extends BaseFragment {
 		@Override
 		public Fragment getItem(int position) {
 			SearchResultsFragment fragment = new SearchResultsFragment();
-			fragment.setRunner(runner);
+			fragment.setRunner(getRunner());
 			fragment.setType(PageTypes[position]);
 			fragment.setData(items);
 			fragments.add(fragment);
@@ -86,7 +86,7 @@ public class SearchFragment extends BaseFragment {
 	}
 
 	public void search(final String query) {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 			@Override
 			public void doWork() {
 				List<ObjectItem> results = client.search(query);
