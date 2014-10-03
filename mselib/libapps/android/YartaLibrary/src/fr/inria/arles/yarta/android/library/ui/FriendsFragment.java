@@ -55,7 +55,7 @@ public class FriendsFragment extends BaseFragment implements
 
 	@Override
 	public void refreshUI() {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 
 			@Override
 			public void doWork() {

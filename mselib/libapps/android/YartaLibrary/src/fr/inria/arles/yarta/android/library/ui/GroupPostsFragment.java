@@ -66,7 +66,7 @@ public class GroupPostsFragment extends BaseFragment implements
 	private List<Content> items;
 
 	private void refreshPostsList() {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 
 			@Override
 			public void doWork() {

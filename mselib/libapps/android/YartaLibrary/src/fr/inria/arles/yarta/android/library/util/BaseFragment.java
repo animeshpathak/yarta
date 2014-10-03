@@ -19,20 +19,25 @@ import fr.inria.arles.iris.web.ElggClient.WebCallback;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
 import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
 import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
+import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public abstract class BaseFragment extends SherlockFragment implements
 		WebCallback {
 
-	protected JobRunner runner;
 	protected StorageAccessManagerEx sam;
 	protected ContentClientPictures contentClient;
 	protected ViewGroup container;
 	protected View content;
 	protected ElggClient client = ElggClient.getInstance();
 	private boolean loginState = false;
+	private JobRunner runner;
 
 	public void setRunner(JobRunner runner) {
 		this.runner = runner;
+	}
+
+	protected JobRunner getRunner() {
+		return runner;
 	}
 
 	public void setSAM(StorageAccessManagerEx sam) {
@@ -45,6 +50,12 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 	public void setContentClient(ContentClientPictures contentClient) {
 		this.contentClient = contentClient;
+	}
+
+	protected void execute(Job job) {
+		if (runner != null) {
+			runner.runBackground(job);
+		}
 	}
 
 	public abstract void refreshUI();

@@ -192,7 +192,7 @@ public class ProfileFragment extends BaseFragment {
 					.getSupportFragmentManager().beginTransaction();
 
 			fragment = new RiverFragment();
-			fragment.setRunner(runner);
+			fragment.setRunner(getRunner());
 			fragment.setUsername(username);
 
 			ft.replace(R.id.userActivity, fragment);
@@ -213,7 +213,7 @@ public class ProfileFragment extends BaseFragment {
 	}
 
 	private void onAdd() {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 
 			int result = -1;
 

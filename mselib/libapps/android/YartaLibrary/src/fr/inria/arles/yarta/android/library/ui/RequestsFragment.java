@@ -57,7 +57,7 @@ public class RequestsFragment extends BaseFragment implements
 
 	@Override
 	public void refreshUI() {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 
 			@Override
 			public void doWork() {
@@ -107,7 +107,7 @@ public class RequestsFragment extends BaseFragment implements
 
 	@Override
 	public void onAccept(final RequestItem item) {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 			@Override
 			public void doWork() {
 				client.acceptRequest(item);
@@ -122,7 +122,7 @@ public class RequestsFragment extends BaseFragment implements
 
 	@Override
 	public void onIgnore(final RequestItem item) {
-		runner.runBackground(new Job() {
+		execute(new Job() {
 			@Override
 			public void doWork() {
 				client.ignoreRequest(item);
