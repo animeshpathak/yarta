@@ -45,6 +45,7 @@ public class WireFragment extends BaseFragment implements
 		list.setAdapter(adapter);
 		list.setOnRefreshListener(this);
 		list.setOnScrollListener(this);
+		list.setEmptyView(root.findViewById(R.id.listEmpty));
 
 		setHasOptionsMenu(true);
 		return root;
