@@ -1,6 +1,6 @@
 package fr.inria.arles.sophia;
 
-import fr.inria.arles.rocq.R;
+import fr.inria.arles.sophia.R;
 import fr.inria.arles.yarta.resources.Group;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;

@@ -141,10 +141,12 @@
         <item name="android:clickable">true</item>
         <item name="android:textColor">@color/AppTextColor</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="DropDownListView" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable</item>
     </style>
-    
+
 </resources>
