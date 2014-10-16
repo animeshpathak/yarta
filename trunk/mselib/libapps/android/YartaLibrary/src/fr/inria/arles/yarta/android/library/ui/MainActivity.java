@@ -6,6 +6,7 @@ import java.util.List;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
+import com.sherlock.navigationdrawer.compat.SherlockActionBarDrawerToggle;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.RequestItem;
@@ -17,12 +18,12 @@ import fr.inria.arles.yarta.android.library.util.Settings;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -81,10 +82,18 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item) {
-				edit.setText("");
-				edit.clearFocus();
-				hideSoftKeyboard(edit);
-				refreshUI();
+
+				edit.post(new Runnable() {
+
+					@Override
+					public void run() {
+						edit.setText("");
+						edit.clearFocus();
+						hideSoftKeyboard(edit);
+
+						refreshUI();
+					}
+				});
 				return true;
 			}
 
@@ -92,21 +101,30 @@ public class MainActivity extends BaseActivity implements
 			public boolean onMenuItemActionExpand(MenuItem item) {
 				drawerLayout.closeDrawer(drawerList);
 
-				if (edit.getText().length() == 0) {
-					// no search was made
-					edit.requestFocus();
-
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-				}
+				edit.post(new Runnable() {
+					@Override
+					public void run() {
+						edit.requestFocus();
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.showSoftInput(edit,
+								InputMethodManager.SHOW_IMPLICIT);
+					}
+				});
 				return true;
 			}
 		});
 	}
 
-	private void hideSoftKeyboard(View view) {
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	private void hideSoftKeyboard(View v) {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		// check if no view has focus:
+		View view = this.getCurrentFocus();
+		if (view != null) {
+			inputManager.hideSoftInputFromWindow(view.getWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS);
+		}
 	}
 
 	@Override
@@ -218,26 +236,13 @@ public class MainActivity extends BaseActivity implements
 		drawerList.setAdapter(drawerAdapter);
 		drawerList.setOnItemClickListener(this);
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+		drawerToggle = new SherlockActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, R.string.drawer_open,
-				R.string.drawer_close) {
-
-			@Override
-			public void onDrawerClosed(View drawerView) {
-			}
-
-			public void onDrawerOpened(View drawerView) {
-			}
-		};
+				R.string.drawer_close);
+		drawerToggle.syncState();
 
 		drawerLayout.setDrawerListener(drawerToggle);
 		drawerToggle.setDrawerIndicatorEnabled(true);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		drawerToggle.syncState();
 	}
 
 	@Override
@@ -355,7 +360,7 @@ public class MainActivity extends BaseActivity implements
 	private SearchFragment searchFragment = new SearchFragment();
 	private List<RequestItem> requests = new ArrayList<RequestItem>();
 
-	private ActionBarDrawerToggle drawerToggle;
+	private SherlockActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	private MenuListAdapter drawerAdapter;

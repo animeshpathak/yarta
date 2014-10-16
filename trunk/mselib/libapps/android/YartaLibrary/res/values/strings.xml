@@ -24,11 +24,11 @@
     <string name="feedback_sent_error">You need Internet to send feedback!</string>
 
     <!-- IRIS -->
-    <string name="login_authenticate_cas">CAS Login</string>
+    <string name="login_authenticate_cas">CAS LOGIN</string>
     <string name="login_or">OR</string>
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
-    <string name="login_authenticate">Authenticate</string>
+    <string name="login_authenticate">AUTHENTICATE</string>
     <string name="login_empty_fields">Username and password should not be empty!</string>
     <string name="login_wait_logging">Please wait while you are being logged in…</string>
     <string name="main_no_internet">You are out of connnexion. Tap to retry.</string>

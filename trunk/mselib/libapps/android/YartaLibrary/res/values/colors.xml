@@ -17,7 +17,8 @@
     <color name="AppContentStroke">#cac5ca</color>
     <color name="AppListNormal">#00000000</color>
     <color name="AppListSelected">#85a5e0</color>
-    <color name="AppFeedbackNormal">#d0c9d0</color>
+    <color name="AppFeedbackNormal">#d5ced5</color>
+    <color name="AppFeedbackPressed">#bfb9bf</color>
     <color name="AppButtonBgStart">#1b7fcc</color>
     <color name="AppButtonBgEnd">#126db3</color>
     <color name="AppButtonStroke">#1b7fcc</color>
