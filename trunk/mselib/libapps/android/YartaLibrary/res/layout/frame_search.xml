@@ -9,12 +9,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
+        android:background="@drawable/edit_search"
         android:cursorVisible="true"
         android:hint="@string/search_search_hint"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:padding="7dp"
-        android:textColorHint="#cde9e3" >
+        android:textColor="@color/AppTitleTextColor"
+        android:textColorHint="@color/AppSearchColor" >
     </EditText>
 
 </LinearLayout>
