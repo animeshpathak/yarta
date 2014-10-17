@@ -980,6 +980,8 @@ public class ElggClient {
 	public List<ObjectItem> search(String query) {
 		List<ObjectItem> items = new ArrayList<ObjectItem>();
 
+		Map<String, List<ObjectItem>> groupedItems = new HashMap<String, List<ObjectItem>>();
+
 		JSONObject json = callMethod("site.search", GET, "query", encode(query));
 		int result = checkErrors(json);
 
@@ -1019,8 +1021,20 @@ public class ElggClient {
 							|| type.equals(ObjectItem.File)) {
 						ObjectItem object = new ObjectItem(guid, title,
 								avatarURL, type);
-						items.add(object);
+
+						if (!groupedItems.containsKey(type)) {
+							groupedItems.put(type, new ArrayList<ObjectItem>());
+						}
+						groupedItems.get(type).add(object);
 					}
+				}
+			}
+
+			String[] order = new String[] { ObjectItem.User, ObjectItem.Group,
+					ObjectItem.Topic, ObjectItem.Blog, ObjectItem.File };
+			for (String type : order) {
+				if (groupedItems.containsKey(type)) {
+					items.addAll(groupedItems.get(type));
 				}
 			}
 		} catch (Exception ex) {
