@@ -37,9 +37,14 @@ public class SearchResultsFragment extends BaseFragment implements
 
 		@Override
 		public void run() {
-			for (ObjectItem item : items) {
-				ImageCache.getBitmap(item);
-				handler.post(refreshListAdapter);
+			try {
+				for (ObjectItem item : items) {
+					if (item.getType().equals(ObjectItem.Object))
+						continue;
+					ImageCache.getBitmap(item);
+					handler.post(refreshListAdapter);
+				}
+			} catch (Exception ex) {
 			}
 		}
 	};
@@ -71,19 +76,67 @@ public class SearchResultsFragment extends BaseFragment implements
 		this.type = type;
 	}
 
+	/**
+	 * Safe loads a string. If not attached or error return empty string.
+	 * 
+	 * @param stringId
+	 * @return
+	 */
+	private String get(int stringId) {
+		try {
+			return getActivity().getString(stringId);
+		} catch (Exception ex) {
+			// not attached to an activity;
+		}
+		return "";
+	}
+
+	private String getTypeName(String type) {
+		if (type.equals(ObjectItem.User)) {
+			return get(R.string.search_users);
+		} else if (type.equals(ObjectItem.Group)) {
+			return get(R.string.search_groups);
+		} else if (type.equals(ObjectItem.File)) {
+			return get(R.string.search_files);
+		} else if (type.equals(ObjectItem.Blog)) {
+			return get(R.string.search_blogs);
+		} else if (type.equals(ObjectItem.Topic)) {
+			return get(R.string.search_discussions);
+		}
+		return null;
+	}
+
 	// sets the raw data which will be filtered
 	public void setData(List<ObjectItem> items) {
-		if (items != null) {
+		// this is the all result fragment
+		if (type.equals(ObjectItem.Object)) {
 			synchronized (this.items) {
 				this.items.clear();
+				String currentType = null;
+
 				for (ObjectItem item : items) {
-					if (item.getType().equals(type)) {
-						this.items.add(item);
+					if (!item.getType().equals(currentType)) {
+						this.items.add(new ObjectItem(null, getTypeName(item
+								.getType()), null, ObjectItem.Object));
+						currentType = item.getType();
 					}
+					this.items.add(item);
 				}
 			}
-
 			fillAdapter();
+		} else {
+			if (items != null) {
+				synchronized (this.items) {
+					this.items.clear();
+					for (ObjectItem item : items) {
+						if (item.getType().equals(type)) {
+							this.items.add(item);
+						}
+					}
+				}
+
+				fillAdapter();
+			}
 		}
 	}
 
@@ -103,6 +156,7 @@ public class SearchResultsFragment extends BaseFragment implements
 
 		ObjectItem item = (ObjectItem) adapter.getItem(position);
 		Intent intent = null;
+		String type = item.getType();
 		if (type.equals(ObjectItem.User)) {
 			intent = new Intent(getSherlockActivity(), ProfileActivity.class);
 			intent.putExtra(ProfileActivity.UserGuid, item.getGuid());

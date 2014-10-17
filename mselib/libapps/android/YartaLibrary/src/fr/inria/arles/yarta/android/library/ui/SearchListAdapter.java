@@ -24,6 +24,8 @@ public class SearchListAdapter extends BaseAdapter {
 		ImageView icon;
 		TextView title;
 		TextView info;
+		View item;
+		TextView separator;
 	}
 
 	private LayoutInflater inflater;
@@ -58,6 +60,9 @@ public class SearchListAdapter extends BaseAdapter {
 			holder.icon = (ImageView) convertView.findViewById(R.id.icon);
 			holder.title = (TextView) convertView.findViewById(R.id.author);
 			holder.info = (TextView) convertView.findViewById(R.id.description);
+			holder.separator = (TextView) convertView
+					.findViewById(R.id.separator);
+			holder.item = convertView.findViewById(R.id.item);
 
 			convertView.setTag(holder);
 		} else {
@@ -66,16 +71,24 @@ public class SearchListAdapter extends BaseAdapter {
 
 		ObjectItem item = items.get(position);
 
-		holder.title.setText(Html.fromHtml(item.getName()));
-
-		holder.info.setVisibility(View.GONE);
-
-		Bitmap bitmap = ImageCache.getBitmap(item);
-
-		if (bitmap == null) {
-			holder.icon.setImageResource(R.drawable.group_default);
+		if (item.getType().equals(ObjectItem.Object)) {
+			holder.item.setVisibility(View.GONE);
+			holder.separator.setVisibility(View.VISIBLE);
+			holder.separator.setText(item.getName());
 		} else {
-			holder.icon.setImageBitmap(bitmap);
+			holder.separator.setVisibility(View.GONE);
+			holder.item.setVisibility(View.VISIBLE);
+
+			holder.title.setText(Html.fromHtml(item.getName()));
+			holder.info.setVisibility(View.GONE);
+
+			Bitmap bitmap = ImageCache.getBitmap(item);
+
+			if (bitmap == null) {
+				holder.icon.setImageResource(R.drawable.group_default);
+			} else {
+				holder.icon.setImageBitmap(bitmap);
+			}
 		}
 
 		return convertView;
