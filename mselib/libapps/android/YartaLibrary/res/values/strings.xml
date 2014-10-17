@@ -22,6 +22,12 @@
     <string name="feedback_app_bug">The app is buggy!</string>
     <string name="feedback_sent_ok">Thank you for the feedback!</string>
     <string name="feedback_sent_error">You need Internet to send feedback!</string>
+    <string name="feedback_appversion">Version: %s</string>
+    <string name="app_new_version_message">A new version of the application is available. Do you want to install it?</string>
+    <string name="app_new_version_title">Update</string>
+    <string name="app_new_version_yes">Yes</string>
+    <string name="app_new_version_cancel">No</string>
+    <string name="app_market_required">Google Play is required to view the application page.</string>
 
     <!-- IRIS -->
     <string name="login_authenticate_cas">CAS LOGIN</string>
