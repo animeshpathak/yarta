@@ -49,12 +49,12 @@ public class FriendsFragment extends BaseFragment implements
 		super.onResume();
 
 		if (sam != null) {
-			refreshUI();
+			refreshUI(null);
 		}
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		execute(new Job() {
 
 			@Override
@@ -81,7 +81,7 @@ public class FriendsFragment extends BaseFragment implements
 
 	@Override
 	public void onRefresh() {
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override

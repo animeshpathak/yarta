@@ -42,7 +42,7 @@ public class FeedbackFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 	}
 
 	@Override

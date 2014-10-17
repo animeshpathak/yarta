@@ -63,7 +63,7 @@ public class SearchResultsFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 	}
 
 	// sets the type of resources displayed

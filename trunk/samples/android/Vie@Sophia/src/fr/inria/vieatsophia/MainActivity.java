@@ -1,7 +1,7 @@
-package fr.inria.arles.sophia;
+package fr.inria.vieatsophia;
 
-import fr.inria.arles.sophia.R;
 import fr.inria.arles.yarta.resources.Group;
+import fr.inria.vieatsophia.R;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Toast;

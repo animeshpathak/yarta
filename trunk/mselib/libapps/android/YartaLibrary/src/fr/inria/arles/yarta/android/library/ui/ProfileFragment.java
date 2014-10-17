@@ -45,7 +45,7 @@ public class ProfileFragment extends BaseFragment {
 	public void onResume() {
 		super.onResume();
 		if (sam != null) {
-			refreshUI();
+			refreshUI(null);
 		}
 	}
 
@@ -140,7 +140,7 @@ public class ProfileFragment extends BaseFragment {
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		if (getUser() == null) {
 			return;
 		}
@@ -186,7 +186,7 @@ public class ProfileFragment extends BaseFragment {
 		}
 
 		if (fragment != null) {
-			fragment.refreshUI();
+			fragment.refreshUI(null);
 		} else {
 			FragmentTransaction ft = getSherlockActivity()
 					.getSupportFragmentManager().beginTransaction();

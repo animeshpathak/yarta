@@ -414,7 +414,8 @@ public class IrisBridge implements WebCallback {
 		String groupId = s.substring(s.indexOf('_') + 1);
 
 		GroupItem group = client.getGroup(groupId);
-		if (util.createGroup(group, true)) {
+		if (client.getLastErrorCode() == ElggClient.RESULT_OK
+				&& util.createGroup(group, true)) {
 			notifyApp("group <%s> updated.", groupId);
 		}
 	}
@@ -495,9 +496,14 @@ public class IrisBridge implements WebCallback {
 		}
 
 		if (update) {
-			notifyApp("post list updated.");
+			notifyApp(PostList);
+		} else if (posts.size() == 0) {
+			notifyApp(PostListEmpty);
 		}
 	}
+	
+	public static final String PostList = "post list updated.";
+	public static final String PostListEmpty = "post list empty.";
 
 	private void ensurePostComments(Node node) {
 		String postId = util.getResourceId(node);

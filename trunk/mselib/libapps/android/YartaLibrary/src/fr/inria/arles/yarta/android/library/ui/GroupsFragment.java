@@ -46,11 +46,11 @@ public class GroupsFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		execute(new Job() {
 
 			@Override
@@ -80,7 +80,7 @@ public class GroupsFragment extends BaseFragment implements
 
 	@Override
 	public void onRefresh() {
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override

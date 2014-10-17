@@ -51,7 +51,7 @@ public class MessageActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 
-		refreshUI();
+		refreshUI(null);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class MessageActivity extends BaseActivity {
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		if (getIntent().hasExtra(MessageId)) {
 			String messageId = getIntent().getStringExtra(MessageId);
 			message = new MessageImpl(getSAM(), new MSEResource(messageId,

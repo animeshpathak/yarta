@@ -36,8 +36,6 @@ public class WireFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_wire, container, false);
 
-		setViews(container, root);
-
 		adapter = new WireListAdapter(getSherlockActivity());
 		adapter.setCallback(this);
 
@@ -72,20 +70,20 @@ public class WireFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
 	public void onRefresh() {
 		if (!loadingMore) {
-			refreshUI();
+			refreshUI(null);
 		}
 	}
 
 	private List<WireItem> items;
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		execute(new Job() {
 
 			@Override
@@ -162,7 +160,7 @@ public class WireFragment extends BaseFragment implements
 
 			@Override
 			public void doUIAfter() {
-				refreshUI();
+				refreshUI(null);
 			}
 		});
 	}
@@ -174,7 +172,7 @@ public class WireFragment extends BaseFragment implements
 
 			@Override
 			public void onWireAdded() {
-				refreshUI();
+				refreshUI(null);
 			}
 		});
 		dlg.show();

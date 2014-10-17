@@ -43,11 +43,11 @@ public class MainActivity extends BaseActivity implements
 		setContentView(R.layout.activity_main);
 
 		initDrawer();
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		// force first item to be selected if was initialized
 		if (drawerToggle != null && drawerLayout != null && drawerList != null
 				&& drawerAdapter != null) {
@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity implements
 						edit.clearFocus();
 						hideSoftKeyboard(edit);
 
-						refreshUI();
+						refreshUI(null);
 					}
 				});
 				return true;
@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements
 				hideSoftKeyboard(view);
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private void showNotifications(Menu menu) {
@@ -303,7 +303,7 @@ public class MainActivity extends BaseActivity implements
 		if (!fragment.isAdded()) {
 			ft.replace(R.id.content_frame, fragment);
 		} else {
-			fragment.refreshUI();
+			fragment.refreshUI(null);
 		}
 		ft.commit();
 	}
