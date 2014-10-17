@@ -109,10 +109,9 @@ public class WireFragment extends BaseFragment implements
 					if (item.getAuthor() == null) {
 						continue;
 					}
-
 					ImageCache.getBitmap(item.getAuthor());
-					handler.post(refreshListAdapter);
 				}
+				handler.post(refreshListAdapter);
 			} catch (Exception ex) {
 				// concurrent over wire items;
 			}

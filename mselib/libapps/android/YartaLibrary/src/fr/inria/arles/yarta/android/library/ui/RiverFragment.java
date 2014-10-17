@@ -112,10 +112,9 @@ public class RiverFragment extends BaseFragment implements
 					if (item.getSubject() == null) {
 						continue;
 					}
-
 					ImageCache.getBitmap(item.getSubject());
-					handler.post(refreshListAdapter);
 				}
+				handler.post(refreshListAdapter);
 
 				if (username != null) {
 					execute(new Job() {
