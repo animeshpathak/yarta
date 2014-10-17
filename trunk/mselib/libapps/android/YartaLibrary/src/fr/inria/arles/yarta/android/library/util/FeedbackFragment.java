@@ -42,6 +42,16 @@ public class FeedbackFragment extends BaseFragment implements
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		setCtrlText(
+				R.id.appversion,
+				String.format(getString(R.string.feedback_appversion),
+						Utils.getCurrentVersion(getActivity())));
+	}
+
+	@Override
 	public void refreshUI(String notification) {
 	}
 

@@ -13,6 +13,7 @@ import fr.inria.arles.iris.web.RequestItem;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.FeedbackFragment;
+import fr.inria.arles.yarta.android.library.util.Utils;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import android.content.Context;
@@ -44,6 +45,7 @@ public class MainActivity extends BaseActivity implements
 
 		initDrawer();
 		refreshUI(null);
+		Utils.checkForUpdate(this);
 	}
 
 	@Override
