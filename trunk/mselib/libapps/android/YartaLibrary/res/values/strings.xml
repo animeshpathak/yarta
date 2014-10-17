@@ -112,6 +112,7 @@
     <string name="search_search">Search</string>
     <string name="search_search_hint">search query</string>
     <string name="search_empty_content">Please input the search query and try again!</string>
+    <string name="search_all">All</string>
     <string name="search_users">People</string>
     <string name="search_groups">Groups</string>
     <string name="search_blogs">Articles</string>

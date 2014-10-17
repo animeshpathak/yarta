@@ -67,6 +67,7 @@
     <string name="search_search">Rechercher</string>
     <string name="search_search_hint">rechercher sur Iris…</string>
     <string name="search_empty_content">Veuillez saisir la requête de recherche et réessayer !</string>
+    <string name="search_all">Tout</string>
     <string name="search_users">Utilisateurs</string>
     <string name="search_groups">Groupes</string>
     <string name="search_blogs">Articles</string>
