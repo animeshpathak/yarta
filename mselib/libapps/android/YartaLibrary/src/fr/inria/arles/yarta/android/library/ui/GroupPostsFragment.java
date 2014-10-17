@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.inria.arles.iris.R;
+import fr.inria.arles.iris.bridge.IrisBridge;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
@@ -50,23 +51,33 @@ public class GroupPostsFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
 	public void onRefresh() {
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
-	public void refreshUI() {
-		refreshPostsList();
+	public void refreshUI(String notification) {
+		if (IrisBridge.PostListEmpty.equals(notification)) {
+			// show content, there is no post
+			showFrame(Frame.Content);
+		} else {
+			refreshPostsList();
+		}
 	}
 
 	private List<Content> items;
 
 	private void refreshPostsList() {
 		execute(new Job() {
+
+			@Override
+			public void doUIBefore() {
+				showFrame(Frame.Loading);
+			}
 
 			@Override
 			public void doWork() {
@@ -80,8 +91,12 @@ public class GroupPostsFragment extends BaseFragment implements
 
 			@Override
 			public void doUIAfter() {
-				adapter.setItems(items);
-				list.onRefreshComplete();
+				if (items.isEmpty()) {
+				} else {
+					showFrame(Frame.Content);
+					adapter.setItems(items);
+					list.onRefreshComplete();
+				}
 			}
 		});
 	}

@@ -2,31 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/AppContentColor"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/listEmpty"
-        style="@style/AppContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+    <include
+        layout="@layout/frame_login"
+        android:visibility="gone" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/message_no_message"
-            android:textColor="@color/AppTextColorLow" />
-    </RelativeLayout>
+    <include
+        layout="@layout/frame_nonet"
+        android:visibility="gone" />
 
-    <fr.inria.arles.yarta.android.library.util.PullToRefreshListView
-        android:id="@+id/listInbox"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="@color/AppContentStroke"
-        android:dividerHeight="1sp"
-        android:listSelector="@drawable/list_selector" />
+    <include
+        layout="@layout/frame_loading"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/frame_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/AppContentColor"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/listEmpty"
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/message_no_message"
+                android:textColor="@color/AppTextColorLow" />
+        </RelativeLayout>
+
+        <fr.inria.arles.yarta.android.library.util.PullToRefreshListView
+            android:id="@+id/listInbox"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@color/AppContentStroke"
+            android:dividerHeight="1sp"
+            android:listSelector="@drawable/list_selector" />
+    </LinearLayout>
 
 </LinearLayout>

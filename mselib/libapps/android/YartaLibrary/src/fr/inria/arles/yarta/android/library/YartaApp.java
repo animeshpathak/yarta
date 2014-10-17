@@ -21,7 +21,7 @@ public class YartaApp extends Application implements MSEApplication {
 	 * who want real time updates over UI data.
 	 */
 	public interface Observer {
-		public void updateInfo();
+		public void updateInfo(String notification);
 
 		public void onLogout();
 	}
@@ -114,7 +114,7 @@ public class YartaApp extends Application implements MSEApplication {
 			mse.setOwnerUID(userId);
 			sam.setOwnerID(userId);
 
-			notifyAllObservers();
+			notifyAllObservers(null);
 		} else {
 			if (loginObserver != null && observers.size() == 0) {
 				loginObserver.onLogout();
@@ -142,9 +142,9 @@ public class YartaApp extends Application implements MSEApplication {
 		observers.remove(observer);
 	}
 
-	private void notifyAllObservers() {
+	private void notifyAllObservers(String notification) {
 		for (Observer observer : observers) {
-			observer.updateInfo();
+			observer.updateInfo(notification);
 		}
 	}
 
@@ -172,8 +172,7 @@ public class YartaApp extends Application implements MSEApplication {
 
 	@Override
 	public void handleNotification(String notification) {
-		System.out.println(notification);
-		notifyAllObservers();
+		notifyAllObservers(notification);
 	}
 
 	@Override

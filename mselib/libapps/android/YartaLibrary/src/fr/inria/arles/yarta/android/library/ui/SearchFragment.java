@@ -68,6 +68,7 @@ public class SearchFragment extends BaseFragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
 		pager = (ViewPager) view.findViewById(R.id.pager);
 
@@ -77,7 +78,7 @@ public class SearchFragment extends BaseFragment {
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		for (SearchResultsFragment fragment : fragments) {
 			synchronized (items) {
 				fragment.setData(items);
@@ -99,7 +100,7 @@ public class SearchFragment extends BaseFragment {
 
 			@Override
 			public void doUIAfter() {
-				refreshUI();
+				refreshUI(null);
 			}
 		});
 	}

@@ -131,12 +131,12 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void updateInfo() {
+	public void updateInfo(final String notification) {
 		runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				refreshUI();
+				refreshUI(notification);
 			}
 		});
 	}
@@ -157,7 +157,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	 * Override here to refresh UI every time something gets updated, KB is
 	 * ready, etc.
 	 */
-	protected void refreshUI() {
+	protected void refreshUI(String notification) {
 	}
 
 	protected void setCtrlText(int resId, String text) {

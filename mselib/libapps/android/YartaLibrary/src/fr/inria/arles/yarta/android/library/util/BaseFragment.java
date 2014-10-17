@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Spanned;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -26,10 +24,12 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 	protected StorageAccessManagerEx sam;
 	protected ContentClientPictures contentClient;
-	protected ViewGroup container;
-	protected View content;
 	protected ElggClient client = ElggClient.getInstance();
-	private boolean loginState = false;
+
+	protected enum Frame {
+		Content, Internet, Authentication, Loading
+	};
+
 	private JobRunner runner;
 
 	public void setRunner(JobRunner runner) {
@@ -58,7 +58,7 @@ public abstract class BaseFragment extends SherlockFragment implements
 		}
 	}
 
-	public abstract void refreshUI();
+	public abstract void refreshUI(String notification);
 
 	protected String getCtrlText(int txtId) {
 		TextView txt = (TextView) getView().findViewById(txtId);
@@ -101,6 +101,13 @@ public abstract class BaseFragment extends SherlockFragment implements
 		}
 	}
 
+	protected void showFrame(Frame frame) {
+		setVisible(R.id.frame_content, frame == Frame.Content);
+		setVisible(R.id.frame_internet, frame == Frame.Internet);
+		setVisible(R.id.frame_authentication, frame == Frame.Authentication);
+		setVisible(R.id.frame_loading, frame == Frame.Loading);
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -111,19 +118,21 @@ public abstract class BaseFragment extends SherlockFragment implements
 	public void onDestroy() {
 		super.onDestroy();
 		client.removeCallback(this);
-		loginState = false;
 	}
 
-	/**
-	 * Sets the parent and the current view. It is being used when log-in fails
-	 * or there is no Internet.
-	 * 
-	 * @param container
-	 * @param content
-	 */
-	protected void setViews(ViewGroup container, View content) {
-		this.container = container;
-		this.content = content;
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		View v = getView().findViewById(R.id.login);
+		if (v != null) {
+			v.setOnClickListener(errorClickListener);
+		}
+
+		v = getView().findViewById(R.id.internet);
+		if (v != null) {
+			v.setOnClickListener(errorClickListener);
+		}
 	}
 
 	@Override
@@ -132,8 +141,7 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 			@Override
 			public void run() {
-				loginState = false;
-				showLogin(false);
+				showFrame(Frame.Content);
 			}
 		});
 	}
@@ -144,61 +152,20 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 			@Override
 			public void run() {
-				loginState = true;
-				showLogin(true);
+				showFrame(Frame.Authentication);
 			}
 		});
 	}
 
-	/**
-	 * Checks for the existence of viewId in the container. If not, it will
-	 * inflate layoutId and search again.
-	 * 
-	 * @return
-	 */
-	private View getChild(int viewId, int layoutId) {
-		View child = container.findViewById(viewId);
-
-		if (child == null) {
-			LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
-			inflater = getSherlockActivity().getLayoutInflater();
-			child = inflater.inflate(layoutId, container, false);
-			container.addView(child);
-		}
-
-		return child;
-	}
-
-	/**
-	 * Shows the log-in frame.
-	 * 
-	 * @param show
-	 */
-	private void showLogin(boolean show) {
-		if (container != null && content != null) {
-			View login = getChild(R.id.frame_login, R.layout.frame_login);
-			login.findViewById(R.id.login).setOnClickListener(
-					errorClickListener);
-
-			login.setVisibility(show ? View.VISIBLE : View.GONE);
-			content.setVisibility(show ? View.GONE : View.VISIBLE);
-		}
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		showLogin(false);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		showLogin(loginState);
-	}
-
 	@Override
 	public void onNetworkFailed() {
+		getSherlockActivity().runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				showFrame(Frame.Internet);
+			}
+		});
 	}
 
 	private void onClickLogin() {
@@ -207,6 +174,8 @@ public abstract class BaseFragment extends SherlockFragment implements
 	}
 
 	private void onClickInternet() {
+		showFrame(Frame.Content);
+		refreshUI(null);
 	}
 
 	private final View.OnClickListener errorClickListener = new View.OnClickListener() {

@@ -80,18 +80,18 @@ public class ThreadsFragment extends BaseFragment implements
 	public void onResume() {
 		super.onResume();
 
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
 	public void onRefresh() {
-		refreshUI();
+		refreshUI(null);
 	}
 
 	private Set<Conversation> items;
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		execute(new Job() {
 
 			@Override

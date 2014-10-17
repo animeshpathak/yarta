@@ -50,13 +50,13 @@ public class RequestsFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshUI();
+		refreshUI(null);
 	}
 
 	private List<RequestItem> items;
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		execute(new Job() {
 
 			@Override
@@ -78,7 +78,7 @@ public class RequestsFragment extends BaseFragment implements
 
 	@Override
 	public void onRefresh() {
-		refreshUI();
+		refreshUI(null);
 	}
 
 	public List<RequestItem> getRequests() {
@@ -115,7 +115,7 @@ public class RequestsFragment extends BaseFragment implements
 
 			@Override
 			public void doUIAfter() {
-				refreshUI();
+				refreshUI(null);
 			}
 		});
 	}
@@ -130,7 +130,7 @@ public class RequestsFragment extends BaseFragment implements
 
 			@Override
 			public void doUIAfter() {
-				refreshUI();
+				refreshUI(null);
 			}
 		});
 	}

@@ -35,12 +35,12 @@ public class GroupDescriptionFragment extends BaseFragment {
 	public void onResume() {
 		super.onResume();
 		if (sam != null) {
-			refreshUI();
+			refreshUI(null);
 		}
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		if (group.getName() != null) {
 			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
 		}

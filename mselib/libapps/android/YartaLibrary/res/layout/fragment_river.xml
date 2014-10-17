@@ -4,40 +4,59 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/listEmpty"
-        style="@style/AppContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" >
+    <include
+        layout="@layout/frame_login"
+        android:visibility="gone" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/main_no_activity"
-            android:textColor="@color/AppTextColorLow" />
-    </RelativeLayout>
+    <include
+        layout="@layout/frame_nonet"
+        android:visibility="gone" />
 
-    <fr.inria.arles.yarta.android.library.util.PullToRefreshListView
-        android:id="@+id/listRiver"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="#00000000"
-        android:dividerHeight="0sp"
-        android:listSelector="@drawable/list_selector_none" />
+    <include
+        layout="@layout/frame_loading"
+        android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/itemsContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone" />
+        android:id="@+id/frame_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/listEmpty"
+            style="@style/AppContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/main_no_activity"
+                android:textColor="@color/AppTextColorLow" />
+        </RelativeLayout>
+
+        <fr.inria.arles.yarta.android.library.util.PullToRefreshListView
+            android:id="@+id/listRiver"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="#00000000"
+            android:dividerHeight="0sp"
+            android:listSelector="@drawable/list_selector_none" />
+
+        <LinearLayout
+            android:id="@+id/itemsContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>

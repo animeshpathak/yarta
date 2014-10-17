@@ -87,10 +87,11 @@ public class GroupActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		refreshUI();
+		refreshUI(null);
 	}
 
-	public void refreshUI() {
+	@Override
+	public void refreshUI(String notification) {
 		if (getSAM() == null) {
 			return;
 		}
@@ -105,7 +106,7 @@ public class GroupActivity extends BaseActivity implements
 		for (int i = 0; i < adapter.getCount(); i++) {
 			BaseFragment fragment = (BaseFragment) adapter.getItem(i);
 			if (fragment.isAdded()) {
-				fragment.refreshUI();
+				fragment.refreshUI(notification);
 			}
 		}
 
@@ -168,6 +169,6 @@ public class GroupActivity extends BaseActivity implements
 
 	@Override
 	public void onContentAdded() {
-		refreshUI();
+		refreshUI(null);
 	}
 }

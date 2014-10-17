@@ -57,28 +57,26 @@ public class RiverFragment extends BaseFragment implements
 				(ViewGroup) root.findViewById(R.id.itemsContainer),
 				root.findViewById(R.id.listEmpty));
 
-		setViews(container, root);
-
 		return root;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
 	public void onRefresh() {
 		if (!loadingMore) {
-			refreshUI();
+			refreshUI(null);
 		}
 	}
 
 	private List<RiverItem> items;
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		execute(new Job() {
 
 			@Override

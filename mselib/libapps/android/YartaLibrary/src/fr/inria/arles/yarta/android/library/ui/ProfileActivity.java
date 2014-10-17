@@ -25,11 +25,11 @@ public class ProfileActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
-	public void refreshUI() {
+	public void refreshUI(String notification) {
 		if (getIntent().hasExtra(UserName)) {
 			username = getIntent().getStringExtra(UserName);
 			attachFragment(username);
@@ -68,7 +68,7 @@ public class ProfileActivity extends BaseActivity {
 		} else {
 			fragment.setSAM(getSAM());
 			fragment.setContentClient(contentClient);
-			fragment.refreshUI();
+			fragment.refreshUI(null);
 		}
 	}
 }
