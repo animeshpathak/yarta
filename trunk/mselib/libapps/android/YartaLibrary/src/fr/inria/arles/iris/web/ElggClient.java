@@ -50,7 +50,8 @@ public class ElggClient {
 	private boolean noInternet() {
 		if (lastError != null) {
 			return lastError.contains("UnknownHostException")
-					|| lastError.contains("Hostname");
+					|| lastError.contains("Hostname")
+					|| lastError.contains("ConnectException");
 		}
 		return false;
 	}
