@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">Vie@Sophia</string>
-    <string name="app_iris_required">You need to install Iris Mobile from Google Play!</string>
-    <string name="app_market_required">You need Google Play installed!</string>
-    <string name="app_iris_install">Install</string>
-
-</resources>
