@@ -84,10 +84,13 @@ public class Utils {
 	}
 
 	private static long value(String string) {
-		string = string.trim();
-		if (string.contains(".")) {
-			string = string.replace(".", "");
+		if (string != null) {
+			string = string.trim();
+			if (string.contains(".")) {
+				string = string.replace(".", "");
+			}
+			return Long.valueOf(string);
 		}
-		return Long.valueOf(string);
+		return 0;
 	}
 }

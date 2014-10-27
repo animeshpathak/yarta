@@ -138,7 +138,6 @@ public class ElggClient {
 			result = new JSONObject(json);
 		} catch (Exception ex) {
 			lastError = ex.toString();
-			ex.printStackTrace();
 		}
 		return result;
 	}

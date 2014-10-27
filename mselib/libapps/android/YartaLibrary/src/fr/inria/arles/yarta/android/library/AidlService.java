@@ -691,6 +691,11 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		for (int i = 0; i < n; i++) {
 			IMSEApplication application = appCallbacks.getBroadcastItem(i);
 			try {
+				if (query.equals(IrisBridge.PostListEmpty)
+						&& !application.getAppId().equals(
+								"fr.inria.arles.yarta")) {
+					continue;
+				}
 				application.handleNotification(query);
 			} catch (Exception ex) {
 				ex.printStackTrace();
