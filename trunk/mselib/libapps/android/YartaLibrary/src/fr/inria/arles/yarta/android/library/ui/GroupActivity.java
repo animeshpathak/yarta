@@ -94,6 +94,10 @@ public class GroupActivity extends BaseActivity implements
 			return;
 		}
 		group = (Group) getSAM().getResourceByURI(groupGuid);
+		if (group == null) {
+			return;
+		}
+
 		if (group.getName() != null) {
 			setTitle(Html.fromHtml(group.getName()));
 		}
