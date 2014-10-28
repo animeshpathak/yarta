@@ -24,6 +24,7 @@ import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
 import fr.inria.arles.yarta.logging.YLogger;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import fr.inria.arles.yarta.middleware.msemanagement.RemoteSAM;
 import fr.inria.arles.yarta.android.library.ILibraryService;
 
 /**
@@ -33,6 +34,7 @@ import fr.inria.arles.yarta.android.library.ILibraryService;
 public class KBClient implements KnowledgeBase {
 
 	private MSEApplication application;
+	private RemoteSAM remoteSAM;
 
 	/**
 	 * The MSEApplication stub to receive notifications back from the actual
@@ -64,6 +66,11 @@ public class KBClient implements KnowledgeBase {
 			return application.getAppId();
 		}
 
+		public void renameResource(String oldURI, String newURI)
+				throws RemoteException {
+			remoteSAM.renameResource(oldURI, newURI);
+		}
+
 	};
 
 	/**
@@ -72,9 +79,11 @@ public class KBClient implements KnowledgeBase {
 	 * @param context
 	 * @param application
 	 */
-	public KBClient(MSEApplication application, Object context) {
+	public KBClient(MSEApplication application, Object context,
+			RemoteSAM remoteSAM) {
 		this.application = application;
 		this.context = (Context) context;
+		this.remoteSAM = remoteSAM;
 	}
 
 	@Override

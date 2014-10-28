@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/grosca/work/yarta/trunk/mselib/libapps/android/YartaLibrary/src/fr/inria/arles/yarta/android/library/IMSEApplication.aidl
+ * Original file: D:\\work\\yarta\\mselib\\libapps\\android\\YartaLibrary\\src\\fr\\inria\\arles\\yarta\\android\\library\\IMSEApplication.aidl
  */
 package fr.inria.arles.yarta.android.library;
 public interface IMSEApplication extends android.os.IInterface
@@ -67,6 +67,17 @@ data.enforceInterface(DESCRIPTOR);
 java.lang.String _arg0;
 _arg0 = data.readString();
 this.handleKBReady(_arg0);
+reply.writeNoException();
+return true;
+}
+case TRANSACTION_renameResource:
+{
+data.enforceInterface(DESCRIPTOR);
+java.lang.String _arg0;
+_arg0 = data.readString();
+java.lang.String _arg1;
+_arg1 = data.readString();
+this.renameResource(_arg0, _arg1);
 reply.writeNoException();
 return true;
 }
@@ -144,6 +155,22 @@ _reply.recycle();
 _data.recycle();
 }
 }
+@Override public void renameResource(java.lang.String oldURI, java.lang.String newURI) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(oldURI);
+_data.writeString(newURI);
+mRemote.transact(Stub.TRANSACTION_renameResource, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
 @Override public java.lang.String getAppId() throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
@@ -165,10 +192,12 @@ return _result;
 static final int TRANSACTION_handleNotification = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
 static final int TRANSACTION_handleQuery = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
 static final int TRANSACTION_handleKBReady = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
-static final int TRANSACTION_getAppId = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+static final int TRANSACTION_renameResource = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+static final int TRANSACTION_getAppId = (android.os.IBinder.FIRST_CALL_TRANSACTION + 4);
 }
 public void handleNotification(java.lang.String notification) throws android.os.RemoteException;
 public boolean handleQuery(java.lang.String query) throws android.os.RemoteException;
 public void handleKBReady(java.lang.String userId) throws android.os.RemoteException;
+public void renameResource(java.lang.String oldURI, java.lang.String newURI) throws android.os.RemoteException;
 public java.lang.String getAppId() throws android.os.RemoteException;
 }

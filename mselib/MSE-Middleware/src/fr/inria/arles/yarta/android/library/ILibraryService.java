@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/grosca/work/yarta/trunk/mselib/libapps/android/YartaLibrary/src/fr/inria/arles/yarta/android/library/ILibraryService.aidl
+ * Original file: D:\\work\\yarta\\mselib\\libapps\\android\\YartaLibrary\\src\\fr\\inria\\arles\\yarta\\android\\library\\ILibraryService.aidl
  */
 package fr.inria.arles.yarta.android.library;
 public interface ILibraryService extends android.os.IInterface

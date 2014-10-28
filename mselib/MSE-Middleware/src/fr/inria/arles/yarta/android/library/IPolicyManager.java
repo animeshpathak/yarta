@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/grosca/work/yarta/trunk/mselib/libapps/android/YartaLibrary/src/fr/inria/arles/yarta/android/library/IPolicyManager.aidl
+ * Original file: D:\\work\\yarta\\mselib\\libapps\\android\\YartaLibrary\\src\\fr\\inria\\arles\\yarta\\android\\library\\IPolicyManager.aidl
  */
 package fr.inria.arles.yarta.android.library;
 public interface IPolicyManager extends android.os.IInterface

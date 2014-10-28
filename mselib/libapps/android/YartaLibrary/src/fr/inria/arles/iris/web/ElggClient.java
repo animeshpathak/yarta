@@ -735,7 +735,7 @@ public class ElggClient {
 		List<GroupItem> groups = new ArrayList<GroupItem>();
 
 		JSONObject json = callMethod("group.get_groups", GET, "context",
-				"user", "username", username);
+				"user", "username", username, "offset", 0);
 		int result = checkErrors(json);
 
 		try {

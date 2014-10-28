@@ -1,6 +1,5 @@
 package fr.inria.arles.iris.bridge;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +22,7 @@ import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import fr.inria.arles.yarta.middleware.msemanagement.RemoteSAM;
 import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Message;
@@ -33,10 +33,13 @@ import fr.inria.arles.yarta.resources.Message;
  */
 public class IrisBridge implements WebCallback {
 
+	private static final long KBIdleTimeout = 10 * 1000;
+
 	private static ElggClient client = ElggClient.getInstance();
 
 	private MSEApplication app;
 	private MSEKnowledgeBase kb;
+	private RemoteSAM remoteSAM;
 
 	private boolean loggedin = false;
 	private boolean nointernet = false;
@@ -45,9 +48,10 @@ public class IrisBridge implements WebCallback {
 	private Notification notification;
 
 	public IrisBridge(Context context, MSEApplication app, KnowledgeBase kb,
-			ContentClientPictures content) {
+			ContentClientPictures content, RemoteSAM remoteSAM) {
 		this.app = app;
 		this.kb = (MSEKnowledgeBase) kb;
+		this.remoteSAM = remoteSAM;
 
 		util = new YartaContentProxy(kb, content);
 		notification = new Notification(context);
@@ -74,8 +78,6 @@ public class IrisBridge implements WebCallback {
 		// no internet
 	}
 
-	/********************** WRITE CALLBACKS ***************************************/
-
 	/**
 	 * Gets fired when a new resource is being added.
 	 * 
@@ -83,12 +85,8 @@ public class IrisBridge implements WebCallback {
 	 * @param typeURI
 	 */
 	public void onAddResource(String nodeURI, String typeURI) {
-		lastWrite = System.currentTimeMillis();
-		synchronized (resourceQueue) {
-			if (typeURI.equals(Content.typeURI)
-					|| typeURI.equals(Message.typeURI)) {
-				resourceQueue.add(new QueueItem(nodeURI, typeURI));
-			}
+		if (typeURI.equals(Content.typeURI) || typeURI.equals(Message.typeURI)) {
+			queue.push(new Queue.Item(nodeURI, typeURI));
 		}
 	}
 
@@ -100,42 +98,13 @@ public class IrisBridge implements WebCallback {
 	 * @param obj
 	 */
 	public void onAddTriple(Node sub, Node pre, Node obj) {
-		lastWrite = System.currentTimeMillis();
-
-		synchronized (resourceQueue) {
-			if (pre.getName().equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
-				resourceQueue.add(new QueueItem(sub, pre, obj));
-			}
+		if (pre.getName().equals(Agent.PROPERTY_ISMEMBEROF_URI)) {
+			queue.push(new Queue.Item(sub, pre, obj));
 		}
 	}
 
-	static class QueueItem {
-		public String nodeURI;
-		public String typeURI;
+	private Queue queue = new Queue();
 
-		public QueueItem(String nodeURI, String typeURI) {
-			this.nodeURI = nodeURI;
-			this.typeURI = typeURI;
-		}
-
-		public Node s;
-		public Node p;
-		public Node o;
-
-		public QueueItem(Node s, Node p, Node o) {
-			this.s = s;
-			this.p = p;
-			this.o = o;
-		}
-
-		public boolean isTriple() {
-			return s != null && p != null && o != null;
-		}
-	}
-
-	private static final long IdleTimeout = 1000;
-	private long lastWrite = 0;
-	private List<QueueItem> resourceQueue = new ArrayList<IrisBridge.QueueItem>();
 	private Runnable queueTask = new Runnable() {
 
 		@Override
@@ -147,10 +116,8 @@ public class IrisBridge implements WebCallback {
 						Thread.sleep(1000);
 					}
 					long now = System.currentTimeMillis();
-					if (now - lastWrite >= IdleTimeout) {
-						synchronized (resourceQueue) {
-							dequeueItems();
-						}
+					if (now - queue.getLastWrite() >= KBIdleTimeout) {
+						processQueueItems();
 					}
 					Thread.sleep(1000);
 				} catch (InterruptedException ex) {
@@ -161,9 +128,9 @@ public class IrisBridge implements WebCallback {
 	};
 	private Thread queueThread = new Thread(queueTask);
 
-	private void dequeueItems() {
-		while (resourceQueue.size() > 0) {
-			QueueItem resource = resourceQueue.get(0);
+	private void processQueueItems() {
+		while (queue.size() > 0) {
+			Queue.Item resource = queue.head();
 			try {
 				nointernet = false;
 				int result = ElggClient.RESULT_OK;
@@ -185,14 +152,14 @@ public class IrisBridge implements WebCallback {
 					break;
 				case ElggClient.RESULT_OK:
 				case ElggClient.RESULT_ERROR:
-					resourceQueue.remove(0);
+					queue.pop();
 					break;
 				}
 
 				if (!loggedin || nointernet)
 					break;
 			} catch (Exception ex) {
-				resourceQueue.remove(0);
+				queue.pop();
 				ex.printStackTrace();
 			}
 		}
@@ -236,8 +203,6 @@ public class IrisBridge implements WebCallback {
 
 			// is a comment
 			if (triples.size() > 0) {
-				log("processCreatedResource(%s, %s)", nodeURI, typeURI);
-
 				String postId = triples.get(0).getSubject().getName();
 				postId = postId.substring(postId.indexOf('_') + 1);
 
@@ -248,8 +213,32 @@ public class IrisBridge implements WebCallback {
 
 				switch (result) {
 				case ElggClient.RESULT_OK:
-					kb.removeResource(nodeURI);
-					ensurePostComments(triples.get(0).getSubject());
+					String newURI = null;
+					List<PostItem> posts = client.getGroupPostComments(postId);
+					if (posts.size() > 0) {
+						PostItem last = posts.get(0);
+						for (PostItem post : posts) {
+							if (!post.getOwner().getUsername()
+									.equals(client.getUsername()))
+								continue;
+
+							if (post.getTime() > last.getTime()) {
+								last = post;
+							}
+						}
+
+						newURI = Content.typeURI + "_" + last.getGuid();
+
+						// replace this resource everywhere
+						renameResource(nodeURI, newURI);
+
+						util.createPost(last);
+						util.ensureTriple(
+								triples.get(0).getSubject().getName(),
+								Content.PROPERTY_HASREPLY_URI, newURI);
+
+						notifyApp("comment created.");
+					}
 					break;
 				}
 			} else {
@@ -259,8 +248,6 @@ public class IrisBridge implements WebCallback {
 						client.getUsername());
 
 				if (triples.size() > 0) {
-					log("processCreatedResource(%s, %s)", nodeURI, typeURI);
-
 					String groupId = triples.get(0).getSubject().getName();
 					groupId = groupId.substring(groupId.indexOf('_') + 1);
 
@@ -273,8 +260,32 @@ public class IrisBridge implements WebCallback {
 
 					switch (result) {
 					case ElggClient.RESULT_OK:
-						kb.removeResource(nodeURI);
-						notifyApp("post created.");
+						String newURI = null;
+						List<PostItem> posts = client.getGroupPosts(groupId);
+						if (posts.size() > 0) {
+							PostItem last = posts.get(0);
+							for (PostItem post : posts) {
+								if (!post.getOwner().getUsername()
+										.equals(client.getUsername()))
+									continue;
+
+								if (post.getTime() > last.getTime()) {
+									last = post;
+								}
+							}
+
+							newURI = Content.typeURI + "_" + last.getGuid();
+
+							// replace future writes
+							renameResource(nodeURI, newURI);
+
+							util.createPost(last);
+							util.ensureTriple(triples.get(0).getSubject()
+									.getName(), Group.PROPERTY_HASCONTENT_URI,
+									newURI);
+
+							notifyApp("post created.");
+						}
 						break;
 					}
 				}
@@ -284,7 +295,17 @@ public class IrisBridge implements WebCallback {
 		return result;
 	}
 
-	/********************** READ CALLBACKS ****************************************/
+	/**
+	 * Renames a resource node everywhere: - KB - Queue - Client SAMS
+	 * 
+	 * @param oldURI
+	 * @param newURI
+	 */
+	private void renameResource(String oldURI, String newURI) {
+		remoteSAM.renameResource(oldURI, newURI);
+		queue.replace(oldURI, newURI);
+		kb.renameResource(oldURI, newURI);
+	}
 
 	/**
 	 * Ensures a given p, o triple will exist.
@@ -501,7 +522,7 @@ public class IrisBridge implements WebCallback {
 			notifyApp(PostListEmpty);
 		}
 	}
-	
+
 	public static final String PostList = "post list updated.";
 	public static final String PostListEmpty = "post list empty.";
 
@@ -513,8 +534,6 @@ public class IrisBridge implements WebCallback {
 		boolean update = false;
 		for (PostItem post : posts) {
 			update |= util.createPost(post);
-
-			// TODO: add creator here
 
 			String replyId = Content.typeURI + "_" + post.getGuid();
 			update |= util.ensureTriple(node.getName(),

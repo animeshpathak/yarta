@@ -62,7 +62,7 @@ public class BlogActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
@@ -163,7 +163,8 @@ public class BlogActivity extends BaseActivity implements
 		}
 	};
 
-	public void refreshUI() {
+	@Override
+	public void refreshUI(String notification) {
 		runner.runBackground(new Job() {
 
 			private PostItem item;

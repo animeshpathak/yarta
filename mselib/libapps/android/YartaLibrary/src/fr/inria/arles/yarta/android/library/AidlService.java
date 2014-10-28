@@ -14,6 +14,7 @@ import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
+import fr.inria.arles.yarta.middleware.msemanagement.RemoteSAM;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteCallbackList;
@@ -25,7 +26,7 @@ import android.os.RemoteException;
  * 
  */
 public class AidlService extends ILibraryService.Stub implements Receiver,
-		MSEApplication {
+		MSEApplication, RemoteSAM {
 
 	/**
 	 * MSE initializer;
@@ -88,7 +89,28 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		this.knowledgeBase = knowledgeBase;
 		this.communicationMgr = communicationMgr;
 		this.bridge = new IrisBridge((Context) init, this, knowledgeBase,
-				contentClient);
+				contentClient, this);
+	}
+
+	@Override
+	public void renameResource(String oldURI, String newURI) {
+		tracker.beforeAPIUsage();
+
+		int n = appCallbacks.beginBroadcast();
+		log("renameResource <%d>", n);
+
+		for (int i = 0; i < n; i++) {
+			IMSEApplication application = appCallbacks.getBroadcastItem(i);
+			try {
+				log("AidlService.renameResource(%s, %s)", oldURI, newURI);
+				application.renameResource(oldURI, newURI);
+			} catch (Exception ex) {
+				log("AidlService.renameResource ex: %s", ex);
+			}
+		}
+		appCallbacks.finishBroadcast();
+
+		tracker.sendAPIUsage("AidlService.renameResource");
 	}
 
 	@Override
