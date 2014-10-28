@@ -18,10 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Person;
-import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Content;
 
@@ -123,8 +121,8 @@ public class ContentActivity extends BaseActivity implements
 		}
 		for (Agent agent : post.getCreator_inverse()) {
 			setCtrlText(R.id.name, Html.fromHtml(agent.getName()));
-			Person person = new PersonImpl(getSAM(), new MSEResource(
-					agent.getUniqueId(), Person.typeURI));
+			Person person = (Person) getSAM().getResourceByURI(
+					agent.getUniqueId());
 
 			Bitmap bitmap = null;
 

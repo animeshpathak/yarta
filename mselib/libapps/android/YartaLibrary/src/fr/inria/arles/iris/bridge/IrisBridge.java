@@ -33,7 +33,7 @@ import fr.inria.arles.yarta.resources.Message;
  */
 public class IrisBridge implements WebCallback {
 
-	private static final long KBIdleTimeout = 10 * 1000;
+	private static final long KBIdleTimeout = 1000;
 
 	private static ElggClient client = ElggClient.getInstance();
 

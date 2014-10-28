@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.bridge.IrisBridge;
 import fr.inria.arles.yarta.android.library.resources.Group;
-import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Content;
 
 public class GroupPostsFragment extends BaseFragment implements
@@ -28,7 +26,7 @@ public class GroupPostsFragment extends BaseFragment implements
 	private Group group;
 
 	public void setGroupGuid(String groupGuid) {
-		group = new GroupImpl(sam, new MSEResource(groupGuid, Group.typeURI));
+		group = (Group) sam.getResourceByURI(groupGuid);
 	}
 
 	@Override

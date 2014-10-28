@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Person;
-import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.KBException;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 
 public class FriendsFragment extends BaseFragment implements
@@ -63,8 +61,8 @@ public class FriendsFragment extends BaseFragment implements
 					items = new ArrayList<Person>();
 					Person me = sam.getMe();
 					for (Agent agent : me.getKnows_inverse()) {
-						items.add(new PersonImpl(sam, new MSEResource(agent
-								.getUniqueId(), Person.typeURI)));
+						items.add((Person) sam.getResourceByURI(agent
+								.getUniqueId()));
 					}
 				} catch (KBException ex) {
 					ex.printStackTrace();

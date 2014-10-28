@@ -11,9 +11,7 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
 import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.android.library.resources.Person;
-import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Message;
@@ -94,8 +92,7 @@ public class ThreadsListAdapter extends BaseAdapter {
 		Person person = null;
 		for (Agent agent : thread.getParticipatesTo_inverse()) {
 			if (!agent.equals(owner)) {
-				person = new PersonImpl(sam, new MSEResource(
-						agent.getUniqueId(), Person.typeURI));
+				person = (Person) sam.getResourceByURI(agent.getUniqueId());
 			}
 		}
 

@@ -16,11 +16,9 @@ import android.widget.ListView;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Conversation;
-import fr.inria.arles.yarta.resources.ConversationImpl;
 import fr.inria.arles.yarta.resources.Message;
 
 public class MessagesActivity extends BaseActivity implements
@@ -57,8 +55,7 @@ public class MessagesActivity extends BaseActivity implements
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		String threadId = getIntent().getStringExtra(ThreadId);
-		conversation = new ConversationImpl(getSAM(), new MSEResource(threadId,
-				Conversation.typeURI));
+		conversation = (Conversation) getSAM().getResourceByURI(threadId);
 
 		adapter = new MessagesListAdapter(this, getSAM());
 

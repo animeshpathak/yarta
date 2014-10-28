@@ -9,17 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Group;
-import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
 public class GroupDescriptionFragment extends BaseFragment {
 
 	private Group group;
 
 	public void setGroupGuid(String groupGuid) {
-		group = new GroupImpl(sam, new MSEResource(groupGuid, Group.typeURI));
+		group = (Group) sam.getResourceByURI(groupGuid);
 	}
 
 	@Override
