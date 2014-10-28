@@ -11,6 +11,7 @@ import java.util.UUID;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.MSELiteral;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.knowledgebase.interfaces.ThinKnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
@@ -723,6 +724,27 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 				resourceCache.put(className, uris);
 			}
 			uris.put(uri, resource);
+		}
+	}
+
+	/**
+	 * Renames a resource ID and changes the cache. Should not be used by
+	 * applications.
+	 * 
+	 * @param oldURI
+	 * @param newURI
+	 */
+	public void renameResource(String oldURI, String newURI) {
+		synchronized (resourceCache) {
+			for (String className : resourceCache.keySet()) {
+				Map<String, Object> uris = resourceCache.get(className);
+
+				if (uris.containsKey(oldURI)) {
+					YartaResource resource = (YartaResource) uris.get(oldURI);
+					MSEResource node = (MSEResource) resource.getNode();
+					node.setURI(newURI);
+				}
+			}
 		}
 	}
 

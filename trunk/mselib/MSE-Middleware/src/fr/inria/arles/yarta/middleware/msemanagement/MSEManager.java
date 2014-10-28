@@ -12,7 +12,7 @@ import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 /**
  * The Class that faces the user program. Mostly calls other classes.
  */
-public class MSEManager {
+public class MSEManager implements RemoteSAM {
 
 	public static final String LOGTAG = "Yarta-MSEManager";
 
@@ -54,7 +54,7 @@ public class MSEManager {
 		if (isAndroid()) {
 			commManager = new fr.inria.arles.yarta.android.library.CMClient();
 			knowledgeBase = new fr.inria.arles.yarta.android.library.KBClient(
-					app, context);
+					app, context, this);
 		} else {
 			commManager = new fr.inria.arles.yarta.desktop.library.CMClient();
 			knowledgeBase = new fr.inria.arles.yarta.desktop.library.KBClient(
@@ -68,6 +68,13 @@ public class MSEManager {
 		storageAccessManager = new StorageAccessManager();
 		storageAccessManager.setKnowledgeBase(knowledgeBase);
 		storageAccessManager.setOwnerID(ownerUID);
+	}
+
+	@Override
+	public void renameResource(String oldURI, String newURI) {
+		if (storageAccessManager != null) {
+			storageAccessManager.renameResource(oldURI, newURI);
+		}
 	}
 
 	/**

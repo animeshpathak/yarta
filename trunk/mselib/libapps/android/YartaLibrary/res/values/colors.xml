@@ -8,7 +8,7 @@
     <color name="AppTextColor">#000000</color>
     <color name="AppTextColorStrong">#f17b3e</color>
     <color name="AppTextColorLow">#666666</color>
-    <color name="AppBackground">#e0d9e0</color>
+    <color name="AppBackground">#e0dae0</color>
     <color name="AppDrawerBackground">#dbd6db</color>
     <color name="AppDrawerTextSelected">#272727</color>
     <color name="AppDrawerText">#272727</color>

@@ -27,15 +27,18 @@ public class MSEResource implements Node {
 	 *            first-class MSE concepts
 	 */
 	public MSEResource(String uri, String type) {
-		this.URI = uri;
 		this.MSEtype = type;
+		setURI(uri);
+	}
+
+	public void setURI(String uri) {
+		this.URI = uri;
 		String[] names = uri.split("#");
 		this.namespace = names[0] + '#';
 		if (!(names.length == 1))
 			this.relName = names[1];
 		else
 			this.relName = "";
-
 	}
 
 	/**

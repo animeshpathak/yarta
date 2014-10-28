@@ -24,7 +24,6 @@ public class GroupsFragment extends BaseFragment implements
 
 	private GroupsListAdapter adapter;
 	private PullToRefreshListView list;
-	private List<Group> items;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +51,8 @@ public class GroupsFragment extends BaseFragment implements
 	@Override
 	public void refreshUI(String notification) {
 		execute(new Job() {
+
+			private List<Group> items;
 
 			@Override
 			public void doWork() {
@@ -86,7 +87,7 @@ public class GroupsFragment extends BaseFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Group item = items.get(position);
+		Group item = (Group) adapter.getItem(position);
 		Intent intent = new Intent(getSherlockActivity(), GroupActivity.class);
 		intent.putExtra(GroupActivity.GroupGuid, item.getUniqueId());
 		startActivity(intent);

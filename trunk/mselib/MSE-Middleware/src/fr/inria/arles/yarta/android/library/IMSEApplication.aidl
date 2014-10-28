@@ -8,5 +8,7 @@ interface IMSEApplication {
 
 	void handleKBReady(in String userId);
 	
+	void renameResource(in String oldURI, in String newURI);
+	
 	String getAppId();
 }

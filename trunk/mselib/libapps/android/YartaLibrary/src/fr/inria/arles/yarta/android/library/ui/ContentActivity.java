@@ -24,7 +24,6 @@ import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Content;
-import fr.inria.arles.yarta.resources.ContentImpl;
 
 public class ContentActivity extends BaseActivity implements
 		ContentListAdapter.Callback, ContentCommentDialog.Callback {
@@ -51,14 +50,14 @@ public class ContentActivity extends BaseActivity implements
 			postId = Content.typeURI + "_" + postId;
 		}
 
-		post = new ContentImpl(getSAM(), new MSEResource(postId,
-				Content.typeURI));
+		post = (Content) getSAM().getResourceByURI(postId);
 
 		adapter = new ContentListAdapter(this);
 		adapter.setCallback(this);
 
 		list = new ListViewContainer(adapter,
-				(ViewGroup) findViewById(R.id.itemsContainer), findViewById(R.id.listEmpty));
+				(ViewGroup) findViewById(R.id.itemsContainer),
+				findViewById(R.id.listEmpty));
 
 		trackUI("PostView");
 	}
@@ -67,7 +66,7 @@ public class ContentActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		refreshUI();
+		refreshUI(null);
 	}
 
 	@Override
@@ -117,7 +116,8 @@ public class ContentActivity extends BaseActivity implements
 		});
 	}
 
-	public void refreshUI() {
+	@Override
+	public void refreshUI(String notification) {
 		if (post == null) {
 			return;
 		}

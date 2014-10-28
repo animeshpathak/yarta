@@ -23,6 +23,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.util.ResourceUtils;
 
 import fr.inria.arles.yarta.Criteria;
 import fr.inria.arles.yarta.knowledgebase.interfaces.*;
@@ -235,12 +236,11 @@ public class MSEKnowledgeBase implements KnowledgeBase {
 		}
 	}
 
-	public void removeResource(String resourceUri) {
+	public void renameResource(String resourceUri, String newURI) {
 		synchronized (model) {
 			Resource resource = model.getResource(resourceUri);
 			if (resource != null) {
-				model.removeAll(resource, null, (RDFNode) null);
-				model.removeAll(null, null, resource);
+				ResourceUtils.renameResource(resource, newURI);
 			}
 		}
 	}
