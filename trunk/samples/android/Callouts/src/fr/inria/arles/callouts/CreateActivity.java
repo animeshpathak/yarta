@@ -2,10 +2,8 @@ package fr.inria.arles.callouts;
 
 import java.util.Calendar;
 
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Group;
-import fr.inria.arles.yarta.resources.GroupImpl;
 import fr.inria.arles.yarta.resources.Person;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -109,8 +107,7 @@ public class CreateActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_ACCEPT:
-			group = new GroupImpl(getSAM(), new MSEResource(
-					Constants.getGroupId(), Group.typeURI));
+			group = (Group) getSAM().getResourceByURI(Constants.getGroupId());
 
 			String title = getCtrlText(R.id.title);
 			String date = getCtrlText(R.id.date);
