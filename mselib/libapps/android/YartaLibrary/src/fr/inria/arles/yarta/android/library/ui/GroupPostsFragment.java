@@ -81,7 +81,7 @@ public class GroupPostsFragment extends BaseFragment implements
 			public void doWork() {
 				items = new ArrayList<Content>();
 
-				if (sam != null) {
+				if (sam != null && group != null) {
 					items.addAll(group.getHasContent());
 					MessagesActivity.sort(items, false);
 				}

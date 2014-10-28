@@ -39,6 +39,9 @@ public class GroupDescriptionFragment extends BaseFragment {
 
 	@Override
 	public void refreshUI(String notification) {
+		if (group == null) {
+			return;
+		}
 		if (group.getName() != null) {
 			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
 		}
