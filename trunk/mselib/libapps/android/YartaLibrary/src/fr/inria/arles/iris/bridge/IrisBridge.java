@@ -17,6 +17,7 @@ import fr.inria.arles.yarta.android.library.resources.Agent;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.knowledgebase.MSEKnowledgeBase;
+import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Triple;
@@ -329,6 +330,22 @@ public class IrisBridge implements WebCallback {
 					if (object.getName().equals(Conversation.typeURI)) {
 						ensureConversations();
 					}
+				}
+			}
+		}).start();
+	}
+
+	public void onGetResourceByURINoPolicies(final String nodeURI) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				boolean missing = kb.getResourceByURINoPolicies(nodeURI) == null;
+
+				if (missing && nodeURI.contains(Content.typeURI)) {
+					ensurePost(new MSEResource(nodeURI, Content.typeURI));
+				} else if (missing && nodeURI.contains(Group.typeURI)) {
+					ensureGroup(new MSEResource(nodeURI, Group.typeURI));
 				}
 			}
 		}).start();

@@ -35,20 +35,21 @@ public class ContentActivity extends BaseActivity implements
 	private ContentListAdapter adapter;
 	private ListViewContainer list;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_post);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+	private String getPostId() {
 		String postId = getIntent().getStringExtra(PostGuid);
 
 		if (!postId.contains(Content.baseMSEURI)) {
 			// it's comming from river
 			postId = Content.typeURI + "_" + postId;
 		}
+		return postId;
+	}
 
-		post = (Content) getSAM().getResourceByURI(postId);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_post);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		adapter = new ContentListAdapter(this);
 		adapter.setCallback(this);
@@ -116,6 +117,8 @@ public class ContentActivity extends BaseActivity implements
 
 	@Override
 	public void refreshUI(String notification) {
+		post = (Content) getSAM().getResourceByURI(getPostId());
+
 		if (post == null) {
 			return;
 		}

@@ -213,6 +213,7 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			// knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase
 					.getResourceByURINoPolicies(nodeURI));
+			bridge.onGetResourceByURINoPolicies(nodeURI);
 		} catch (Exception ex) {
 			logError("AidlService.getResourceByURINoPolicies ex: %s", ex);
 		}
