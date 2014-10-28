@@ -1,9 +1,7 @@
 package fr.inria.arles.callouts;
 
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Group;
-import fr.inria.arles.yarta.resources.GroupImpl;
 import fr.inria.arles.yarta.resources.Person;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,8 +60,8 @@ public class AllCalloutsActivity extends BaseActivity implements
 		if (getSAM() != null) {
 			try {
 				if (group == null || me == null) {
-					group = new GroupImpl(getSAM(), new MSEResource(
-							Constants.getGroupId(), Group.typeURI));
+					group = (Group) getSAM().getResourceByURI(
+							Constants.getGroupId());
 					me = getSAM().getMe();
 
 					if (me != null) {
