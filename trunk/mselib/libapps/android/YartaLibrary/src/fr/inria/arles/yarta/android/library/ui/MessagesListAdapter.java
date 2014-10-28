@@ -4,9 +4,7 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
 import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.android.library.resources.Person;
-import fr.inria.arles.yarta.android.library.resources.PersonImpl;
 import fr.inria.arles.yarta.android.library.resources.Picture;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Message;
 
@@ -115,8 +113,7 @@ public class MessagesListAdapter extends BaseAdapter {
 			if (agent.equals(me)) {
 				sent = true;
 			}
-			Person person = new PersonImpl(sam, new MSEResource(
-					agent.getUniqueId(), Person.typeURI));
+			Person person = (Person) sam.getResourceByURI(agent.getUniqueId());
 			for (Picture picture : person.getPicture()) {
 				bitmap = content.getBitmap(picture);
 			}

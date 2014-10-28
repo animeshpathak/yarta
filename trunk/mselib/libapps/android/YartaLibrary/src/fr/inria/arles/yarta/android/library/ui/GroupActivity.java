@@ -10,11 +10,9 @@ import android.text.Html;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Group;
-import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.GenericPageAdapter;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
 public class GroupActivity extends BaseActivity implements
 		ContentDialog.Callback {
@@ -95,8 +93,7 @@ public class GroupActivity extends BaseActivity implements
 		if (getSAM() == null) {
 			return;
 		}
-		group = new GroupImpl(getSAM(), new MSEResource(groupGuid,
-				Group.typeURI));
+		group = (Group) getSAM().getResourceByURI(groupGuid);
 		if (group.getName() != null) {
 			setTitle(Html.fromHtml(group.getName()));
 		}

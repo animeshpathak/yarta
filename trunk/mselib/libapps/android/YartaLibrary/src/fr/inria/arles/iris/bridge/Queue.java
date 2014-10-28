@@ -47,8 +47,8 @@ public class Queue {
 		synchronized (operations) {
 			for (Item item : operations) {
 				if (item.isTriple()) {
-					item.s = replaceNode(item.s, oldURI, newURI);
-					item.o = replaceNode(item.o, oldURI, newURI);
+					replaceNode(item.s, oldURI, newURI);
+					replaceNode(item.o, oldURI, newURI);
 				} else {
 					if (item.nodeURI.equals(oldURI)) {
 						item.nodeURI = newURI;
@@ -66,11 +66,11 @@ public class Queue {
 	 * @param newURI
 	 * @return
 	 */
-	private Node replaceNode(Node node, String oldURI, String newURI) {
+	private void replaceNode(Node node, String oldURI, String newURI) {
 		if (node.getName().equals(oldURI)) {
-			return new MSEResource(newURI, node.getType());
+			MSEResource resource = (MSEResource) node;
+			resource.setURI(newURI);
 		}
-		return node;
 	}
 
 	public long getLastWrite() {

@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Group;
-import fr.inria.arles.yarta.android.library.resources.GroupImpl;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 
 public class GroupsFragment extends BaseFragment implements
 		PullToRefreshListView.OnRefreshListener,
@@ -63,8 +61,8 @@ public class GroupsFragment extends BaseFragment implements
 
 					for (fr.inria.arles.yarta.resources.Group group : person
 							.getIsMemberOf()) {
-						items.add(new GroupImpl(sam, new MSEResource(group
-								.getUniqueId(), Group.typeURI)));
+						items.add((Group) sam.getResourceByURI(group
+								.getUniqueId()));
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();

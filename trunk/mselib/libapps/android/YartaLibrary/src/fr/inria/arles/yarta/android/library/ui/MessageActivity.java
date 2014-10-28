@@ -20,11 +20,9 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.knowledgebase.MSEResource;
 import fr.inria.arles.yarta.resources.Agent;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Message;
-import fr.inria.arles.yarta.resources.MessageImpl;
 
 public class MessageActivity extends BaseActivity {
 
@@ -75,8 +73,7 @@ public class MessageActivity extends BaseActivity {
 	public void refreshUI(String notification) {
 		if (getIntent().hasExtra(MessageId)) {
 			String messageId = getIntent().getStringExtra(MessageId);
-			message = new MessageImpl(getSAM(), new MSEResource(messageId,
-					Message.typeURI));
+			message = (Message) getSAM().getResourceByURI(messageId);
 			loadMessage();
 		} else {
 			runner.runBackground(new Job() {
@@ -96,8 +93,7 @@ public class MessageActivity extends BaseActivity {
 
 					if (getIntent().hasExtra(ReplyId)) {
 						String replyId = getIntent().getStringExtra(ReplyId);
-						reply = new MessageImpl(getSAM(), new MSEResource(
-								replyId, Message.typeURI));
+						reply = (Message) getSAM().getResourceByURI(replyId);
 
 						peer = getPeer(reply, me);
 
