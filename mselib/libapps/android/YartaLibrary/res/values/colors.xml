@@ -2,7 +2,7 @@
 <resources>
 
     <!-- IRIS -->
-    <color name="AppTitleBackground">#732b4a</color>
+    <color name="AppTitleBackground">#643A48</color>
     <color name="AppTitleTextColor">#ffffff</color>
     <color name="AppMenuBackground">#84455a</color>
     <color name="AppTextColor">#000000</color>
