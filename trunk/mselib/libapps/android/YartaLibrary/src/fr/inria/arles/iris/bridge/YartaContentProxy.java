@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import android.graphics.Bitmap;
+
 import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.iris.web.GroupItem;
 import fr.inria.arles.iris.web.MessageItem;
@@ -287,20 +289,15 @@ public class YartaContentProxy {
 				kb.addTriple(s, getNode(Group.PROPERTY_PICTURE_URI), p,
 						getUsername());
 
-				content.setBitmap(pictureId, item.getAvatarURL());
-
+				content.setBitmap(pictureId, getGroupIcon(item, highres));
 				update = true;
 			} else {
 				pictureId = pictureId.substring(pictureId.indexOf('#') + 1);
 
 				if (content.getData(pictureId) == null) {
-					content.setBitmap(pictureId, item.getAvatarURL());
+					content.setBitmap(pictureId, getGroupIcon(item, highres));
 				} else if (highres) {
-					String avatarURL = item.getAvatarURL();
-					if (avatarURL.endsWith("small")) {
-						avatarURL = avatarURL.replace("small", "medium");
-					}
-					content.setBitmap(pictureId, item.getAvatarURL());
+					content.setBitmap(pictureId, getGroupIcon(item, true));
 				}
 			}
 		} catch (Exception ex) {
@@ -308,6 +305,11 @@ public class YartaContentProxy {
 		}
 
 		return update;
+	}
+
+	private Bitmap getGroupIcon(GroupItem group, boolean highres) {
+		return ElggClient.getInstance().getGroupIcon(group.getGuid(),
+				highres ? "large" : "medium");
 	}
 
 	/**

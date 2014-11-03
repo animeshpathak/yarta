@@ -13,6 +13,10 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import fr.inria.arles.yarta.android.library.util.Base64;
 import fr.inria.arles.yarta.logging.YLoggerFactory;
 
 /**
@@ -729,6 +733,25 @@ public class ElggClient {
 
 		log("%s: result<%d>, lastError<%s>", "getGroup", result, lastError);
 		return group;
+	}
+
+	public Bitmap getGroupIcon(String guid, String size) {
+		JSONObject json = callMethod("group.get_icon", POST, "guid", guid,
+				"size", size);
+		int result = checkErrors(json);
+
+		Bitmap bitmap = null;
+		try {
+			String content64 = json.getJSONObject("result")
+					.getString("content");
+			byte[] data = Base64.decode(content64);
+			bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+		} catch (Exception ex) {
+			lastError = ex.toString();
+		}
+
+		log("%s: result<%d>, lastError<%s>", "getGroupIcon", result, lastError);
+		return bitmap;
 	}
 
 	public List<GroupItem> getGroups(String username) {
