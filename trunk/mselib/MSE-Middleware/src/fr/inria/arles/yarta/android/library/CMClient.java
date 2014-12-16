@@ -1,9 +1,13 @@
 package fr.inria.arles.yarta.android.library;
 
+import java.util.List;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.IBinder;
@@ -169,13 +173,40 @@ public class CMClient implements CommunicationManager {
 		this.receiver = receiver;
 	}
 
+	public static Intent createExplicitFromImplicitIntent(Context context,
+			Intent implicitIntent) {
+		// Retrieve all services that can match the given intent
+		PackageManager pm = context.getPackageManager();
+		List<ResolveInfo> resolveInfo = pm.queryIntentServices(implicitIntent,
+				0);
+
+		// Make sure only one match was found
+		if (resolveInfo == null || resolveInfo.size() != 1) {
+			return null;
+		}
+
+		// Get component info and create ComponentName
+		ResolveInfo serviceInfo = resolveInfo.get(0);
+		String packageName = serviceInfo.serviceInfo.packageName;
+		String className = serviceInfo.serviceInfo.name;
+		ComponentName component = new ComponentName(packageName, className);
+
+		// Create a new intent. Use the old one for extras and such reuse
+		Intent explicitIntent = new Intent(implicitIntent);
+
+		// Set the component to be explicit
+		explicitIntent.setComponent(component);
+
+		return explicitIntent;
+	}
+
 	/**
 	 * Does the service starting.
 	 */
 	private void doStartService() {
 		Intent intent = new Intent(
 				"fr.inria.arles.yarta.android.library.LibraryService");
-		context.startService(intent);
+		context.startService(createExplicitFromImplicitIntent(context, intent));
 	}
 
 	/**
@@ -184,7 +215,7 @@ public class CMClient implements CommunicationManager {
 	private void doBindService() {
 		Intent intent = new Intent(
 				"fr.inria.arles.yarta.android.library.LibraryService");
-		boolean bound = context.bindService(intent, mConnection,
+		boolean bound = context.bindService(createExplicitFromImplicitIntent(context, intent), mConnection,
 				Context.BIND_AUTO_CREATE);
 
 		log("serviceBound: %b", bound);
