@@ -473,13 +473,16 @@ public class KBClient implements KnowledgeBase {
 	private void doStartService() {
 		Intent intent = new Intent(
 				"fr.inria.arles.yarta.android.library.LibraryService");
-		context.startService(intent);
+		context.startService(CMClient.createExplicitFromImplicitIntent(context,
+				intent));
 	}
 
 	private void doBindService() {
 		Intent intent = new Intent(
 				"fr.inria.arles.yarta.android.library.LibraryService");
-		context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		context.bindService(
+				CMClient.createExplicitFromImplicitIntent(context, intent),
+				mConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	private void doUnbindService() {
