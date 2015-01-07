@@ -130,13 +130,32 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		return false;
 	}
 
-	public void onClickLoginCAS(View view) {
+	/**
+	 * Opens the CAS login page in the browser;
+	 */
+	private void showCas() {
 		String guid = UUID.randomUUID().toString();
 		settings.setString(Settings.USER_RANDOM_GUID, guid);
 
 		String url = Strings.BaseCAS + "guid=" + guid;
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		startActivity(browserIntent);
+	}
+
+	public void onClickLoginCAS(View view) {
+		if (settings.getBoolean(Settings.CAS_SHOW)) {
+			showCas();
+		} else {
+			// show warning
+			CasDialog.show(this, new CasDialog.Handler() {
+
+				@Override
+				public void onProceed(boolean remember) {
+					settings.setBoolean(Settings.CAS_SHOW, remember);
+					showCas();
+				}
+			});
+		}
 	}
 
 	public void onClickLogin(View view) {

@@ -678,7 +678,6 @@ public class ElggClient {
 		} catch (Exception ex) {
 			lastError = ex.toString();
 		}
-
 		log("%s: result<%d>, lastError<%s>", "getUserRequests", result,
 				lastError);
 		return requests;

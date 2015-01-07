@@ -144,5 +144,10 @@
     <string name="topic_time">""Time: "</string>
     <string name="main_no_requests">No notifications.</string>
     <string name="group_description">Description</string>
+    <string name="cas_title">Inria CAS</string>
+    <string name="cas_proceed">Proceed</string>
+    <string name="cas_cancel">Cancel</string>
+    <string name="cas_message">You will be redirected to Inria\'s CAS page.</string>
+    <string name="cas_never_show">Remember this decision</string>
 
 </resources>

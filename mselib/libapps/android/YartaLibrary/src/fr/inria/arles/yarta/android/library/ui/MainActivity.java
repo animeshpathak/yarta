@@ -6,35 +6,30 @@ import java.util.List;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
-import com.sherlock.navigationdrawer.compat.SherlockActionBarDrawerToggle;
+import com.astuetz.PagerSlidingTabStrip;
 
 import fr.inria.arles.iris.R;
 import fr.inria.arles.iris.web.RequestItem;
-import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.FeedbackFragment;
+import fr.inria.arles.yarta.android.library.util.IconPageAdapter;
 import fr.inria.arles.yarta.android.library.util.Utils;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
-import fr.inria.arles.yarta.android.library.util.Settings;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener, RequestsFragment.Callback,
-		TextView.OnEditorActionListener {
+		RequestsFragment.Callback, TextView.OnEditorActionListener {
 
 	private static final int MENU_NOTIFICATIONS = 1;
 
@@ -50,10 +45,29 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public void refreshUI(String notification) {
-		// force first item to be selected if was initialized
-		if (drawerToggle != null && drawerLayout != null && drawerList != null
-				&& drawerAdapter != null) {
-			onDrawerItem(currentPosition);
+		showView(R.id.content);
+		for (int i = 0; i < adapter.getCount(); i++) {
+			BaseFragment fragment = (BaseFragment) adapter.getItem(i);
+			if (fragment != null) {
+				fragment.setRunner(runner);
+				fragment.setSAM(getSAM());
+				fragment.setContentClient(contentClient);
+			}
+		}
+
+		int currentPage = pager.getCurrentItem();
+		if (currentPage > -1 && currentPage < adapter.getCount()) {
+			BaseFragment fragment = (BaseFragment) adapter.getItem(currentPage);
+			fragment.refreshUI(notification);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (findViewById(R.id.content).getVisibility() != View.VISIBLE) {
+			showView(R.id.content);
+		} else {
+			super.onBackPressed();
 		}
 	}
 
@@ -72,25 +86,26 @@ public class MainActivity extends BaseActivity implements
 		return true;
 	}
 
+	MenuItem menuSearch;
+
 	private void showSearchMenu(Menu menu) {
 		final EditText edit = (EditText) menu.findItem(R.id.main_search)
 				.getActionView().findViewById(R.id.search);
 
 		edit.setOnEditorActionListener(this);
 
-		MenuItem menuSearch = menu.findItem(R.id.main_search);
+		menuSearch = menu.findItem(R.id.main_search);
 		menuSearch.setOnActionExpandListener(new OnActionExpandListener() {
 
 			@Override
 			public boolean onMenuItemActionCollapse(MenuItem item) {
-
 				edit.post(new Runnable() {
 
 					@Override
 					public void run() {
 						edit.setText("");
 						edit.clearFocus();
-						hideSoftKeyboard(edit);
+						hideSoftKeyboard();
 
 						refreshUI(null);
 					}
@@ -100,8 +115,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
-				drawerLayout.closeDrawer(drawerList);
-
 				edit.post(new Runnable() {
 					@Override
 					public void run() {
@@ -116,7 +129,7 @@ public class MainActivity extends BaseActivity implements
 		});
 	}
 
-	private void hideSoftKeyboard(View v) {
+	private void hideSoftKeyboard() {
 		InputMethodManager inputManager = (InputMethodManager) this
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -135,9 +148,10 @@ public class MainActivity extends BaseActivity implements
 				Toast.makeText(this, R.string.search_empty_content,
 						Toast.LENGTH_LONG).show();
 			} else {
-				displayFragment(searchFragment);
+				displayFragment(R.id.searchView, searchFragment);
+				showView(R.id.searchView);
 				searchFragment.search(view.getText().toString());
-				hideSoftKeyboard(view);
+				hideSoftKeyboard();
 			}
 		}
 		return true;
@@ -162,8 +176,8 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View v) {
-				if (inRequests) {
-					onDrawerItem(currentPosition);
+				if (findViewById(R.id.requests).getVisibility() == View.VISIBLE) {
+					showView(R.id.content);
 				} else {
 					onNotificationsClick();
 				}
@@ -171,131 +185,51 @@ public class MainActivity extends BaseActivity implements
 		});
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (drawerLayout.isDrawerOpen(drawerList)) {
-				drawerLayout.closeDrawer(drawerList);
-			} else {
-				drawerLayout.openDrawer(drawerList);
-			}
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onDrawerToggle();
-			break;
-		default:
-			super.onOptionsItemSelected(item);
-			break;
-		}
-		return false;
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		if (parent.equals(drawerList)) {
-			onDrawerItem(position);
-		}
-	}
-
-	private void onLogoutClicked() {
-		AlertDialog.show(this, getString(R.string.main_logout_are_you_sure),
-				getString(R.string.main_logout_confirm),
-				getString(R.string.main_logout_ok),
-				getString(R.string.main_logout_cancel),
-				new AlertDialog.Handler() {
-
-					@Override
-					public void onOK() {
-						settings.setString(Settings.USER_TOKEN, null);
-						clearMSE();
-						finish();
-					}
-				});
-	}
-
 	private void initDrawer() {
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-		drawerList = (ListView) findViewById(R.id.listview_drawer);
-		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
 
 		initSideMenu();
-		drawerAdapter = new MenuListAdapter(this, sideMenuItems);
 
-		drawerList.setAdapter(drawerAdapter);
-		drawerList.setOnItemClickListener(this);
+		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		pager = (ViewPager) findViewById(R.id.pager);
 
-		drawerToggle = new SherlockActionBarDrawerToggle(this, drawerLayout,
-				R.drawable.ic_drawer, R.string.drawer_open,
-				R.string.drawer_close);
-		drawerToggle.syncState();
+		pager.setAdapter(adapter);
+		tabs.setViewPager(pager);
 
-		drawerLayout.setDrawerListener(drawerToggle);
-		drawerToggle.setDrawerIndicatorEnabled(true);
-	}
+		tabs.setOnPageChangeListener(new OnPageChangeListener() {
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		drawerToggle.onConfigurationChanged(newConfig);
-	}
+			@Override
+			public void onPageSelected(int selected) {
+				setTitle(adapter.getPageTitle(selected));
+				if (menuSearch.isActionViewExpanded()) {
+					menuSearch.collapseActionView();
+				}
 
-	private void onDrawerToggle() {
-		if (drawerLayout.isDrawerOpen(drawerList)) {
-			drawerLayout.closeDrawer(drawerList);
-		} else {
-			drawerLayout.openDrawer(drawerList);
-		}
-	}
+				hideSoftKeyboard();
 
-	@Override
-	public void onBackPressed() {
-		// TODO: if in requests come back to previous?
-		if (currentPosition != 0 || inRequests) {
-			onDrawerItem(0);
-		} else {
-			finish();
-		}
-	}
+				BaseFragment fragment = (BaseFragment) adapter
+						.getItem(selected);
+				fragment.setSAM(getSAM());
+				fragment.setContentClient(contentClient);
+				fragment.refreshUI(null);
+			}
 
-	private int currentPosition = 0;
+			@Override
+			public void onPageScrolled(int selected, float f, int i) {
+			}
 
-	private void onDrawerItem(int position) {
-		drawerList.setItemChecked(currentPosition, true);
-
-		if (position == sideMenuItems.size() - 1) {
-			drawerLayout.closeDrawer(drawerList);
-			onLogoutClicked();
-			return;
-		} else {
-			currentPosition = position;
-			drawerList.setItemChecked(currentPosition, true);
-		}
-		setTitle(sideMenuItems.get(position).getText());
-		displayFragment(sideMenuItems.get(position).getFragment());
-
-		drawerLayout.closeDrawer(drawerList);
-		inRequests = false;
+			@Override
+			public void onPageScrollStateChanged(int selected) {
+			}
+		});
 	}
 
 	/**
-	 * Replaces the window content with the specified fragment.
+	 * Attaches a fragment to a view id;
 	 * 
+	 * @param viewId
 	 * @param fragment
 	 */
-	private void displayFragment(BaseFragment fragment) {
+	private void displayFragment(int viewId, BaseFragment fragment) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
 		fragment.setRunner(runner);
@@ -303,36 +237,65 @@ public class MainActivity extends BaseActivity implements
 		fragment.setContentClient(contentClient);
 
 		if (!fragment.isAdded()) {
-			ft.replace(R.id.content_frame, fragment);
+			ft.replace(viewId, fragment);
 		} else {
 			fragment.refreshUI(null);
 		}
 		ft.commit();
 	}
 
+	private void addFragment(int titleId, int iconId, BaseFragment fragment) {
+		if (fragment != null) {
+			fragment.setRunner(runner);
+			adapter.addFragment(fragment, titleId, iconId);
+		}
+	}
+
 	private void initSideMenu() {
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_river),
-				R.drawable.drawer_river, new RiverFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_wire),
-				R.drawable.drawer_wire, new WireFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_profile),
-				R.drawable.drawer_profile, new ProfileFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_friends),
-				R.drawable.drawer_contacts, new FriendsFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_groups),
-				R.drawable.drawer_groups, new GroupsFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_message),
-				R.drawable.drawer_messages, new ThreadsFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.feedback_title),
-				R.drawable.drawer_feedback, new FeedbackFragment()));
-		sideMenuItems.add(new SideMenuItem(getString(R.string.main_logout),
-				R.drawable.drawer_disconnect, null));
+		adapter = new IconPageAdapter(getSupportFragmentManager(), this);
+
+		addFragment(R.string.main_river, R.drawable.drawer_river,
+				new RiverFragment());
+		addFragment(R.string.main_wire, R.drawable.drawer_wire,
+				new WireFragment());
+		addFragment(R.string.main_profile, R.drawable.drawer_profile,
+				new ProfileFragment());
+		addFragment(R.string.main_friends, R.drawable.drawer_contacts,
+				new FriendsFragment());
+		addFragment(R.string.main_groups, R.drawable.drawer_groups,
+				new GroupsFragment());
+		addFragment(R.string.main_message, R.drawable.drawer_messages,
+				new ThreadsFragment());
+		addFragment(R.string.feedback_title, R.drawable.drawer_feedback,
+				new FeedbackFragment());
+		addFragment(R.string.main_logout, R.drawable.drawer_disconnect, null);
+	}
+
+	/**
+	 * Toggles the visibility of one of the content, requests or search views.
+	 * 
+	 * @param viewId
+	 */
+	private void showView(int viewId) {
+		findViewById(R.id.searchView).setVisibility(
+				viewId == R.id.searchView ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requests).setVisibility(
+				viewId == R.id.requests ? View.VISIBLE : View.GONE);
+		findViewById(R.id.content).setVisibility(
+				viewId == R.id.content ? View.VISIBLE : View.GONE);
+
+		if (viewId == R.id.content) {
+			int currentPage = pager.getCurrentItem();
+			if (currentPage > -1 && currentPage < adapter.getCount()) {
+				setTitle(adapter.getPageTitle(currentPage));
+			}
+		}
 	}
 
 	private void onNotificationsClick() {
 		setTitle(getString(R.string.main_menu_notifications));
-		displayFragment(requestsFragment);
-		inRequests = true;
+		displayFragment(R.id.requests, requestsFragment);
+		showView(R.id.requests);
 	}
 
 	private void refreshRequests() {
@@ -356,14 +319,13 @@ public class MainActivity extends BaseActivity implements
 		supportInvalidateOptionsMenu();
 	}
 
-	private boolean inRequests;
 	private RequestsFragment requestsFragment = new RequestsFragment();
 	private SearchFragment searchFragment = new SearchFragment();
+
 	private List<RequestItem> requests = new ArrayList<RequestItem>();
 
-	private SherlockActionBarDrawerToggle drawerToggle;
-	private DrawerLayout drawerLayout;
-	private ListView drawerList;
-	private MenuListAdapter drawerAdapter;
-	private List<SideMenuItem> sideMenuItems = new ArrayList<SideMenuItem>();
+	private IconPageAdapter adapter;
+
+	private PagerSlidingTabStrip tabs;
+	private ViewPager pager;
 }

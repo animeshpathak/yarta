@@ -16,6 +16,7 @@ import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.resources.Content;
+import fr.inria.arles.yarta.resources.YartaResource;
 
 public class GroupPostsFragment extends BaseFragment implements
 		ContentListAdapter.Callback, PullToRefreshListView.OnRefreshListener {
@@ -24,9 +25,10 @@ public class GroupPostsFragment extends BaseFragment implements
 	private PullToRefreshListView list;
 
 	private Group group;
+	private String groupGuid;
 
 	public void setGroupGuid(String groupGuid) {
-		group = (Group) sam.getResourceByURI(groupGuid);
+		this.groupGuid = groupGuid;
 	}
 
 	@Override
@@ -59,6 +61,15 @@ public class GroupPostsFragment extends BaseFragment implements
 
 	@Override
 	public void refreshUI(String notification) {
+		if (groupGuid == null || sam == null) {
+			return;
+		}
+		YartaResource resource = sam.getResourceByURI(groupGuid);
+		if (resource == null) {
+			return;
+		} else {
+			group = (Group) resource;
+		}
 		if (IrisBridge.PostListEmpty.equals(notification)) {
 			// show content, there is no post
 			showFrame(Frame.Content);

@@ -92,13 +92,15 @@ public class RiverFragment extends BaseFragment implements
 
 			@Override
 			public void doUIAfter() {
-				adapter.setItems(items);
-				list.onRefreshComplete();
-				if (username != null) {
-					list.setVisibility(View.GONE);
-					fakeList.update();
+				if (adapter != null) {
+					adapter.setItems(items);
+					list.onRefreshComplete();
+					if (username != null) {
+						list.setVisibility(View.GONE);
+						fakeList.update();
+					}
+					new Thread(lazyImageLoader).start();
 				}
-				new Thread(lazyImageLoader).start();
 			}
 		});
 	}

@@ -118,5 +118,10 @@
     <string name="notification_ignore">Ignorer</string>
     <string name="notification_accept">Accepter</string>
     <string name="main_no_requests">Pas de notification pour le moment.</string>
+    <string name="cas_title">Inria CAS</string>
+    <string name="cas_proceed">Continuer</string>
+    <string name="cas_cancel">Annuler</string>
+    <string name="cas_message">Vous serez redirigé vers la page CAS d\'Inria.</string>
+    <string name="cas_never_show">Rappelez cette décision</string>
 
 </resources>

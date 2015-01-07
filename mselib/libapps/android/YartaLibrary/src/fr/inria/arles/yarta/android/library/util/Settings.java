@@ -11,15 +11,17 @@ public class Settings {
 	public static final String SETTINGS_FILE = "settings.prefs";
 
 	public static final String NOTIFICATION_HIDE = "notification.hide";
-	
+
 	public static final String USER_NAME = "user.name";
 	public static final String USER_TOKEN = "user.token";
 	public static final String USER_GUID = "user.guid";
 	public static final String USER_RANDOM_GUID = "user.random.guid";
-	
+
 	public static final String EULA_ACCEPTED = "eula.accepted";
 	public static final String AUR_ACCEPTED = "aur.accepted";
-	
+
+	public static final String CAS_SHOW = "cas.show";
+
 	public static final String REFRESH_INTERVAL = "refresh.interval";
 
 	/**

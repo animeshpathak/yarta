@@ -20,6 +20,7 @@ import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
+import fr.inria.arles.yarta.android.library.util.Settings;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 
@@ -77,6 +78,37 @@ public class ProfileFragment extends BaseFragment {
 					R.string.profile_compose);
 			item.setIcon(R.drawable.icon_compose);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		} else {
+			if (getView() != null) {
+				getView().findViewById(R.id.logout).setVisibility(View.VISIBLE);
+				getView().findViewById(R.id.logout).setOnClickListener(
+						new View.OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								AlertDialog
+										.show(getSherlockActivity(),
+												getString(R.string.main_logout_are_you_sure),
+												getString(R.string.main_logout_confirm),
+												getString(R.string.main_logout_ok),
+												getString(R.string.main_logout_cancel),
+												new AlertDialog.Handler() {
+
+													@Override
+													public void onOK() {
+														BaseActivity activity = (BaseActivity) getSherlockActivity();
+														Settings settings = new Settings(
+																activity);
+														settings.setString(
+																Settings.USER_TOKEN,
+																null);
+														activity.clearMSE();
+														activity.finish();
+													}
+												});
+							}
+						});
+			}
 		}
 		super.onCreateOptionsMenu(menu, inflater);
 	}

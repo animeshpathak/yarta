@@ -14,7 +14,7 @@ public class GenericPageAdapter extends FragmentStatePagerAdapter {
 		super(fm);
 		this.context = context;
 	}
-	
+
 	public void addFragment(Fragment fragment, int resTitleId) {
 		fragments.add(fragment);
 		fragmentTitles.add(context.getString(resTitleId));
