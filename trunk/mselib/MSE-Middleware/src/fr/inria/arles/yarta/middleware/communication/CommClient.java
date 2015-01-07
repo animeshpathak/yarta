@@ -73,7 +73,7 @@ public class CommClient {
 	public static int post(String userId, Message message) {
 		byte[] data = YCommunicationManagerUtils.toBytes(message);
 		String base64 = Base64.encode(data);
-		
+
 		String urlParams = String.format("push=1&from=%s&to=%s&message=%s",
 				CommClient.userId, userId, base64);
 		try {
@@ -92,9 +92,9 @@ public class CommClient {
 		Message message = null;
 
 		try {
-			String result = doPost(urlParams);
+			String result = doPost(urlParams).trim();
 			log("get(%s) returned %s", userId, result);
-			
+
 			if (result.length() == 0)
 				return null;
 
@@ -124,6 +124,7 @@ public class CommClient {
 			}
 			result = new String(baos.toByteArray());
 			baos.close();
+			// auto url encoding of base64 pluses + unknown char at 0
 			byte[] data = Base64.decode(result.replace(" ", "+"));
 
 			message = (Message) YCommunicationManagerUtils.toObject(data);
@@ -135,7 +136,7 @@ public class CommClient {
 		}
 		return message;
 	}
-	
+
 	private static void notifiyAllObservers(String from, Message message) {
 		for (Receiver callback : callbacks) {
 			callback.handleMessage(from, message);
@@ -171,6 +172,7 @@ public class CommClient {
 		}
 		rd.close();
 		connection.disconnect();
+
 		return response;
 	}
 }

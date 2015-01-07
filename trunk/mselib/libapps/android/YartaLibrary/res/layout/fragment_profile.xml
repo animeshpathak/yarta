@@ -68,6 +68,17 @@
                 android:autoLink="web"
                 android:textColorLink="@color/AppTextColorStrong"
                 android:visibility="gone" />
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button_gray"
+                android:text="@string/main_logout"
+                android:visibility="gone" />
         </LinearLayout>
 
         <FrameLayout

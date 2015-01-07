@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.inria.arles.iris"
-    android:versionCode="85"
-    android:versionName="2.6.33" >
+    android:versionCode="88"
+    android:versionName="2.6.38" >
 
     <uses-sdk
         android:minSdkVersion="8"

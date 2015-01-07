@@ -11,13 +11,14 @@ import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
+import fr.inria.arles.yarta.resources.YartaResource;
 
 public class GroupDescriptionFragment extends BaseFragment {
 
-	private Group group;
+	private String groupId;
 
-	public void setGroupGuid(String groupGuid) {
-		group = (Group) sam.getResourceByURI(groupGuid);
+	public void setGroupGuid(String groupId) {
+		this.groupId = groupId;
 	}
 
 	@Override
@@ -39,9 +40,17 @@ public class GroupDescriptionFragment extends BaseFragment {
 
 	@Override
 	public void refreshUI(String notification) {
-		if (group == null) {
+		if (groupId == null) {
 			return;
 		}
+		Group group = null;
+		YartaResource resource = sam.getResourceByURI(groupId);
+		if (resource != null) {
+			group = (Group) resource;
+		} else {
+			return;
+		}
+
 		if (group.getName() != null) {
 			setCtrlText(R.id.name, Html.fromHtml(group.getName()));
 		}

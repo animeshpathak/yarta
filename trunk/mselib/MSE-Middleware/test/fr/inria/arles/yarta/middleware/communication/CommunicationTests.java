@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class CommunicationTests implements Receiver {
 
-	private static final String UID = "test";
+	private static final String UID = "android";
 	private boolean received;
 	private Message message;
 	private String from;
@@ -20,6 +20,14 @@ public class CommunicationTests implements Receiver {
 		connection = new CommPollConnection(UID);
 		connection.setReceiver(this);
 		connection.init(null);
+	}
+
+	public static void main(String args[]) throws Exception {
+		CommunicationTests t = new CommunicationTests();
+		t.setUp();
+		t.testSendMessage();
+		t.testReceiveMessage();
+		t.tearDown();
 	}
 
 	@After
