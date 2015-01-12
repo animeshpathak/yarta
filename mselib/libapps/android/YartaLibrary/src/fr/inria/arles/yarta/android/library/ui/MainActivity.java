@@ -210,7 +210,6 @@ public class MainActivity extends BaseActivity implements
 						.getItem(selected);
 				fragment.setSAM(getSAM());
 				fragment.setContentClient(contentClient);
-				fragment.refreshUI(null);
 			}
 
 			@Override

@@ -50,6 +50,13 @@ public class ProfileFragment extends BaseFragment {
 		}
 	}
 
+	@Override
+	public void setMenuVisibility(final boolean visible) {
+		if (visible && sam != null && isAdded()) {
+			refreshUI(null);
+		}
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
