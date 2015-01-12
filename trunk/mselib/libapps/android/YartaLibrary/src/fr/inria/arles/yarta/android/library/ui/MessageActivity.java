@@ -2,6 +2,8 @@ package fr.inria.arles.yarta.android.library.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -87,6 +89,13 @@ public class MessageActivity extends BaseActivity {
 						friends = new ArrayList<Agent>();
 						me = getSAM().getMe();
 						friends.addAll(me.getKnows_inverse());
+
+						Collections.sort(friends, new Comparator<Agent>() {
+							@Override
+							public int compare(Agent lhs, Agent rhs) {
+								return lhs.getName().compareTo(rhs.getName());
+							}
+						});
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
