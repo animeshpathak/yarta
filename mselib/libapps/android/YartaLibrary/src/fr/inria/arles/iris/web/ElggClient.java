@@ -356,6 +356,31 @@ public class ElggClient {
 		return result;
 	}
 
+	public int addAnnotationLike(String guid) {
+		JSONObject json = callMethod("likes_annotation.add", POST, "annotation_id", guid);
+
+		int result = checkErrors(json);
+		log("%s: result<%d>, lastError<%s>", "likes_annotation_add", result,
+				lastError);
+		return result;
+	}
+
+	public int getAnnotationLikes(String guid) {
+		JSONObject json = callMethod("likes_annotation.count", POST, "annotation_id",
+				guid);
+
+		int result = checkErrors(json);
+		try {
+			JSONObject all = json.getJSONObject("result");
+			result = all.getInt("count");
+		} catch (Exception ex) {
+			result = 0;
+		}
+		log("%s: result<%d>, lastError<%s>", "likes_annotation_count", result,
+				lastError);
+		return result;
+	}
+
 	public int removeWire(String guid) {
 		JSONObject json = callMethod("wire.delete_posts", POST, "username",
 				username, "wireid", guid);
