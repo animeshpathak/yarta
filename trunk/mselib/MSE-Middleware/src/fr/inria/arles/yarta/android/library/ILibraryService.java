@@ -153,6 +153,16 @@ reply.writeNoException();
 reply.writeString(_result);
 return true;
 }
+case TRANSACTION_pureCall:
+{
+data.enforceInterface(DESCRIPTOR);
+java.lang.String _arg0;
+_arg0 = data.readString();
+java.lang.String _result = this.pureCall(_arg0);
+reply.writeNoException();
+reply.writeString(_result);
+return true;
+}
 case TRANSACTION_addTriple:
 {
 data.enforceInterface(DESCRIPTOR);
@@ -841,6 +851,26 @@ java.lang.String _result;
 try {
 _data.writeInterfaceToken(DESCRIPTOR);
 mRemote.transact(Stub.TRANSACTION_getMyNameSpace, _data, _reply, 0);
+_reply.readException();
+_result = _reply.readString();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+return _result;
+}
+// makes a direct call to Elgg
+
+@Override public java.lang.String pureCall(java.lang.String param) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+java.lang.String _result;
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(param);
+mRemote.transact(Stub.TRANSACTION_pureCall, _data, _reply, 0);
 _reply.readException();
 _result = _reply.readString();
 }
@@ -1571,32 +1601,33 @@ static final int TRANSACTION_addLiteral = (android.os.IBinder.FIRST_CALL_TRANSAC
 static final int TRANSACTION_addResource = (android.os.IBinder.FIRST_CALL_TRANSACTION + 5);
 static final int TRANSACTION_addResourceNode = (android.os.IBinder.FIRST_CALL_TRANSACTION + 6);
 static final int TRANSACTION_getMyNameSpace = (android.os.IBinder.FIRST_CALL_TRANSACTION + 7);
-static final int TRANSACTION_addTriple = (android.os.IBinder.FIRST_CALL_TRANSACTION + 8);
-static final int TRANSACTION_getTriple = (android.os.IBinder.FIRST_CALL_TRANSACTION + 9);
-static final int TRANSACTION_removeTriple = (android.os.IBinder.FIRST_CALL_TRANSACTION + 10);
-static final int TRANSACTION_getResourceByURI = (android.os.IBinder.FIRST_CALL_TRANSACTION + 11);
-static final int TRANSACTION_getResourceByURINoPolicies = (android.os.IBinder.FIRST_CALL_TRANSACTION + 12);
-static final int TRANSACTION_getPropertyObjectAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 13);
-static final int TRANSACTION_getPropertySubjectAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 14);
-static final int TRANSACTION_getPropertyAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 15);
-static final int TRANSACTION_getAllPropertiesAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 16);
-static final int TRANSACTION_getKBAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 17);
-static final int TRANSACTION_getPropertyObject = (android.os.IBinder.FIRST_CALL_TRANSACTION + 18);
-static final int TRANSACTION_getPropertySubject = (android.os.IBinder.FIRST_CALL_TRANSACTION + 19);
-static final int TRANSACTION_addGraph = (android.os.IBinder.FIRST_CALL_TRANSACTION + 20);
-static final int TRANSACTION_getProperty = (android.os.IBinder.FIRST_CALL_TRANSACTION + 21);
-static final int TRANSACTION_getAllProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 22);
-static final int TRANSACTION_queryKB = (android.os.IBinder.FIRST_CALL_TRANSACTION + 23);
-static final int TRANSACTION_getKB = (android.os.IBinder.FIRST_CALL_TRANSACTION + 24);
-static final int TRANSACTION_getPolicyManager = (android.os.IBinder.FIRST_CALL_TRANSACTION + 25);
-static final int TRANSACTION_sendUpdateRequest = (android.os.IBinder.FIRST_CALL_TRANSACTION + 26);
-static final int TRANSACTION_sendHello = (android.os.IBinder.FIRST_CALL_TRANSACTION + 27);
-static final int TRANSACTION_sendNotify = (android.os.IBinder.FIRST_CALL_TRANSACTION + 28);
-static final int TRANSACTION_sendMessage = (android.os.IBinder.FIRST_CALL_TRANSACTION + 29);
-static final int TRANSACTION_registerReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 30);
-static final int TRANSACTION_unregisterReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 31);
-static final int TRANSACTION_registerCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 32);
-static final int TRANSACTION_unregisterCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 33);
+static final int TRANSACTION_pureCall = (android.os.IBinder.FIRST_CALL_TRANSACTION + 8);
+static final int TRANSACTION_addTriple = (android.os.IBinder.FIRST_CALL_TRANSACTION + 9);
+static final int TRANSACTION_getTriple = (android.os.IBinder.FIRST_CALL_TRANSACTION + 10);
+static final int TRANSACTION_removeTriple = (android.os.IBinder.FIRST_CALL_TRANSACTION + 11);
+static final int TRANSACTION_getResourceByURI = (android.os.IBinder.FIRST_CALL_TRANSACTION + 12);
+static final int TRANSACTION_getResourceByURINoPolicies = (android.os.IBinder.FIRST_CALL_TRANSACTION + 13);
+static final int TRANSACTION_getPropertyObjectAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 14);
+static final int TRANSACTION_getPropertySubjectAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 15);
+static final int TRANSACTION_getPropertyAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 16);
+static final int TRANSACTION_getAllPropertiesAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 17);
+static final int TRANSACTION_getKBAsTriples = (android.os.IBinder.FIRST_CALL_TRANSACTION + 18);
+static final int TRANSACTION_getPropertyObject = (android.os.IBinder.FIRST_CALL_TRANSACTION + 19);
+static final int TRANSACTION_getPropertySubject = (android.os.IBinder.FIRST_CALL_TRANSACTION + 20);
+static final int TRANSACTION_addGraph = (android.os.IBinder.FIRST_CALL_TRANSACTION + 21);
+static final int TRANSACTION_getProperty = (android.os.IBinder.FIRST_CALL_TRANSACTION + 22);
+static final int TRANSACTION_getAllProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 23);
+static final int TRANSACTION_queryKB = (android.os.IBinder.FIRST_CALL_TRANSACTION + 24);
+static final int TRANSACTION_getKB = (android.os.IBinder.FIRST_CALL_TRANSACTION + 25);
+static final int TRANSACTION_getPolicyManager = (android.os.IBinder.FIRST_CALL_TRANSACTION + 26);
+static final int TRANSACTION_sendUpdateRequest = (android.os.IBinder.FIRST_CALL_TRANSACTION + 27);
+static final int TRANSACTION_sendHello = (android.os.IBinder.FIRST_CALL_TRANSACTION + 28);
+static final int TRANSACTION_sendNotify = (android.os.IBinder.FIRST_CALL_TRANSACTION + 29);
+static final int TRANSACTION_sendMessage = (android.os.IBinder.FIRST_CALL_TRANSACTION + 30);
+static final int TRANSACTION_registerReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 31);
+static final int TRANSACTION_unregisterReceiver = (android.os.IBinder.FIRST_CALL_TRANSACTION + 32);
+static final int TRANSACTION_registerCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 33);
+static final int TRANSACTION_unregisterCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 34);
 }
 public java.lang.String getUserId() throws android.os.RemoteException;
 public boolean clear() throws android.os.RemoteException;
@@ -1607,6 +1638,9 @@ public android.os.Bundle addLiteral(java.lang.String value, java.lang.String dat
 public android.os.Bundle addResource(java.lang.String nodeURI, java.lang.String typeURI, java.lang.String requestorId) throws android.os.RemoteException;
 public android.os.Bundle addResourceNode(android.os.Bundle node, java.lang.String requestorId) throws android.os.RemoteException;
 public java.lang.String getMyNameSpace() throws android.os.RemoteException;
+// makes a direct call to Elgg
+
+public java.lang.String pureCall(java.lang.String param) throws android.os.RemoteException;
 public android.os.Bundle addTriple(android.os.Bundle s, android.os.Bundle p, android.os.Bundle o, java.lang.String requestorId) throws android.os.RemoteException;
 public android.os.Bundle getTriple(android.os.Bundle s, android.os.Bundle p, android.os.Bundle o, java.lang.String requestorId) throws android.os.RemoteException;
 public android.os.Bundle removeTriple(android.os.Bundle s, android.os.Bundle p, android.os.Bundle o, java.lang.String requestorId) throws android.os.RemoteException;

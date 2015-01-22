@@ -18,6 +18,9 @@ interface ILibraryService {
 	Bundle addResourceNode(in Bundle node, in String requestorId);
 
 	String getMyNameSpace();
+	
+	// makes a direct call to Elgg
+	String pureCall(String param);
 
 	Bundle addTriple(in Bundle s, in Bundle p, in Bundle o, in String requestorId);
 	Bundle getTriple(in Bundle s, in Bundle p, in Bundle o, in String requestorId);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.inria.arles.iris.bridge.IrisBridge;
+import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
@@ -759,5 +760,19 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	@Override
 	public String getAppId() {
 		return this.getClass().getPackage().getName();
+	}
+
+	@Override
+	public String pureCall(String param) throws RemoteException {
+		String [] args = param.split(",");
+		
+		if (args.length > 1) {
+			if (args[0].equals("getAnnotationLikes")) {
+				return "" + ElggClient.getInstance().getAnnotationLikes(args[1]);
+			} else if (args[0].equals("addAnnotationLike")) {
+				return "" + ElggClient.getInstance().addAnnotationLike(args[1]);
+			}
+		}
+		return "OK[" + param + "]";
 	}
 }
