@@ -1,15 +1,15 @@
 package fr.inria.arles.yarta.android.library.resources;
 
-import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
+import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Event;
+import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
+import fr.inria.arles.yarta.resources.Topic;
+import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Place;
-import fr.inria.arles.yarta.resources.YartaResource;
 import java.util.Set;
-import fr.inria.arles.yarta.resources.Content;
-import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
-import fr.inria.arles.yarta.resources.Topic;
+import fr.inria.arles.yarta.resources.YartaResource;
 
 /**
  * 
@@ -47,116 +47,21 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * @return the lastName. Null if value is not set.
+	 * @return the summary. Null if value is not set.
 	 */
-	public String getLastName() {
-		return sam.getDataProperty(kbNode, PROPERTY_LASTNAME_URI,
+	public String getSummary() {
+		return sam.getDataProperty(kbNode, PROPERTY_SUMMARY_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the lastName.
+	 * Sets the summary.
 	 * 
 	 * @param	string
-	 *			the lastName to be set
+	 *			the summary to be set
 	 */
-	public void setLastName(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_LASTNAME_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the phone. Null if value is not set.
-	 */
-	public String getPhone() {
-		return sam.getDataProperty(kbNode, PROPERTY_PHONE_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the phone.
-	 * 
-	 * @param	string
-	 *			the phone to be set
-	 */
-	public void setPhone(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_PHONE_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the location. Null if value is not set.
-	 */
-	public String getLocation() {
-		return sam.getDataProperty(kbNode, PROPERTY_LOCATION_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the location.
-	 * 
-	 * @param	string
-	 *			the location to be set
-	 */
-	public void setLocation(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_LOCATION_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the email. Null if value is not set.
-	 */
-	public String getEmail() {
-		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the email.
-	 * 
-	 * @param	string
-	 *			the email to be set
-	 */
-	public void setEmail(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the userId. Null if value is not set.
-	 */
-	public String getUserId() {
-		return sam.getDataProperty(kbNode, PROPERTY_USERID_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the userId.
-	 * 
-	 * @param	string
-	 *			the userId to be set
-	 */
-	public void setUserId(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_USERID_URI, String.class,
-				string);
-	}
-
-	/**
-	 * @return the name. Null if value is not set.
-	 */
-	public String getName() {
-		return sam.getDataProperty(kbNode, PROPERTY_NAME_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the name.
-	 * 
-	 * @param	string
-	 *			the name to be set
-	 */
-	public void setName(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_NAME_URI, String.class,
+	public void setSummary(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_SUMMARY_URI, String.class,
 				string);
 	}
 
@@ -180,6 +85,82 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
+	 * @return the lastName. Null if value is not set.
+	 */
+	public String getLastName() {
+		return sam.getDataProperty(kbNode, PROPERTY_LASTNAME_URI,
+				String.class);
+	}
+	
+	/**
+	 * Sets the lastName.
+	 * 
+	 * @param	string
+	 *			the lastName to be set
+	 */
+	public void setLastName(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_LASTNAME_URI, String.class,
+				string);
+	}
+
+	/**
+	 * @return the name. Null if value is not set.
+	 */
+	public String getName() {
+		return sam.getDataProperty(kbNode, PROPERTY_NAME_URI,
+				String.class);
+	}
+	
+	/**
+	 * Sets the name.
+	 * 
+	 * @param	string
+	 *			the name to be set
+	 */
+	public void setName(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_NAME_URI, String.class,
+				string);
+	}
+
+	/**
+	 * @return the userId. Null if value is not set.
+	 */
+	public String getUserId() {
+		return sam.getDataProperty(kbNode, PROPERTY_USERID_URI,
+				String.class);
+	}
+	
+	/**
+	 * Sets the userId.
+	 * 
+	 * @param	string
+	 *			the userId to be set
+	 */
+	public void setUserId(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_USERID_URI, String.class,
+				string);
+	}
+
+	/**
+	 * @return the email. Null if value is not set.
+	 */
+	public String getEmail() {
+		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
+				String.class);
+	}
+	
+	/**
+	 * Sets the email.
+	 * 
+	 * @param	string
+	 *			the email to be set
+	 */
+	public void setEmail(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
+				string);
+	}
+
+	/**
 	 * @return the homepage. Null if value is not set.
 	 */
 	public String getHomepage() {
@@ -196,97 +177,6 @@ public class PersonImpl extends YartaResource implements Person {
 	public void setHomepage(String string) {
 		sam.setDataProperty(kbNode, PROPERTY_HOMEPAGE_URI, String.class,
 				string);
-	}
-
-	/**
-	 * @return the room. Null if value is not set.
-	 */
-	public String getRoom() {
-		return sam.getDataProperty(kbNode, PROPERTY_ROOM_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the room.
-	 * 
-	 * @param	string
-	 *			the room to be set
-	 */
-	public void setRoom(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_ROOM_URI, String.class,
-				string);
-	}
-
-	/**
-	 * Creates a "picture" edge between this person and picture
-	 * 
-	 * @param	picture
-	 *			the Picture
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addPicture(Picture picture) {
-		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * deletes the "picture" link between this person and picture
-	 * 
-	 * @param	picture
-	 * 			the Picture
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deletePicture(Picture picture) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "picture" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<Picture> getPicture() {
-		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
-	}
-
-	/**
-	 * Creates a "knows" edge between this person and agent
-	 * 
-	 * @param	agent
-	 *			the fr.inria.arles.yarta.resources.Agent
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addKnows(fr.inria.arles.yarta.resources.Agent agent) {
-		return sam.setObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
-	}
-
-	/**
-	 * deletes the "knows" link between this person and agent
-	 * 
-	 * @param	agent
-	 * 			the fr.inria.arles.yarta.resources.Agent
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deleteKnows(fr.inria.arles.yarta.resources.Agent agent) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "knows" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<fr.inria.arles.yarta.resources.Agent> getKnows() {
-		return sam.getObjectProperty(kbNode, PROPERTY_KNOWS_URI);
 	}
 
 	/**
@@ -326,6 +216,78 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
+	 * Creates a "hasinterest" edge between this person and resource
+	 * 
+	 * @param	resource
+	 *			the Resource
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addHasInterest(Resource resource) {
+		return sam.setObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	}
+
+	/**
+	 * deletes the "hasinterest" link between this person and resource
+	 * 
+	 * @param	resource
+	 * 			the Resource
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteHasInterest(Resource resource) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "hasinterest" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Resource> getHasInterest() {
+		return sam.getObjectProperty(kbNode, PROPERTY_HASINTEREST_URI);
+	}
+
+	/**
+	 * Creates a "creator" edge between this person and content
+	 * 
+	 * @param	content
+	 *			the Content
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addCreator(Content content) {
+		return sam.setObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	}
+
+	/**
+	 * deletes the "creator" link between this person and content
+	 * 
+	 * @param	content
+	 * 			the Content
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteCreator(Content content) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "creator" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Content> getCreator() {
+		return sam.getObjectProperty(kbNode, PROPERTY_CREATOR_URI);
+	}
+
+	/**
 	 * Creates a "isattending" edge between this person and event
 	 * 
 	 * @param	event
@@ -362,39 +324,39 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "hasinterest" edge between this person and resource
+	 * Creates a "islocated" edge between this person and place
 	 * 
-	 * @param	resource
-	 *			the Resource
+	 * @param	place
+	 *			the Place
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addHasInterest(Resource resource) {
-		return sam.setObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	public boolean addIsLocated(Place place) {
+		return sam.setObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
 	}
 
 	/**
-	 * deletes the "hasinterest" link between this person and resource
+	 * deletes the "islocated" link between this person and place
 	 * 
-	 * @param	resource
-	 * 			the Resource
+	 * @param	place
+	 * 			the Place
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteHasInterest(Resource resource) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	public boolean deleteIsLocated(Place place) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "hasinterest" edge with the current resource.
+	 * @return	The list of resources linked by a "islocated" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Resource> getHasInterest() {
-		return sam.getObjectProperty(kbNode, PROPERTY_HASINTEREST_URI);
+	public Set<Place> getIsLocated() {
+		return sam.getObjectProperty(kbNode, PROPERTY_ISLOCATED_URI);
 	}
 
 	/**
@@ -470,83 +432,75 @@ public class PersonImpl extends YartaResource implements Person {
 	}
 
 	/**
-	 * Creates a "islocated" edge between this person and place
+	 * Creates a "picture" edge between this person and picture
 	 * 
-	 * @param	place
-	 *			the Place
+	 * @param	picture
+	 *			the Picture
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addIsLocated(Place place) {
-		return sam.setObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
+	public boolean addPicture(Picture picture) {
+		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
 	}
 
 	/**
-	 * deletes the "islocated" link between this person and place
+	 * deletes the "picture" link between this person and picture
 	 * 
-	 * @param	place
-	 * 			the Place
+	 * @param	picture
+	 * 			the Picture
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteIsLocated(Place place) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
+	public boolean deletePicture(Picture picture) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "islocated" edge with the current resource.
+	 * @return	The list of resources linked by a "picture" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Place> getIsLocated() {
-		return sam.getObjectProperty(kbNode, PROPERTY_ISLOCATED_URI);
+	public Set<Picture> getPicture() {
+		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
 	}
 
 	/**
-	 * Creates a "creator" edge between this person and content
+	 * Creates a "knows" edge between this person and agent
 	 * 
-	 * @param	content
-	 *			the Content
+	 * @param	agent
+	 *			the fr.inria.arles.yarta.resources.Agent
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addCreator(Content content) {
-		return sam.setObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	public boolean addKnows(fr.inria.arles.yarta.resources.Agent agent) {
+		return sam.setObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
 	}
 
 	/**
-	 * deletes the "creator" link between this person and content
+	 * deletes the "knows" link between this person and agent
 	 * 
-	 * @param	content
-	 * 			the Content
+	 * @param	agent
+	 * 			the fr.inria.arles.yarta.resources.Agent
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteCreator(Content content) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	public boolean deleteKnows(fr.inria.arles.yarta.resources.Agent agent) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "creator" edge with the current resource.
+	 * @return	The list of resources linked by a "knows" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Content> getCreator() {
-		return sam.getObjectProperty(kbNode, PROPERTY_CREATOR_URI);
-	}
-
-	/**
-	 * inverse of {@link #getKnows()}
-	 */
-	@Override
-	public Set<fr.inria.arles.yarta.resources.Agent> getKnows_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_KNOWS_URI);
+	public Set<fr.inria.arles.yarta.resources.Agent> getKnows() {
+		return sam.getObjectProperty(kbNode, PROPERTY_KNOWS_URI);
 	}
 
 	/**
@@ -555,5 +509,13 @@ public class PersonImpl extends YartaResource implements Person {
 	@Override
 	public Set<fr.inria.arles.yarta.resources.Agent> getHasInterest_inverse() {
 		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_HASINTEREST_URI);
+	}
+
+	/**
+	 * inverse of {@link #getKnows()}
+	 */
+	@Override
+	public Set<fr.inria.arles.yarta.resources.Agent> getKnows_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_KNOWS_URI);
 	}
 }

@@ -1,15 +1,15 @@
 package fr.inria.arles.yarta.android.library.resources;
 
-import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
+import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Event;
+import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
+import fr.inria.arles.yarta.resources.Topic;
+import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Place;
-import fr.inria.arles.yarta.resources.YartaResource;
 import java.util.Set;
-import fr.inria.arles.yarta.resources.Content;
-import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
-import fr.inria.arles.yarta.resources.Topic;
+import fr.inria.arles.yarta.resources.YartaResource;
 
 /**
  * 
@@ -28,25 +28,6 @@ public class AgentImpl extends YartaResource implements Agent {
 	 */
 	public AgentImpl(ThinStorageAccessManager sam, Node n) {
 		super(sam, n);
-	}
-
-	/**
-	 * @return the email. Null if value is not set.
-	 */
-	public String getEmail() {
-		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
-				String.class);
-	}
-	
-	/**
-	 * Sets the email.
-	 * 
-	 * @param	string
-	 *			the email to be set
-	 */
-	public void setEmail(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
-				string);
 	}
 
 	/**
@@ -69,6 +50,25 @@ public class AgentImpl extends YartaResource implements Agent {
 	}
 
 	/**
+	 * @return the email. Null if value is not set.
+	 */
+	public String getEmail() {
+		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
+				String.class);
+	}
+	
+	/**
+	 * Sets the email.
+	 * 
+	 * @param	string
+	 *			the email to be set
+	 */
+	public void setEmail(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
+				string);
+	}
+
+	/**
 	 * @return the homepage. Null if value is not set.
 	 */
 	public String getHomepage() {
@@ -85,78 +85,6 @@ public class AgentImpl extends YartaResource implements Agent {
 	public void setHomepage(String string) {
 		sam.setDataProperty(kbNode, PROPERTY_HOMEPAGE_URI, String.class,
 				string);
-	}
-
-	/**
-	 * Creates a "picture" edge between this agent and picture
-	 * 
-	 * @param	picture
-	 *			the Picture
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addPicture(Picture picture) {
-		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * deletes the "picture" link between this agent and picture
-	 * 
-	 * @param	picture
-	 * 			the Picture
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deletePicture(Picture picture) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "picture" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<Picture> getPicture() {
-		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
-	}
-
-	/**
-	 * Creates a "knows" edge between this agent and agent
-	 * 
-	 * @param	agent
-	 *			the fr.inria.arles.yarta.resources.Agent
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addKnows(fr.inria.arles.yarta.resources.Agent agent) {
-		return sam.setObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
-	}
-
-	/**
-	 * deletes the "knows" link between this agent and agent
-	 * 
-	 * @param	agent
-	 * 			the fr.inria.arles.yarta.resources.Agent
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deleteKnows(fr.inria.arles.yarta.resources.Agent agent) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "knows" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<fr.inria.arles.yarta.resources.Agent> getKnows() {
-		return sam.getObjectProperty(kbNode, PROPERTY_KNOWS_URI);
 	}
 
 	/**
@@ -196,6 +124,78 @@ public class AgentImpl extends YartaResource implements Agent {
 	}
 
 	/**
+	 * Creates a "hasinterest" edge between this agent and resource
+	 * 
+	 * @param	resource
+	 *			the Resource
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addHasInterest(Resource resource) {
+		return sam.setObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	}
+
+	/**
+	 * deletes the "hasinterest" link between this agent and resource
+	 * 
+	 * @param	resource
+	 * 			the Resource
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteHasInterest(Resource resource) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "hasinterest" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Resource> getHasInterest() {
+		return sam.getObjectProperty(kbNode, PROPERTY_HASINTEREST_URI);
+	}
+
+	/**
+	 * Creates a "creator" edge between this agent and content
+	 * 
+	 * @param	content
+	 *			the Content
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addCreator(Content content) {
+		return sam.setObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	}
+
+	/**
+	 * deletes the "creator" link between this agent and content
+	 * 
+	 * @param	content
+	 * 			the Content
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteCreator(Content content) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "creator" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Content> getCreator() {
+		return sam.getObjectProperty(kbNode, PROPERTY_CREATOR_URI);
+	}
+
+	/**
 	 * Creates a "isattending" edge between this agent and event
 	 * 
 	 * @param	event
@@ -232,39 +232,39 @@ public class AgentImpl extends YartaResource implements Agent {
 	}
 
 	/**
-	 * Creates a "hasinterest" edge between this agent and resource
+	 * Creates a "islocated" edge between this agent and place
 	 * 
-	 * @param	resource
-	 *			the Resource
+	 * @param	place
+	 *			the Place
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addHasInterest(Resource resource) {
-		return sam.setObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	public boolean addIsLocated(Place place) {
+		return sam.setObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
 	}
 
 	/**
-	 * deletes the "hasinterest" link between this agent and resource
+	 * deletes the "islocated" link between this agent and place
 	 * 
-	 * @param	resource
-	 * 			the Resource
+	 * @param	place
+	 * 			the Place
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteHasInterest(Resource resource) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_HASINTEREST_URI, resource);
+	public boolean deleteIsLocated(Place place) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "hasinterest" edge with the current resource.
+	 * @return	The list of resources linked by a "islocated" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Resource> getHasInterest() {
-		return sam.getObjectProperty(kbNode, PROPERTY_HASINTEREST_URI);
+	public Set<Place> getIsLocated() {
+		return sam.getObjectProperty(kbNode, PROPERTY_ISLOCATED_URI);
 	}
 
 	/**
@@ -340,83 +340,75 @@ public class AgentImpl extends YartaResource implements Agent {
 	}
 
 	/**
-	 * Creates a "islocated" edge between this agent and place
+	 * Creates a "picture" edge between this agent and picture
 	 * 
-	 * @param	place
-	 *			the Place
+	 * @param	picture
+	 *			the Picture
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addIsLocated(Place place) {
-		return sam.setObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
+	public boolean addPicture(Picture picture) {
+		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
 	}
 
 	/**
-	 * deletes the "islocated" link between this agent and place
+	 * deletes the "picture" link between this agent and picture
 	 * 
-	 * @param	place
-	 * 			the Place
+	 * @param	picture
+	 * 			the Picture
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteIsLocated(Place place) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_ISLOCATED_URI, place);
+	public boolean deletePicture(Picture picture) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "islocated" edge with the current resource.
+	 * @return	The list of resources linked by a "picture" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Place> getIsLocated() {
-		return sam.getObjectProperty(kbNode, PROPERTY_ISLOCATED_URI);
+	public Set<Picture> getPicture() {
+		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
 	}
 
 	/**
-	 * Creates a "creator" edge between this agent and content
+	 * Creates a "knows" edge between this agent and agent
 	 * 
-	 * @param	content
-	 *			the Content
+	 * @param	agent
+	 *			the fr.inria.arles.yarta.resources.Agent
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addCreator(Content content) {
-		return sam.setObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	public boolean addKnows(fr.inria.arles.yarta.resources.Agent agent) {
+		return sam.setObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
 	}
 
 	/**
-	 * deletes the "creator" link between this agent and content
+	 * deletes the "knows" link between this agent and agent
 	 * 
-	 * @param	content
-	 * 			the Content
+	 * @param	agent
+	 * 			the fr.inria.arles.yarta.resources.Agent
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteCreator(Content content) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	public boolean deleteKnows(fr.inria.arles.yarta.resources.Agent agent) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "creator" edge with the current resource.
+	 * @return	The list of resources linked by a "knows" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Content> getCreator() {
-		return sam.getObjectProperty(kbNode, PROPERTY_CREATOR_URI);
-	}
-
-	/**
-	 * inverse of {@link #getKnows()}
-	 */
-	@Override
-	public Set<fr.inria.arles.yarta.resources.Agent> getKnows_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_KNOWS_URI);
+	public Set<fr.inria.arles.yarta.resources.Agent> getKnows() {
+		return sam.getObjectProperty(kbNode, PROPERTY_KNOWS_URI);
 	}
 
 	/**
@@ -425,5 +417,13 @@ public class AgentImpl extends YartaResource implements Agent {
 	@Override
 	public Set<fr.inria.arles.yarta.resources.Agent> getHasInterest_inverse() {
 		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_HASINTEREST_URI);
+	}
+
+	/**
+	 * inverse of {@link #getKnows()}
+	 */
+	@Override
+	public Set<fr.inria.arles.yarta.resources.Agent> getKnows_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_KNOWS_URI);
 	}
 }

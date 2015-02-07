@@ -10,7 +10,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.AnalyticsTracker;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
 import fr.inria.arles.yarta.android.library.LibraryService;
@@ -35,7 +34,6 @@ public class BaseActivity extends SherlockFragmentActivity implements
 	protected ContentClientPictures contentClient;
 	private YLogger log = YLoggerFactory.getLogger();
 	protected Settings settings;
-	protected ElggClient client = ElggClient.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +45,7 @@ public class BaseActivity extends SherlockFragmentActivity implements
 		app = (YartaApp) getApplication();
 		runner = new JobRunner(this);
 		tracker.start(this);
-
-		// set credentials
-		client.setUsername(settings.getString(Settings.USER_NAME));
-		client.setUserGuid(settings.getString(Settings.USER_GUID));
-		client.setToken(settings.getString(Settings.USER_TOKEN));
-
+		
 		initMSE();
 	}
 

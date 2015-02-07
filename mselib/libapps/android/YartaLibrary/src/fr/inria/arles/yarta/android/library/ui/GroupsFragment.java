@@ -57,7 +57,7 @@ public class GroupsFragment extends BaseFragment implements
 				items = new ArrayList<Group>();
 
 				try {
-					Person person = sam.getMe();
+					Person person = (Person) sam.getMe();
 
 					for (fr.inria.arles.yarta.resources.Group group : person
 							.getIsMemberOf()) {

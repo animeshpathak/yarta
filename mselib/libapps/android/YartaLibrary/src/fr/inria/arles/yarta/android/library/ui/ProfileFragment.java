@@ -4,10 +4,14 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.resources.Picture;
 import fr.inria.arles.yarta.android.library.util.AlertDialog;
@@ -26,20 +29,27 @@ import fr.inria.arles.yarta.knowledgebase.KBException;
 
 public class ProfileFragment extends BaseFragment {
 
+	private static final int MENU_ACCEPT = 1;
 	private static final int MENU_COMPOSE = 2;
 	private static final int MENU_ADD = 3;
+	private static final int MENU_GALLERY = 4;
+	private static final int MENU_SYNC = 5;
 
 	private String username;
 	private Person user;
-	private RiverFragment fragment;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_profile, container,
 				false);
-		setHasOptionsMenu(true);
 		return root;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -53,7 +63,10 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public void setMenuVisibility(final boolean visible) {
 		if (visible && sam != null && isAdded()) {
+			setHasOptionsMenu(true);
 			refreshUI(null);
+		} else {
+			setHasOptionsMenu(false);
 		}
 	}
 
@@ -67,12 +80,16 @@ public class ProfileFragment extends BaseFragment {
 	 * @return
 	 */
 	private boolean isCurrentUser() {
-		return username == null || client.getUsername() == null
-				|| client.getUsername().equals(username);
+		try {
+			return username == null || username.equals(sam.getMe().getUserId());
+		} catch (Exception ex) {
+			return false;
+		}
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
 		if (!isCurrentUser()) {
 			if (!isFriend(getUser())) {
 				MenuItem item = menu.add(0, MENU_ADD, 0,
@@ -85,7 +102,22 @@ public class ProfileFragment extends BaseFragment {
 					R.string.profile_compose);
 			item.setIcon(R.drawable.icon_compose);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+			item = menu.add(0, MENU_SYNC, 0, R.string.profile_sync);
+			item.setIcon(R.drawable.icon_sync);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+			if (getView() != null) {
+				// disable edits
+				getView().findViewById(R.id.name).setFocusable(false);
+				getView().findViewById(R.id.summary).setFocusable(false);
+			}
 		} else {
+			MenuItem item = menu.add(0, MENU_ACCEPT, 0,
+					R.string.profile_add_yes);
+			item.setIcon(R.drawable.icon_accept);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
 			if (getView() != null) {
 				getView().findViewById(R.id.logout).setVisibility(View.VISIBLE);
 				getView().findViewById(R.id.logout).setOnClickListener(
@@ -115,14 +147,97 @@ public class ProfileFragment extends BaseFragment {
 												});
 							}
 						});
+
+				getView().findViewById(R.id.icon).setOnClickListener(
+						new View.OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								onClickPhoto();
+							}
+						});
 			}
 		}
-		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	private void onClickPhoto() {
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(intent, MENU_GALLERY);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == MENU_GALLERY && data != null) {
+				Picture picture = null;
+				if (user.getPicture().size() > 0) {
+					picture = user.getPicture().iterator().next();
+				} else {
+					picture = sam.createPicture();
+					user.addPicture(picture);
+				}
+
+				String picturePath = getPath(data.getData());
+				contentClient.setBitmap(contentClient.getShortName(picture),
+						getBitmap(picturePath, 300, 300));
+			}
+		}
+	}
+
+	public static Bitmap getBitmap(String path, int reqWidth, int reqHeight) {
+
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
+
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(path, options);
+	}
+
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and
+			// keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
+	}
+
+	private String getPath(Uri uri) {
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = getSherlockActivity().getContentResolver().query(uri,
+				projection, null, null, null);
+		int column_index = cursor
+				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
+		return cursor.getString(column_index);
 	}
 
 	private boolean isFriend(Person person) {
 		try {
-			return sam.getMe().getKnows_inverse().contains(person);
+			return sam.getMe().getKnows().contains(person);
 		} catch (Exception ex) {
 		}
 		return false;
@@ -131,6 +246,43 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case MENU_SYNC:
+			execute(new Job() {
+
+				String message = getString(R.string.profile_update_ok);
+
+				@Override
+				public void doWork() {
+					try {
+						comm.sendUpdateRequest(username);
+					} catch (Exception ex) {
+						message = ex.toString();
+					}
+				}
+
+				@Override
+				public void doUIAfter() {
+					Toast.makeText(getSherlockActivity(), message,
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+			break;
+		case MENU_ACCEPT:
+			if (user != null) {
+				String agentName = getCtrlText(R.id.name);
+				String summary = getCtrlText(R.id.summary);
+				if (agentName.length() > 0) {
+					user.setName(agentName);
+				}
+
+				if (summary.length() > 0) {
+					user.setSummary(summary);
+				}
+
+				Toast.makeText(getSherlockActivity(), R.string.profile_saved,
+						Toast.LENGTH_SHORT).show();
+			}
+			break;
 		case MENU_COMPOSE:
 			if (user == null) {
 				break;
@@ -165,12 +317,13 @@ public class ProfileFragment extends BaseFragment {
 	 * @return
 	 */
 	private Person getUser() {
-		if (user == null) {
+		if (sam != null) {
 			try {
 				if (username == null) {
-					username = ElggClient.getInstance().getUsername();
+					user = (Person) sam.getMe();
+				} else {
+					user = (Person) sam.getPersonByUserId(username);
 				}
-				user = sam.getPersonByUserId(username);
 			} catch (KBException ex) {
 				ex.printStackTrace();
 			}
@@ -180,34 +333,28 @@ public class ProfileFragment extends BaseFragment {
 
 	@Override
 	public void refreshUI(String notification) {
+		if (getView() == null) {
+			return;
+		}
 		if (getUser() == null) {
 			return;
 		}
 
-		if (user.getName() != null) {
-			setCtrlText(R.id.name, Html.fromHtml(user.getName()));
+		String name = user.getName();
+		if (name == null) {
+			name = user.getUserId();
 		}
+		setCtrlText(R.id.name, Html.fromHtml(name));
+
 		if (user.getHomepage() != null) {
 			setVisible(R.id.website, true);
 			setCtrlText(R.id.website, user.getHomepage());
 		}
 
-		if (user.getLocation() != null) {
-			String location = String.format(getString(R.string.profile_team),
-					user.getLocation());
-			setCtrlText(R.id.location, Html.fromHtml(location));
-		}
-
-		if (user.getRoom() != null) {
-			String room = String.format(getString(R.string.profile_room),
-					user.getRoom());
-			setCtrlText(R.id.room, Html.fromHtml(room));
-		}
-
-		if (user.getPhone() != null) {
-			String phone = String.format(getString(R.string.profile_phone),
-					user.getPhone());
-			setCtrlText(R.id.phone, Html.fromHtml(phone));
+		if (user.getSummary() != null) {
+			setCtrlText(R.id.summary, Html.fromHtml(user.getSummary()));
+		} else {
+			setCtrlText(R.id.summary, "");
 		}
 
 		ImageView image = (ImageView) getView().findViewById(R.id.icon);
@@ -220,28 +367,15 @@ public class ProfileFragment extends BaseFragment {
 		if (bitmap != null) {
 			image.setVisibility(View.VISIBLE);
 			image.setImageBitmap(bitmap);
+			image.setBackgroundResource(0);
 		} else {
-			image.setVisibility(View.GONE);
-		}
-
-		if (fragment != null) {
-			fragment.refreshUI(null);
-		} else {
-			FragmentTransaction ft = getSherlockActivity()
-					.getSupportFragmentManager().beginTransaction();
-
-			fragment = new RiverFragment();
-			fragment.setRunner(getRunner());
-			fragment.setUsername(username);
-
-			ft.replace(R.id.userActivity, fragment);
-			ft.commit();
+			image.setImageBitmap(null);
+			image.setBackgroundResource(R.drawable.user_default);
 		}
 	}
 
 	@Override
 	public void onDestroyView() {
-		fragment = null;
 		super.onDestroyView();
 	}
 
@@ -254,20 +388,19 @@ public class ProfileFragment extends BaseFragment {
 	private void onAdd() {
 		execute(new Job() {
 
-			int result = -1;
-
 			@Override
 			public void doWork() {
-				result = client.addFriend(user.getUserId());
+				try {
+					sam.getMe().addKnows(user);
+				} catch (Exception ex) {
+
+				}
 			}
 
 			@Override
 			public void doUIAfter() {
 				try {
 					String message = getString(R.string.profile_add_ok);
-					if (result != ElggClient.RESULT_OK) {
-						message = client.getLastError();
-					}
 					Toast.makeText(getSherlockActivity(), message,
 							Toast.LENGTH_SHORT).show();
 				} catch (IllegalStateException ex) {

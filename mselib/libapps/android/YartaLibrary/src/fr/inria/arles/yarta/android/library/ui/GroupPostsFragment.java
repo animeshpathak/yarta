@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.bridge.IrisBridge;
 import fr.inria.arles.yarta.android.library.resources.Group;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
@@ -70,12 +69,8 @@ public class GroupPostsFragment extends BaseFragment implements
 		} else {
 			group = (Group) resource;
 		}
-		if (IrisBridge.PostListEmpty.equals(notification)) {
-			// show content, there is no post
-			showFrame(Frame.Content);
-		} else {
-			refreshPostsList();
-		}
+
+		refreshPostsList();
 	}
 
 	private List<Content> items;
@@ -100,12 +95,9 @@ public class GroupPostsFragment extends BaseFragment implements
 
 			@Override
 			public void doUIAfter() {
-				if (items.isEmpty()) {
-				} else {
-					showFrame(Frame.Content);
-					adapter.setItems(items);
-					list.onRefreshComplete();
-				}
+				showFrame(Frame.Content);
+				adapter.setItems(items);
+				list.onRefreshComplete();
 			}
 		});
 	}

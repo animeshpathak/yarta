@@ -58,7 +58,7 @@ public class MessagesListAdapter extends BaseAdapter {
 
 		try {
 			this.sam = sam;
-			me = sam.getMe();
+			me = (Person) sam.getMe();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -128,7 +128,13 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.pictureL.setVisibility(View.GONE);
 			holder.pictureR.setVisibility(View.VISIBLE);
 
-			holder.pictureR.setImageBitmap(bitmap);
+			if (bitmap != null) {
+				holder.pictureR.setImageResource(0);
+				holder.pictureR.setImageBitmap(bitmap);
+			} else {
+				holder.pictureR.setImageBitmap(null);
+				holder.pictureR.setImageResource(R.drawable.user_default);
+			}
 		} else {
 			holder.container
 					.setBackgroundResource(R.drawable.speech_bubble_orange);
@@ -138,7 +144,13 @@ public class MessagesListAdapter extends BaseAdapter {
 			holder.pictureR.setVisibility(View.GONE);
 			holder.pictureL.setVisibility(View.VISIBLE);
 
-			holder.pictureL.setImageBitmap(bitmap);
+			if (bitmap != null) {
+				holder.pictureL.setImageResource(0);
+				holder.pictureL.setImageBitmap(bitmap);
+			} else {
+				holder.pictureL.setImageBitmap(null);
+				holder.pictureL.setImageResource(R.drawable.user_default);
+			}
 		}
 		holder.container.setLayoutParams(lp);
 

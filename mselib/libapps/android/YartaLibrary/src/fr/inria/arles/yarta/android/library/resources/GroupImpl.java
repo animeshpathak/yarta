@@ -1,15 +1,15 @@
 package fr.inria.arles.yarta.android.library.resources;
 
-import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
+import fr.inria.arles.yarta.resources.Content;
 import fr.inria.arles.yarta.resources.Event;
+import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
+import fr.inria.arles.yarta.resources.Topic;
+import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.resources.Conversation;
 import fr.inria.arles.yarta.resources.Place;
-import fr.inria.arles.yarta.resources.YartaResource;
 import java.util.Set;
-import fr.inria.arles.yarta.resources.Content;
-import fr.inria.arles.yarta.resources.Resource;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
-import fr.inria.arles.yarta.resources.Topic;
+import fr.inria.arles.yarta.resources.YartaResource;
 
 /**
  * 
@@ -50,21 +50,40 @@ public class GroupImpl extends YartaResource implements Group {
 	}
 
 	/**
-	 * @return the email. Null if value is not set.
+	 * @return the members. Null if value is not set.
 	 */
-	public String getEmail() {
-		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
+	public Long getMembers() {
+		return Long.valueOf(sam.getDataProperty(kbNode, PROPERTY_MEMBERS_URI,
+				String.class));
+	}
+
+	/**
+	 * Sets the members.
+	 * 
+	 * @param	long
+	 *			the members to be set
+	 */
+	public void setMembers(Long members) {
+		sam.setDataProperty(kbNode, PROPERTY_MEMBERS_URI, String.class,
+				String.valueOf(members));
+	}
+
+	/**
+	 * @return the name. Null if value is not set.
+	 */
+	public String getName() {
+		return sam.getDataProperty(kbNode, PROPERTY_NAME_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the email.
+	 * Sets the name.
 	 * 
 	 * @param	string
-	 *			the email to be set
+	 *			the name to be set
 	 */
-	public void setEmail(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
+	public void setName(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_NAME_URI, String.class,
 				string);
 	}
 
@@ -88,21 +107,21 @@ public class GroupImpl extends YartaResource implements Group {
 	}
 
 	/**
-	 * @return the name. Null if value is not set.
+	 * @return the email. Null if value is not set.
 	 */
-	public String getName() {
-		return sam.getDataProperty(kbNode, PROPERTY_NAME_URI,
+	public String getEmail() {
+		return sam.getDataProperty(kbNode, PROPERTY_EMAIL_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the name.
+	 * Sets the email.
 	 * 
 	 * @param	string
-	 *			the name to be set
+	 *			the email to be set
 	 */
-	public void setName(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_NAME_URI, String.class,
+	public void setEmail(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_EMAIL_URI, String.class,
 				string);
 	}
 
@@ -123,97 +142,6 @@ public class GroupImpl extends YartaResource implements Group {
 	public void setHomepage(String string) {
 		sam.setDataProperty(kbNode, PROPERTY_HOMEPAGE_URI, String.class,
 				string);
-	}
-
-	/**
-	 * @return the members. Null if value is not set.
-	 */
-	public Long getMembers() {
-		return Long.valueOf(sam.getDataProperty(kbNode, PROPERTY_MEMBERS_URI,
-				String.class));
-	}
-
-	/**
-	 * Sets the members.
-	 * 
-	 * @param	long
-	 *			the members to be set
-	 */
-	public void setMembers(Long members) {
-		sam.setDataProperty(kbNode, PROPERTY_MEMBERS_URI, String.class,
-				String.valueOf(members));
-	}
-
-	/**
-	 * Creates a "picture" edge between this group and picture
-	 * 
-	 * @param	picture
-	 *			the Picture
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addPicture(Picture picture) {
-		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * deletes the "picture" link between this group and picture
-	 * 
-	 * @param	picture
-	 * 			the Picture
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deletePicture(Picture picture) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "picture" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<Picture> getPicture() {
-		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
-	}
-
-	/**
-	 * Creates a "knows" edge between this group and agent
-	 * 
-	 * @param	agent
-	 *			the fr.inria.arles.yarta.resources.Agent
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addKnows(fr.inria.arles.yarta.resources.Agent agent) {
-		return sam.setObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
-	}
-
-	/**
-	 * deletes the "knows" link between this group and agent
-	 * 
-	 * @param	agent
-	 * 			the fr.inria.arles.yarta.resources.Agent
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deleteKnows(fr.inria.arles.yarta.resources.Agent agent) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "knows" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<fr.inria.arles.yarta.resources.Agent> getKnows() {
-		return sam.getObjectProperty(kbNode, PROPERTY_KNOWS_URI);
 	}
 
 	/**
@@ -253,42 +181,6 @@ public class GroupImpl extends YartaResource implements Group {
 	}
 
 	/**
-	 * Creates a "isattending" edge between this group and event
-	 * 
-	 * @param	event
-	 *			the Event
-	 *
-	 * @return true if all went well, false otherwise
-	 */
-	@Override
-	public boolean addIsAttending(Event event) {
-		return sam.setObjectProperty(kbNode, PROPERTY_ISATTENDING_URI, event);
-	}
-
-	/**
-	 * deletes the "isattending" link between this group and event
-	 * 
-	 * @param	event
-	 * 			the Event
-	 * @return true if success. false is something went wrong
-	 */
-	@Override
-	public boolean deleteIsAttending(Event event) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_ISATTENDING_URI, event);
-	}
-
-	/**
-	 * 
-	 * @return	The list of resources linked by a "isattending" edge with the current resource.
-	 *			Empty list if I know no one. null if there was an error
-	 *
-	 */
-	@Override
-	public Set<Event> getIsAttending() {
-		return sam.getObjectProperty(kbNode, PROPERTY_ISATTENDING_URI);
-	}
-
-	/**
 	 * Creates a "hasinterest" edge between this group and resource
 	 * 
 	 * @param	resource
@@ -325,75 +217,75 @@ public class GroupImpl extends YartaResource implements Group {
 	}
 
 	/**
-	 * Creates a "ismemberof" edge between this group and group
+	 * Creates a "creator" edge between this group and content
 	 * 
-	 * @param	group
-	 *			the fr.inria.arles.yarta.resources.Group
+	 * @param	content
+	 *			the Content
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addIsMemberOf(fr.inria.arles.yarta.resources.Group group) {
-		return sam.setObjectProperty(kbNode, PROPERTY_ISMEMBEROF_URI, group);
+	public boolean addCreator(Content content) {
+		return sam.setObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
 	}
 
 	/**
-	 * deletes the "ismemberof" link between this group and group
+	 * deletes the "creator" link between this group and content
 	 * 
-	 * @param	group
-	 * 			the fr.inria.arles.yarta.resources.Group
+	 * @param	content
+	 * 			the Content
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteIsMemberOf(fr.inria.arles.yarta.resources.Group group) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_ISMEMBEROF_URI, group);
+	public boolean deleteCreator(Content content) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "ismemberof" edge with the current resource.
+	 * @return	The list of resources linked by a "creator" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<fr.inria.arles.yarta.resources.Group> getIsMemberOf() {
-		return sam.getObjectProperty(kbNode, PROPERTY_ISMEMBEROF_URI);
+	public Set<Content> getCreator() {
+		return sam.getObjectProperty(kbNode, PROPERTY_CREATOR_URI);
 	}
 
 	/**
-	 * Creates a "participatesto" edge between this group and conversation
+	 * Creates a "isattending" edge between this group and event
 	 * 
-	 * @param	conversation
-	 *			the Conversation
+	 * @param	event
+	 *			the Event
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addParticipatesTo(Conversation conversation) {
-		return sam.setObjectProperty(kbNode, PROPERTY_PARTICIPATESTO_URI, conversation);
+	public boolean addIsAttending(Event event) {
+		return sam.setObjectProperty(kbNode, PROPERTY_ISATTENDING_URI, event);
 	}
 
 	/**
-	 * deletes the "participatesto" link between this group and conversation
+	 * deletes the "isattending" link between this group and event
 	 * 
-	 * @param	conversation
-	 * 			the Conversation
+	 * @param	event
+	 * 			the Event
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteParticipatesTo(Conversation conversation) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_PARTICIPATESTO_URI, conversation);
+	public boolean deleteIsAttending(Event event) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_ISATTENDING_URI, event);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "participatesto" edge with the current resource.
+	 * @return	The list of resources linked by a "isattending" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Conversation> getParticipatesTo() {
-		return sam.getObjectProperty(kbNode, PROPERTY_PARTICIPATESTO_URI);
+	public Set<Event> getIsAttending() {
+		return sam.getObjectProperty(kbNode, PROPERTY_ISATTENDING_URI);
 	}
 
 	/**
@@ -469,47 +361,147 @@ public class GroupImpl extends YartaResource implements Group {
 	}
 
 	/**
-	 * Creates a "creator" edge between this group and content
+	 * Creates a "ismemberof" edge between this group and group
 	 * 
-	 * @param	content
-	 *			the Content
+	 * @param	group
+	 *			the fr.inria.arles.yarta.resources.Group
 	 *
 	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public boolean addCreator(Content content) {
-		return sam.setObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	public boolean addIsMemberOf(fr.inria.arles.yarta.resources.Group group) {
+		return sam.setObjectProperty(kbNode, PROPERTY_ISMEMBEROF_URI, group);
 	}
 
 	/**
-	 * deletes the "creator" link between this group and content
+	 * deletes the "ismemberof" link between this group and group
 	 * 
-	 * @param	content
-	 * 			the Content
+	 * @param	group
+	 * 			the fr.inria.arles.yarta.resources.Group
 	 * @return true if success. false is something went wrong
 	 */
 	@Override
-	public boolean deleteCreator(Content content) {
-		return sam.deleteObjectProperty(kbNode, PROPERTY_CREATOR_URI, content);
+	public boolean deleteIsMemberOf(fr.inria.arles.yarta.resources.Group group) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_ISMEMBEROF_URI, group);
 	}
 
 	/**
 	 * 
-	 * @return	The list of resources linked by a "creator" edge with the current resource.
+	 * @return	The list of resources linked by a "ismemberof" edge with the current resource.
 	 *			Empty list if I know no one. null if there was an error
 	 *
 	 */
 	@Override
-	public Set<Content> getCreator() {
-		return sam.getObjectProperty(kbNode, PROPERTY_CREATOR_URI);
+	public Set<fr.inria.arles.yarta.resources.Group> getIsMemberOf() {
+		return sam.getObjectProperty(kbNode, PROPERTY_ISMEMBEROF_URI);
 	}
 
 	/**
-	 * inverse of {@link #getKnows()}
+	 * Creates a "participatesto" edge between this group and conversation
+	 * 
+	 * @param	conversation
+	 *			the Conversation
+	 *
+	 * @return true if all went well, false otherwise
 	 */
 	@Override
-	public Set<fr.inria.arles.yarta.resources.Agent> getKnows_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_KNOWS_URI);
+	public boolean addParticipatesTo(Conversation conversation) {
+		return sam.setObjectProperty(kbNode, PROPERTY_PARTICIPATESTO_URI, conversation);
+	}
+
+	/**
+	 * deletes the "participatesto" link between this group and conversation
+	 * 
+	 * @param	conversation
+	 * 			the Conversation
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteParticipatesTo(Conversation conversation) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_PARTICIPATESTO_URI, conversation);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "participatesto" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Conversation> getParticipatesTo() {
+		return sam.getObjectProperty(kbNode, PROPERTY_PARTICIPATESTO_URI);
+	}
+
+	/**
+	 * Creates a "picture" edge between this group and picture
+	 * 
+	 * @param	picture
+	 *			the Picture
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addPicture(Picture picture) {
+		return sam.setObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * deletes the "picture" link between this group and picture
+	 * 
+	 * @param	picture
+	 * 			the Picture
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deletePicture(Picture picture) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_PICTURE_URI, picture);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "picture" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<Picture> getPicture() {
+		return sam.getObjectProperty(kbNode, PROPERTY_PICTURE_URI);
+	}
+
+	/**
+	 * Creates a "knows" edge between this group and agent
+	 * 
+	 * @param	agent
+	 *			the fr.inria.arles.yarta.resources.Agent
+	 *
+	 * @return true if all went well, false otherwise
+	 */
+	@Override
+	public boolean addKnows(fr.inria.arles.yarta.resources.Agent agent) {
+		return sam.setObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
+	}
+
+	/**
+	 * deletes the "knows" link between this group and agent
+	 * 
+	 * @param	agent
+	 * 			the fr.inria.arles.yarta.resources.Agent
+	 * @return true if success. false is something went wrong
+	 */
+	@Override
+	public boolean deleteKnows(fr.inria.arles.yarta.resources.Agent agent) {
+		return sam.deleteObjectProperty(kbNode, PROPERTY_KNOWS_URI, agent);
+	}
+
+	/**
+	 * 
+	 * @return	The list of resources linked by a "knows" edge with the current resource.
+	 *			Empty list if I know no one. null if there was an error
+	 *
+	 */
+	@Override
+	public Set<fr.inria.arles.yarta.resources.Agent> getKnows() {
+		return sam.getObjectProperty(kbNode, PROPERTY_KNOWS_URI);
 	}
 
 	/**
@@ -526,5 +518,13 @@ public class GroupImpl extends YartaResource implements Group {
 	@Override
 	public Set<fr.inria.arles.yarta.resources.Agent> getIsMemberOf_inverse() {
 		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_ISMEMBEROF_URI);
+	}
+
+	/**
+	 * inverse of {@link #getKnows()}
+	 */
+	@Override
+	public Set<fr.inria.arles.yarta.resources.Agent> getKnows_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_KNOWS_URI);
 	}
 }

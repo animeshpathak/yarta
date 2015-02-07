@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Iris Mobile</string>
+    <string name="app_name">Yarta</string>
     <string name="app_login_required">Tap to log-in to Iris Mobile</string>
     <string name="app_socialdata">Access social data</string>
     <string name="app_socialdata_description">Access social data</string>
@@ -28,6 +28,11 @@
     <string name="app_new_version_yes">Yes</string>
     <string name="app_new_version_cancel">No</string>
     <string name="app_market_required">Google Play is required to view the application page.</string>
+    <string name="person_knows_you">%s added you in his contact list. Would you like to add him as well?</string>
+    <string name="person_knows_you_title">Contact request</string>
+    <string name="person_knows_you_ok">OK</string>
+    <string name="person_knows_you_cancel">Cancel</string>
+    <string name="profile_sync">Sync</string>
 
     <!-- IRIS -->
     <string name="login_authenticate_cas">CAS LOGIN</string>
@@ -67,6 +72,7 @@
     <string name="group_activity">Activity</string>
     <string name="group_join_sent">Group join sent!</string>
     <string name="profile_title">Profile</string>
+    <string name="profile_saved">Profile saved.</string>
     <string name="profile_team">Location: %s</string>
     <string name="profile_room">Room: %s</string>
     <string name="profile_phone">Phone: %s</string>
@@ -89,6 +95,9 @@
     <string name="wire_title">Wire</string>
     <string name="wire_cancel">Cancel</string>
     <string name="wire_post">Post</string>
+    <string name="profile_add_hint">user id</string>
+    <string name="profile_ok">OK</string>
+    <string name="profile_cancel">Cancel</string>
     <string name="wire_content">your text goes here</string>
     <string name="wire_content_length">The content length must be between 0 and 140!</string>
     <string name="wire_logged_users">Logged users</string>
@@ -149,5 +158,6 @@
     <string name="cas_cancel">Cancel</string>
     <string name="cas_message">You will be redirected to Inria\'s CAS page.</string>
     <string name="cas_never_show">Remember this decision</string>
+    <string name="profile_update_ok">Update sent successfully!</string>
 
 </resources>

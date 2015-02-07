@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
 import fr.inria.arles.yarta.android.library.auth.FakeActivity;
 import fr.inria.arles.yarta.android.library.util.Settings;
@@ -165,7 +164,7 @@ public class LibraryService extends Service implements MSEApplication,
 
 			try {
 				// import elgg's rdf
-				MSEKnowledgeBaseUtils.importDataFromRDF(getAsset("elgg.rdf"),
+				MSEKnowledgeBaseUtils.importDataFromRDF(getAsset("custom.rdf"),
 						knowledgeBase);
 
 				if (new File(getStorePath()).exists()) {
@@ -198,7 +197,6 @@ public class LibraryService extends Service implements MSEApplication,
 
 	@Override
 	public boolean save() {
-
 		MSEKnowledgeBaseUtils.printMSEKnowledgeBase(
 				(MSEKnowledgeBase) knowledgeBase, getStorePath(), "RDF/XML");
 		return true;
@@ -251,10 +249,6 @@ public class LibraryService extends Service implements MSEApplication,
 		tracker.start(this);
 
 		accountMgr.addOnAccountsUpdatedListener(this, null, false);
-
-		client.setUsername(settings.getString(Settings.USER_NAME));
-		client.setUserGuid(settings.getString(Settings.USER_GUID));
-		client.setToken(settings.getString(Settings.USER_TOKEN));
 
 		registerReceiver(helloReceiver, new IntentFilter(HelloReceiver.Action));
 
@@ -440,7 +434,6 @@ public class LibraryService extends Service implements MSEApplication,
 
 	// the settings object
 	private Settings settings;
-	private ElggClient client = ElggClient.getInstance();
 
 	@Override
 	public boolean clear() {
@@ -450,10 +443,6 @@ public class LibraryService extends Service implements MSEApplication,
 		settings.setString(Settings.USER_GUID, null);
 		settings.setString(Settings.USER_TOKEN, null);
 		settings.setString(Settings.USER_RANDOM_GUID, null);
-
-		client.setUsername(null);
-		client.setUserGuid(null);
-		client.setToken(null);
 
 		Account[] accounts = accountMgr
 				.getAccountsByType(AuthenticatorActivity.ACCOUNT_TYPE);

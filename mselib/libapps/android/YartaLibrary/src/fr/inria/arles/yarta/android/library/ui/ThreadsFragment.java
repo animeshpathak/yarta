@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import fr.inria.arles.iris.R;
+import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.BaseFragment;
 import fr.inria.arles.yarta.android.library.util.PullToRefreshListView;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
@@ -96,7 +97,12 @@ public class ThreadsFragment extends BaseFragment implements
 
 			@Override
 			public void doWork() {
-				items = sam.getAllConversations();
+				try {
+					Person me = (Person) sam.getMe();
+					items = me.getParticipatesTo();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 
 			@Override

@@ -21,7 +21,7 @@ public class ContentClientPictures extends ContentClientAndroid {
 		super(context);
 	}
 
-	private String getShortName(Resource resource) {
+	public String getShortName(Resource resource) {
 		String uniqueId = resource.getUniqueId();
 		return uniqueId.substring(uniqueId.indexOf('#') + 1);
 	}

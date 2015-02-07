@@ -3,8 +3,6 @@ package fr.inria.arles.yarta.android.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.arles.iris.bridge.IrisBridge;
-import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.knowledgebase.KBException;
 import fr.inria.arles.yarta.knowledgebase.interfaces.KnowledgeBase;
 import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
@@ -16,7 +14,6 @@ import fr.inria.arles.yarta.middleware.communication.Message;
 import fr.inria.arles.yarta.middleware.communication.Receiver;
 import fr.inria.arles.yarta.middleware.msemanagement.MSEApplication;
 import fr.inria.arles.yarta.middleware.msemanagement.RemoteSAM;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -52,11 +49,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 	private CommunicationManager communicationMgr;
 
 	/**
-	 * The bridge between Iris & Yarta
-	 */
-	private IrisBridge bridge;
-
-	/**
 	 * Receiver and MSEApplication callbacks
 	 */
 	private final RemoteCallbackList<IReceiver> messageCallbacks = new RemoteCallbackList<IReceiver>();
@@ -89,8 +81,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		this.tracker = tracker;
 		this.knowledgeBase = knowledgeBase;
 		this.communicationMgr = communicationMgr;
-		this.bridge = new IrisBridge((Context) init, this, knowledgeBase,
-				contentClient, this);
 	}
 
 	@Override
@@ -160,9 +150,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 			result = Conversion.toBundle(knowledgeBase.addResource(nodeURI,
 					typeURI, requestorId));
-
-			bridge.onAddResource(nodeURI, typeURI);
-
 		} catch (Exception ex) {
 			logError("AidlService.addResource ex: %s", ex);
 		}
@@ -214,7 +201,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			// knowledgeBase);
 			result = Conversion.toBundle(knowledgeBase
 					.getResourceByURINoPolicies(nodeURI));
-			bridge.onGetResourceByURINoPolicies(nodeURI);
 		} catch (Exception ex) {
 			logError("AidlService.getResourceByURINoPolicies ex: %s", ex);
 		}
@@ -236,8 +222,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 			result = Conversion.toBundle(knowledgeBase.addTriple(sub, pre, obj,
 					requestorId));
-
-			bridge.onAddTriple(sub, pre, obj);
 		} catch (Exception ex) {
 			logError("AidlService.addTriple ex: %s", ex);
 		}
@@ -303,8 +287,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
 			}
-
-			bridge.onGetPropertyObjectAsTriples(subject, predicate);
 		} catch (Exception ex) {
 			logError("AidlService.getPropertyObjectAsTriples ex: %s", ex);
 		}
@@ -329,8 +311,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 			for (Triple triple : triples) {
 				lstResult.add(Conversion.toBundle(triple));
 			}
-
-			bridge.onGetPropertySubjectAsTriples(predicate, object);
 		} catch (Exception ex) {
 			logError("AidlService.getPropertySubjectAsTriples ex: %s", ex);
 			ex.printStackTrace();
@@ -715,11 +695,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 		for (int i = 0; i < n; i++) {
 			IMSEApplication application = appCallbacks.getBroadcastItem(i);
 			try {
-				if (query.equals(IrisBridge.PostListEmpty)
-						&& !application.getAppId().equals(
-								"fr.inria.arles.yarta")) {
-					continue;
-				}
 				application.handleNotification(query);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -764,15 +739,6 @@ public class AidlService extends ILibraryService.Stub implements Receiver,
 
 	@Override
 	public String pureCall(String param) throws RemoteException {
-		String [] args = param.split(",");
-		
-		if (args.length > 1) {
-			if (args[0].equals("getAnnotationLikes")) {
-				return "" + ElggClient.getInstance().getAnnotationLikes(args[1]);
-			} else if (args[0].equals("addAnnotationLike")) {
-				return "" + ElggClient.getInstance().addAnnotationLike(args[1]);
-			}
-		}
 		return "OK[" + param + "]";
 	}
 }

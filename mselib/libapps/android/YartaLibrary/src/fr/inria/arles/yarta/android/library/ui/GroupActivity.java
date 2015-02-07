@@ -62,7 +62,6 @@ public class GroupActivity extends BaseActivity implements
 		adapter.addFragment(new GroupDescriptionFragment(),
 				R.string.group_description);
 		adapter.addFragment(new GroupPostsFragment(), R.string.group_posts);
-		adapter.addFragment(new RiverFragment(), R.string.group_activity);
 
 		setFragmentsData();
 	}
@@ -149,7 +148,7 @@ public class GroupActivity extends BaseActivity implements
 		case MENU_JOIN:
 			try {
 				if (group != null) {
-					Person person = getSAM().getMe();
+					Person person = (Person) getSAM().getMe();
 					person.addIsMemberOf(group);
 					Toast.makeText(this, R.string.group_join_sent,
 							Toast.LENGTH_SHORT).show();

@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ElggClient;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 import fr.inria.arles.yarta.resources.Agent;
@@ -87,13 +86,14 @@ public class MessageActivity extends BaseActivity {
 					Person me = null;
 					try {
 						friends = new ArrayList<Agent>();
-						me = getSAM().getMe();
-						friends.addAll(me.getKnows_inverse());
+						me = (Person) getSAM().getMe();
+						friends.addAll(me.getKnows());
 
 						Collections.sort(friends, new Comparator<Agent>() {
 							@Override
 							public int compare(Agent lhs, Agent rhs) {
-								return lhs.getName().compareTo(rhs.getName());
+								return lhs.getUniqueId().compareTo(
+										rhs.getUniqueId());
 							}
 						});
 					} catch (Exception ex) {
@@ -129,7 +129,11 @@ public class MessageActivity extends BaseActivity {
 
 					String fa[] = new String[friends.size()];
 					for (int i = 0; i < fa.length; i++) {
-						fa[i] = friends.get(i).getName();
+						String name = friends.get(i).getName();
+						if (name == null) {
+							name = getUserId(friends.get(i));
+						}
+						fa[i] = name;
 					}
 					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 							getApplicationContext(), R.layout.item_spinner, fa);
@@ -146,6 +150,12 @@ public class MessageActivity extends BaseActivity {
 				}
 			});
 		}
+	}
+
+	private String getUserId(Agent agent) {
+		String name = agent.getUniqueId();
+		name = name.substring(name.indexOf('_') + 1);
+		return name;
 	}
 
 	private void setSelectedUser(Agent user) {
@@ -168,7 +178,11 @@ public class MessageActivity extends BaseActivity {
 		setFocusable(R.id.content, false);
 
 		for (Agent agent : message.getCreator_inverse()) {
-			setCtrlText(R.id.author, agent.getName());
+			String name = agent.getName();
+			if (name == null) {
+				name = getUserId(agent);
+			}
+			setCtrlText(R.id.author, name);
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM, HH:mm",
@@ -236,26 +250,54 @@ public class MessageActivity extends BaseActivity {
 			public void doWork() {
 				String username = item.getUniqueId();
 				username = username.substring(username.indexOf('_') + 1);
-				result = client.sendMessage(username, subject, body, replyTo);
+
+				try {
+					// gets the participants
+					Person peer = (Person) getSAM().getPersonByUserId(username);
+					Person me = (Person) getSAM().getMe();
+
+					// creates a new conversation & message
+					Conversation c = getSAM().createConversation();
+					Message message = getSAM().createMessage();
+
+					// sets message details
+					message.setTime(System.currentTimeMillis());
+					message.setTitle(subject);
+					message.setContent(body);
+
+					// creator link
+					me.addCreator(message);
+					
+					// peers - conversation links
+					me.addParticipatesTo(c);
+					peer.addParticipatesTo(c);
+					
+					// conversation - message link
+					c.addContains(message);
+
+					// notifies the peer(s)
+					getCOMM().sendNotify(peer.getUserId());
+					
+					result = 0;
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 
 			@Override
 			public void doUIAfter() {
-				String message = client.getLastError();
+				String message = "error"; // client.getLastError();
 
 				switch (result) {
-				case ElggClient.RESULT_OK:
+				case 0:
 					message = getString(R.string.message_sent_ok);
-					break;
-				case ElggClient.RESULT_AUTH_FAILED:
-					message = getString(R.string.app_login_required);
 					break;
 				}
 
 				Toast.makeText(getApplicationContext(), message,
 						Toast.LENGTH_SHORT).show();
 
-				if (result == ElggClient.RESULT_OK) {
+				if (result == 0) {
 					finish();
 				}
 			}

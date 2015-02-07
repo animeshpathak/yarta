@@ -169,11 +169,7 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 								+ userId);
 				return null;
 			} else {
-				// convert this person Node into a PersonImpl object
-				return new PersonImpl(this,
-						thinKnowledgeBase
-								.getResourceByURINoPolicies(retPersonNode
-										.getName()));
+				return (Person) getResourceByURI(retPersonNode.getName());
 			}
 		}
 	}
@@ -225,9 +221,10 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 	 */
 	public String getDataProperty(Node resourceNode, String propertyUri,
 			Class<?> c) {
-		if (get(resourceNode, propertyUri) != null) {
-			return get(resourceNode, propertyUri);
-		}
+
+		// if (get(resourceNode, propertyUri) != null) {
+		// return get(resourceNode, propertyUri);
+		// }
 
 		try {
 			tempTriples = thinKnowledgeBase.getPropertyObjectAsTriples(
@@ -662,6 +659,28 @@ public class ThinStorageAccessManager implements ThinKnowledgeBaseManager {
 	public Node createNewNode(String typeuri) {
 		String namespace = getNamespace(typeuri);
 		String newID = namespace + UUID.randomUUID().toString();
+		try {
+			Node newNode = thinKnowledgeBase.addResource(newID, typeuri,
+					ownerId);
+			return newNode;
+		} catch (KBException e) {
+			logger.e(STORAGE_ACCESS_MGR_LOGTAG,
+					"KBException crating new node of type " + typeuri, e);
+			return null;
+		}
+	}
+
+	/**
+	 * Creates a new node of a given type in the KB with the given unique
+	 * identifier.
+	 * 
+	 * @param newID
+	 *            the id
+	 * @param typeuri
+	 *            The URI of the type
+	 * @return The KB Node created.
+	 */
+	public Node createNewNode(String newID, String typeuri) {
 		try {
 			Node newNode = thinKnowledgeBase.addResource(newID, typeuri,
 					ownerId);

@@ -23,14 +23,6 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/logo_iris" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:src="@drawable/bulles_header" />
         </LinearLayout>
 
@@ -42,45 +34,6 @@
             android:gravity="center_vertical"
             android:orientation="vertical" >
 
-            <Button
-                style="@style/AppCarrotButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:onClick="onClickLoginCAS"
-                android:text="@string/login_authenticate_cas" />
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/login_or"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/login_or"
-                    android:textColor="@color/AppBackground" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/login_or"
-                    android:background="@color/AppBackground" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_toRightOf="@+id/login_or"
-                    android:background="@color/AppBackground" />
-            </RelativeLayout>
 
             <EditText
                 android:id="@+id/username"
@@ -89,21 +42,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:hint="@string/login_username"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionGo"
                 android:inputType="text"
                 android:padding="10dp" />
-
-            <EditText
-                android:id="@+id/password"
-                style="@style/AppEdit"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-2dp"
-                android:hint="@string/login_password"
-                android:imeOptions="actionGo"
-                android:inputType="textPassword"
-                android:padding="10dp" />
-
             <Button
                 style="@style/AppGrayButton"
                 android:layout_width="fill_parent"

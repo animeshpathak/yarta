@@ -127,7 +127,7 @@ public class FeedbackFragment extends BaseFragment implements
 
 		try {
 			String appId = getSherlockActivity().getPackageName();
-			String from = client.getUsername();
+			String from = "student";
 
 			content += " " + packMgr.getPackageInfo(appId, 0).versionName;
 

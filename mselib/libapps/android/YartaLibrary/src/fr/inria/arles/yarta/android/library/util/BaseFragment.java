@@ -12,19 +12,17 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ElggClient;
-import fr.inria.arles.iris.web.ElggClient.WebCallback;
 import fr.inria.arles.yarta.android.library.ContentClientPictures;
 import fr.inria.arles.yarta.android.library.auth.AuthenticatorActivity;
 import fr.inria.arles.yarta.android.library.msemanagement.StorageAccessManagerEx;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
+import fr.inria.arles.yarta.middleware.communication.CommunicationManager;
 
-public abstract class BaseFragment extends SherlockFragment implements
-		WebCallback {
+public abstract class BaseFragment extends SherlockFragment {
 
+	protected CommunicationManager comm;
 	protected StorageAccessManagerEx sam;
 	protected ContentClientPictures contentClient;
-	protected ElggClient client = ElggClient.getInstance();
 
 	protected enum Frame {
 		Content, Internet, Authentication, Loading
@@ -42,6 +40,10 @@ public abstract class BaseFragment extends SherlockFragment implements
 
 	public void setSAM(StorageAccessManagerEx sam) {
 		this.sam = sam;
+	}
+
+	public void setCOMM(CommunicationManager comm) {
+		this.comm = comm;
 	}
 
 	public void setGroupGuid(String groupId) {
@@ -101,6 +103,15 @@ public abstract class BaseFragment extends SherlockFragment implements
 		}
 	}
 
+	@Override
+	public void setMenuVisibility(boolean menuVisible) {
+		super.setMenuVisibility(menuVisible);
+
+		if (menuVisible && isAdded()) {
+			refreshUI(null);
+		}
+	}
+
 	protected void showFrame(Frame frame) {
 		setVisible(R.id.frame_content, frame == Frame.Content);
 		setVisible(R.id.frame_internet, frame == Frame.Internet);
@@ -111,13 +122,11 @@ public abstract class BaseFragment extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		client.addCallback(this);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		client.removeCallback(this);
 	}
 
 	@Override
@@ -133,39 +142,6 @@ public abstract class BaseFragment extends SherlockFragment implements
 		if (v != null) {
 			v.setOnClickListener(errorClickListener);
 		}
-	}
-
-	@Override
-	public void onAuthentication() {
-		getSherlockActivity().runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				showFrame(Frame.Content);
-			}
-		});
-	}
-
-	@Override
-	public void onAuthenticationFailed() {
-		getSherlockActivity().runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				showFrame(Frame.Authentication);
-			}
-		});
-	}
-
-	@Override
-	public void onNetworkFailed() {
-		getSherlockActivity().runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				showFrame(Frame.Internet);
-			}
-		});
 	}
 
 	private void onClickLogin() {

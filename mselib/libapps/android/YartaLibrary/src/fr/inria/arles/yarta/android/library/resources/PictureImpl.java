@@ -1,11 +1,11 @@
 package fr.inria.arles.yarta.android.library.resources;
 
-import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
-import fr.inria.arles.yarta.resources.YartaResource;
-import java.util.Set;
 import fr.inria.arles.yarta.resources.Content;
-import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
+import fr.inria.arles.yarta.middleware.msemanagement.ThinStorageAccessManager;
 import fr.inria.arles.yarta.resources.Topic;
+import java.util.Set;
+import fr.inria.arles.yarta.knowledgebase.interfaces.Node;
+import fr.inria.arles.yarta.resources.YartaResource;
 
 /**
  * 
@@ -27,40 +27,40 @@ public class PictureImpl extends YartaResource implements Picture {
 	}
 
 	/**
-	 * @return the content. Null if value is not set.
+	 * @return the identifier. Null if value is not set.
 	 */
-	public String getContent() {
-		return sam.getDataProperty(kbNode, PROPERTY_CONTENT_URI,
+	public String getIdentifier() {
+		return sam.getDataProperty(kbNode, PROPERTY_IDENTIFIER_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the content.
+	 * Sets the identifier.
 	 * 
 	 * @param	string
-	 *			the content to be set
+	 *			the identifier to be set
 	 */
-	public void setContent(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_CONTENT_URI, String.class,
+	public void setIdentifier(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_IDENTIFIER_URI, String.class,
 				string);
 	}
 
 	/**
-	 * @return the title. Null if value is not set.
+	 * @return the format. Null if value is not set.
 	 */
-	public String getTitle() {
-		return sam.getDataProperty(kbNode, PROPERTY_TITLE_URI,
+	public String getFormat() {
+		return sam.getDataProperty(kbNode, PROPERTY_FORMAT_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the title.
+	 * Sets the format.
 	 * 
 	 * @param	string
-	 *			the title to be set
+	 *			the format to be set
 	 */
-	public void setTitle(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_TITLE_URI, String.class,
+	public void setFormat(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_FORMAT_URI, String.class,
 				string);
 	}
 
@@ -103,40 +103,40 @@ public class PictureImpl extends YartaResource implements Picture {
 	}
 
 	/**
-	 * @return the format. Null if value is not set.
+	 * @return the title. Null if value is not set.
 	 */
-	public String getFormat() {
-		return sam.getDataProperty(kbNode, PROPERTY_FORMAT_URI,
+	public String getTitle() {
+		return sam.getDataProperty(kbNode, PROPERTY_TITLE_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the format.
+	 * Sets the title.
 	 * 
 	 * @param	string
-	 *			the format to be set
+	 *			the title to be set
 	 */
-	public void setFormat(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_FORMAT_URI, String.class,
+	public void setTitle(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_TITLE_URI, String.class,
 				string);
 	}
 
 	/**
-	 * @return the identifier. Null if value is not set.
+	 * @return the content. Null if value is not set.
 	 */
-	public String getIdentifier() {
-		return sam.getDataProperty(kbNode, PROPERTY_IDENTIFIER_URI,
+	public String getContent() {
+		return sam.getDataProperty(kbNode, PROPERTY_CONTENT_URI,
 				String.class);
 	}
 	
 	/**
-	 * Sets the identifier.
+	 * Sets the content.
 	 * 
 	 * @param	string
-	 *			the identifier to be set
+	 *			the content to be set
 	 */
-	public void setIdentifier(String string) {
-		sam.setDataProperty(kbNode, PROPERTY_IDENTIFIER_URI, String.class,
+	public void setContent(String string) {
+		sam.setDataProperty(kbNode, PROPERTY_CONTENT_URI, String.class,
 				string);
 	}
 
@@ -213,14 +213,6 @@ public class PictureImpl extends YartaResource implements Picture {
 	}
 
 	/**
-	 * inverse of {@link #getPicture()}
-	 */
-	@Override
-	public Set<Agent> getPicture_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Agent.PROPERTY_PICTURE_URI);
-	}
-
-	/**
 	 * inverse of {@link #getHasInterest()}
 	 */
 	@Override
@@ -229,11 +221,11 @@ public class PictureImpl extends YartaResource implements Picture {
 	}
 
 	/**
-	 * inverse of {@link #getHasReply()}
+	 * inverse of {@link #getCreator()}
 	 */
 	@Override
-	public Set<Content> getHasReply_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, Content.PROPERTY_HASREPLY_URI);
+	public Set<fr.inria.arles.yarta.resources.Agent> getCreator_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_CREATOR_URI);
 	}
 
 	/**
@@ -245,10 +237,18 @@ public class PictureImpl extends YartaResource implements Picture {
 	}
 
 	/**
-	 * inverse of {@link #getCreator()}
+	 * inverse of {@link #getHasReply()}
 	 */
 	@Override
-	public Set<fr.inria.arles.yarta.resources.Agent> getCreator_inverse() {
-		return sam.getObjectProperty_inverse(kbNode, fr.inria.arles.yarta.resources.Agent.PROPERTY_CREATOR_URI);
+	public Set<Content> getHasReply_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, Content.PROPERTY_HASREPLY_URI);
+	}
+
+	/**
+	 * inverse of {@link #getPicture()}
+	 */
+	@Override
+	public Set<Agent> getPicture_inverse() {
+		return sam.getObjectProperty_inverse(kbNode, Agent.PROPERTY_PICTURE_URI);
 	}
 }

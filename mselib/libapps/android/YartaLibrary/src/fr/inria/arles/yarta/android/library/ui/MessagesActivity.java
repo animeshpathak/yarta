@@ -5,14 +5,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import fr.inria.arles.iris.R;
 import fr.inria.arles.yarta.android.library.resources.Person;
 import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
@@ -25,10 +23,12 @@ public class MessagesActivity extends BaseActivity implements
 		AdapterView.OnItemClickListener {
 
 	public static final String ThreadId = "ThreadId";
-	private static final int MENU_REPLY = 2;
 
 	private MessagesListAdapter adapter;
 	private Conversation conversation;
+	private String peerId;
+	private String conversationTitle;
+	private ListView list;
 
 	public static void sort(List<? extends Content> list,
 			final boolean ascending) {
@@ -59,10 +59,25 @@ public class MessagesActivity extends BaseActivity implements
 
 		adapter = new MessagesListAdapter(this, getSAM());
 
-		final ListView list = (ListView) findViewById(R.id.listMessages);
+		list = (ListView) findViewById(R.id.listMessages);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
+		
+		refreshUI(null);
+	}
 
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		Message message = (Message) adapter.getItem(position);
+
+		Intent intent = new Intent(this, MessageActivity.class);
+		intent.putExtra(MessageActivity.MessageId, message.getUniqueId());
+		startActivity(intent);
+	}
+
+	@Override
+	protected void refreshUI(String notification) {
 		execute(new Job() {
 			Person me;
 			String title;
@@ -71,15 +86,28 @@ public class MessagesActivity extends BaseActivity implements
 			@Override
 			public void doWork() {
 				try {
-					me = getSAM().getMe();
+					me = (Person) getSAM().getMe();
 					messages = new ArrayList<Message>();
 					messages.addAll(conversation.getContains());
 
 					sort(messages, true);
 
+					for (Message message : messages) {
+						conversationTitle = message.getTitle();
+						break;
+					}
+
 					for (Agent agent : conversation.getParticipatesTo_inverse()) {
-						if (!agent.equals(me))
+						if (!agent.equals(me)) {
 							title = agent.getName();
+
+							peerId = agent.getUniqueId();
+							peerId = peerId.substring(peerId.indexOf('_') + 1);
+
+							if (title == null) {
+								title = peerId;
+							}
+						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -95,40 +123,41 @@ public class MessagesActivity extends BaseActivity implements
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem item = menu.add(0, MENU_REPLY, 0, R.string.message_reply);
-		item.setIcon(R.drawable.icon_reply);
-		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		return super.onCreateOptionsMenu(menu);
-	}
+	public void onClickSend(View view) {
+		String reply = getCtrlText(R.id.reply);
+		if (reply.length() > 0) {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_REPLY:
-			onReply();
-			break;
+			try {
+				Person me = (Person) getSAM().getMe();
+				Message message = getSAM().createMessage();
+
+				message.setTime(System.currentTimeMillis());
+				message.setTitle(conversationTitle);
+				message.setContent(reply);
+
+				me.addCreator(message);
+
+				conversation.addContains(message);
+
+				// send notification
+				execute(new Job() {
+					@Override
+					public void doWork() {
+						getCOMM().sendNotify(peerId);
+					}
+				});
+
+				// ui enhancements;
+				setCtrlText(R.id.reply, "");
+				findViewById(R.id.reply).clearFocus();
+
+				refreshUI(null);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			Toast.makeText(this, R.string.feedback_content_empty,
+					Toast.LENGTH_SHORT).show();
 		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	private void onReply() {
-		Intent intent = new Intent(this, MessageActivity.class);
-
-		Message message = (Message) adapter.getItem(0);
-		intent.putExtra(MessageActivity.ReplyId, message.getUniqueId());
-		startActivity(intent);
-		finish();
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		Message message = (Message) adapter.getItem(position);
-
-		Intent intent = new Intent(this, MessageActivity.class);
-		intent.putExtra(MessageActivity.MessageId, message.getUniqueId());
-		startActivity(intent);
 	}
 }

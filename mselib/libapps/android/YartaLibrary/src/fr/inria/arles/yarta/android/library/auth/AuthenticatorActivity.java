@@ -1,20 +1,12 @@
 package fr.inria.arles.yarta.android.library.auth;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.UUID;
-
 import fr.inria.arles.iris.R;
-import fr.inria.arles.iris.web.ElggClient;
-import fr.inria.arles.iris.web.Strings;
 import fr.inria.arles.yarta.android.library.util.ProgressDialog;
 import fr.inria.arles.yarta.android.library.util.Settings;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -29,7 +21,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 	private Settings settings;
 	private AccountManager accountManager;
-	private ElggClient client = ElggClient.getInstance();
 
 	public static final String ARG_ACCOUNT_TYPE = "AccountType";
 	public static final String ARG_AUTH_TYPE = "AuthType";
@@ -49,77 +40,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 		setCtrlText(R.id.username, username);
 
-		EditText textPassword = (EditText) findViewById(R.id.password);
+		EditText textPassword = (EditText) findViewById(R.id.username);
 		textPassword.setOnEditorActionListener(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		final String guid = settings.getString(Settings.USER_RANDOM_GUID);
-		if (guid.length() > 0) {
-			new AsyncTask<Void, Void, Intent>() {
-
-				private boolean ok;
-				private ProgressDialog dialog;
-
-				protected void onPreExecute() {
-					dialog = ProgressDialog.show(AuthenticatorActivity.this,
-							getString(R.string.login_wait_logging));
-				}
-
-				@Override
-				protected Intent doInBackground(Void... params) {
-					try {
-						String url = Strings.BaseCAS + "read&guid=" + guid;
-						String tokenAndUser = readURL(url).trim();
-
-						if (tokenAndUser.length() > 3) {
-							String token = tokenAndUser.substring(0,
-									tokenAndUser.indexOf(','));
-							String username = tokenAndUser
-									.substring(tokenAndUser.indexOf(',') + 1);
-							client.setUsername(username);
-							client.setToken(token);
-							client.setUserGuid(client.getUserGuid(username));
-
-							settings.setString(Settings.USER_NAME,
-									client.getUsername());
-							settings.setString(Settings.USER_GUID,
-									client.getUserGuid());
-							settings.setString(Settings.USER_TOKEN,
-									client.getToken());
-
-							settings.setString(Settings.USER_RANDOM_GUID, "");
-
-							ok = true;
-
-							readURL(url.replace("read", "remove"));
-						}
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-
-					return null;
-				}
-
-				protected void onPostExecute(Intent result) {
-					dialog.dismiss();
-					if (ok) {
-						final Intent res = new Intent();
-						res.putExtra(AccountManager.KEY_ACCOUNT_NAME,
-								client.getUsername());
-						res.putExtra(AccountManager.KEY_ACCOUNT_TYPE,
-								ACCOUNT_TYPE);
-						res.putExtra(AccountManager.KEY_AUTHTOKEN,
-								client.getToken());
-
-						finishLogin(res);
-					}
-				}
-			}.execute();
-		}
 	}
 
 	@Override
@@ -130,39 +57,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 		return false;
 	}
 
-	/**
-	 * Opens the CAS login page in the browser;
-	 */
-	private void showCas() {
-		String guid = UUID.randomUUID().toString();
-		settings.setString(Settings.USER_RANDOM_GUID, guid);
-
-		String url = Strings.BaseCAS + "guid=" + guid;
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		startActivity(browserIntent);
-	}
-
 	public void onClickLoginCAS(View view) {
-		if (settings.getBoolean(Settings.CAS_SHOW)) {
-			showCas();
-		} else {
-			// show warning
-			CasDialog.show(this, new CasDialog.Handler() {
-
-				@Override
-				public void onProceed(boolean remember) {
-					settings.setBoolean(Settings.CAS_SHOW, remember);
-					showCas();
-				}
-			});
-		}
 	}
 
 	public void onClickLogin(View view) {
 		final String username = getCtrlText(R.id.username);
-		final String password = getCtrlText(R.id.password);
 
-		if (username.length() == 0 || password.length() == 0) {
+		if (username.length() == 0) {
 			Toast.makeText(this, R.string.login_empty_fields, Toast.LENGTH_LONG)
 					.show();
 			return;
@@ -170,7 +71,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 		new AsyncTask<Void, Void, Intent>() {
 
-			private int result = -1;
 			private ProgressDialog dialog;
 
 			protected void onPreExecute() {
@@ -180,30 +80,22 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 
 			@Override
 			protected Intent doInBackground(Void... params) {
-				result = client.authenticate(username, password);
 				return null;
 			}
 
 			@Override
 			protected void onPostExecute(Intent intent) {
 				dialog.dismiss();
-				if (result == ElggClient.RESULT_OK) {
-					settings.setString(Settings.USER_NAME, client.getUsername());
-					settings.setString(Settings.USER_GUID, client.getUserGuid());
-					settings.setString(Settings.USER_TOKEN, client.getToken());
+				settings.setString(Settings.USER_NAME, username);
+				settings.setString(Settings.USER_GUID, username);
+				settings.setString(Settings.USER_TOKEN, username);
 
-					final Intent res = new Intent();
-					res.putExtra(AccountManager.KEY_ACCOUNT_NAME,
-							client.getUsername());
-					res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ACCOUNT_TYPE);
-					res.putExtra(AccountManager.KEY_AUTHTOKEN,
-							client.getToken());
+				final Intent res = new Intent();
+				res.putExtra(AccountManager.KEY_ACCOUNT_NAME, username);
+				res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ACCOUNT_TYPE);
+				res.putExtra(AccountManager.KEY_AUTHTOKEN, username);
 
-					finishLogin(res);
-				} else {
-					Toast.makeText(getApplicationContext(),
-							client.getLastError(), Toast.LENGTH_LONG).show();
-				}
+				finishLogin(res);
 			}
 		}.execute();
 	}
@@ -215,12 +107,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 				intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 		if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
 			accountManager.addAccountExplicitly(account, null, null);
-			accountManager.setAuthToken(account, ACCOUNT_TOKEN,
-					client.getToken());
+			accountManager.setAuthToken(account, ACCOUNT_TOKEN, accountName);
 		} else {
 			accountManager.setPassword(account, null);
-			accountManager.setAuthToken(account, ACCOUNT_TOKEN,
-					client.getToken());
+			accountManager.setAuthToken(account, ACCOUNT_TOKEN, accountName);
 		}
 		setAccountAuthenticatorResult(intent.getExtras());
 		setResult(RESULT_OK, intent);
@@ -240,22 +130,5 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity
 			return txt.getText().toString();
 		}
 		return null;
-	}
-
-	private String readURL(String url) {
-		String content = "";
-		try {
-			URL oracle = new URL(url);
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					oracle.openStream()));
-
-			String inputLine;
-			while ((inputLine = in.readLine()) != null)
-				content += inputLine;
-			in.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return content;
 	}
 }

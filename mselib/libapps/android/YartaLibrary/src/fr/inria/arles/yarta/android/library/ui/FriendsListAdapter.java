@@ -71,17 +71,24 @@ public class FriendsListAdapter extends BaseAdapter {
 		Person item = items.get(position);
 
 		String name = item.getName();
-		if (name != null) {
-			holder.title.setText(Html.fromHtml(name));
+
+		if (name == null) {
+			name = item.getUserId();
 		}
-		holder.info.setText(item.getLocation());
+
+		holder.title.setText(Html.fromHtml(name));
+		holder.info.setText(item.getSummary());
 
 		Bitmap bitmap = null;
 		for (Picture picture : item.getPicture()) {
 			bitmap = content.getBitmap(picture);
 		}
 		if (bitmap != null) {
+			holder.icon.setImageResource(0);
 			holder.icon.setImageBitmap(bitmap);
+		} else {
+			holder.icon.setImageBitmap(null);
+			holder.icon.setImageResource(R.drawable.user_default);
 		}
 
 		return convertView;

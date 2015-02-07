@@ -12,7 +12,7 @@ public class MSEManagerEx extends MSEManager {
 	/**
 	 * Base URI described in the custom ontology file.
 	 */
-	public static final String baseMSEURI = "http://yarta.gforge.inria.fr/ontologies/elgg.rdf";
+	public static final String baseMSEURI = "http://yarta.gforge.inria.fr/ontologies/custom.rdf";
 	
 	/**
 	 * Basic constructor.

@@ -66,7 +66,7 @@ public class ContentCommentDialog extends BaseDialog implements
 
 		if (text.length() > 0 && text.length() <= 140) {
 			try {
-				Person me = sam.getMe();
+				Person me = (Person) sam.getMe();
 				Content comment = sam.createContent();
 
 				me.addCreator(comment);

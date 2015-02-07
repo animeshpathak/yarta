@@ -3,11 +3,9 @@ package fr.inria.arles.yarta.android.library.ui;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import fr.inria.arles.iris.R;
-import fr.inria.arles.yarta.android.library.util.JobRunner.Job;
 
 public class ProfileActivity extends BaseActivity {
 
-	public static final String UserGuid = "UserGuid";
 	public static final String UserName = "UserName";
 
 	private ProfileFragment fragment;
@@ -33,23 +31,6 @@ public class ProfileActivity extends BaseActivity {
 		if (getIntent().hasExtra(UserName)) {
 			username = getIntent().getStringExtra(UserName);
 			attachFragment(username);
-		} else {
-			final String userGuid = getIntent().getStringExtra(UserGuid);
-
-			runner.runBackground(new Job() {
-
-				@Override
-				public void doWork() {
-					username = client.getUsername(userGuid);
-				}
-
-				@Override
-				public void doUIAfter() {
-					if (username != null) {
-						attachFragment(username);
-					}
-				}
-			});
 		}
 	}
 
@@ -60,14 +41,18 @@ public class ProfileActivity extends BaseActivity {
 			fragment = new ProfileFragment();
 			fragment.setRunner(runner);
 			fragment.setSAM(getSAM());
+			fragment.setCOMM(getCOMM());
 			fragment.setContentClient(contentClient);
 			fragment.setUsername(username);
 
 			ft.replace(R.id.content_frame, fragment);
 			ft.commit();
 		} else {
+			fragment.setRunner(runner);
 			fragment.setSAM(getSAM());
+			fragment.setCOMM(getCOMM());
 			fragment.setContentClient(contentClient);
+			fragment.setUsername(username);
 			fragment.refreshUI(null);
 		}
 	}

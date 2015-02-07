@@ -74,7 +74,7 @@ public class YartaApp extends Application implements MSEApplication {
 			mse = new MSEManagerEx();
 
 			try {
-				mse.initialize(getAsset("elgg.rdf"), getAsset("policies"),
+				mse.initialize(getAsset("custom.rdf"), getAsset("policies"),
 						this, this);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -113,6 +113,10 @@ public class YartaApp extends Application implements MSEApplication {
 
 			mse.setOwnerUID(userId);
 			sam.setOwnerID(userId);
+
+			if (loginObserver != null && observers.size() == 0) {
+				loginObserver.updateInfo(userId);
+			}
 
 			notifyAllObservers(null);
 		} else {

@@ -65,7 +65,7 @@ public class ContentDialog extends BaseDialog implements View.OnClickListener {
 		final String title = getCtrlText(R.id.title);
 
 		try {
-			Person me = sam.getMe();
+			Person me = (Person) sam.getMe();
 			Content content = sam.createContent();
 
 			me.addCreator(content);

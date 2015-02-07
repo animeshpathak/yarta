@@ -48,7 +48,7 @@ public class ThreadsListAdapter extends BaseAdapter {
 		content = new ContentClientPictures(context);
 		try {
 			this.sam = sam;
-			this.owner = sam.getMe();
+			this.owner = (Person) sam.getMe();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -105,9 +105,18 @@ public class ThreadsListAdapter extends BaseAdapter {
 				message = m;
 			}
 
-			holder.author.setText(Html.fromHtml(person.getName()));
+			String name = person.getName();
+			if (name == null) {
+				name = person.getUserId();
+			}
+			holder.author.setText(Html.fromHtml(name));
 			holder.subject.setText(Html.fromHtml(message.getTitle()));
-			holder.time.setText(sdf.format(new Date(message.getTime())));
+
+			try {
+				holder.time.setText(sdf.format(new Date(message.getTime())));
+			} catch (Exception ex) {
+				holder.time.setText("return Long.valueOf ex!");
+			}
 
 			// TODO: see if message is read
 			holder.container.setVisibility(View.GONE);
@@ -118,7 +127,11 @@ public class ThreadsListAdapter extends BaseAdapter {
 			}
 
 			if (bitmap != null) {
+				holder.image.setImageResource(0);
 				holder.image.setImageBitmap(bitmap);
+			} else {
+				holder.image.setImageBitmap(null);
+				holder.image.setImageResource(R.drawable.user_default);
 			}
 		}
 		return convertView;
